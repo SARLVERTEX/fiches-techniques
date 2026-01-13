@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche Technique - Affichage E-Paper 13.3 - Vertex Displays</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-2 md:p-8 text-slate-900">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+        
+        <header class="bg-slate-900 text-white p-8 md:p-12 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-10 rounded-full -mr-16 -mt-16"></div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+                <div>
+                    <span class="bg-blue-600 text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest">Nouveau Produit</span>
+                    <h1 class="text-3xl md:text-5xl font-bold mt-2 uppercase tracking-tight">Affichage E-Paper 13.3"</h1>
+                    <p class="text-slate-400 text-lg">Signalétique numérique sans fil & ultra-basse consommation</p>
+                </div>
+                <div class="text-left md:text-right border-l md:border-l-0 md:border-r border-slate-700 pl-4 md:pl-0 md:pr-4">
+                    <div class="text-xl font-black">VERTEX DISPLAYS</div>
+                    <a href="mailto:contact.fr@vertexdisplays.com" class="block text-sm text-blue-400 hover:text-blue-300">contact.fr@vertexdisplays.com</a>
+                    <a href="tel:+33426317520" class="block text-sm text-slate-400">+33 (0)4.26.31.75.20</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-6 md:p-10 space-y-12">
+            
+            <section>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
+                        <i data-lucide="monitor"></i>
+                    </div>
+                    <h2 class="text-xl font-bold uppercase tracking-wide text-slate-800">Technologie d'Affichage</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="border border-slate-100 bg-slate-50 p-5 rounded-2xl">
+                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Type d'écran</p>
+                        <p class="text-lg font-bold text-slate-800">E-Paper (Encre Électronique)</p>
+                        <p class="text-sm text-slate-500 mt-1">Lecture parfaite même sous lumière directe, sans reflets.</p>
+                    </div>
+                    <div class="border border-slate-100 bg-slate-50 p-5 rounded-2xl">
+                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Taille & Visibilité</p>
+                        <p class="text-lg font-bold text-slate-800">13.3 Pouces (T133A/T133B)</p>
+                        <p class="text-sm text-slate-500 mt-1">Format idéal pour porte de salle de réunion et signalétique.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-emerald-100 rounded-lg text-emerald-600">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <h2 class="text-xl font-bold uppercase tracking-wide text-slate-800">Indicateurs & Contrôles</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 border border-slate-100 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                            <span class="font-bold text-sm">LED Bleue</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Connecté au serveur. Prêt pour la mise à jour.</p>
+                    </div>
+                    <div class="p-4 border border-slate-100 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                            <span class="font-bold text-sm">LED Rouge</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Appareil déconnecté du réseau WiFi.</p>
+                    </div>
+                    <div class="p-4 border border-slate-100 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                            <span class="font-bold text-sm">LED Verte</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Appareil en cours de charge via USB-C.</p>
+                    </div>
+                </div>
+                <div class="mt-4 p-4 bg-emerald-50 rounded-2xl text-sm text-emerald-800 border border-emerald-100">
+                    <strong>Astuce :</strong> Appuyez 10s sur le bouton pour afficher l'adresse MAC et entrer en mode configuration WiFi.
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
+                        <i data-lucide="wifi"></i>
+                    </div>
+                    <h2 class="text-xl font-bold uppercase tracking-wide text-slate-800">Connectivité & Gestion</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex gap-4 items-start">
+                            <i data-lucide="smartphone" class="text-purple-600 w-5 h-5 mt-1"></i>
+                            <div>
+                                <p class="font-bold">Application Mobile "InkIot"</p>
+                                <p class="text-sm text-slate-500">Gestion via Bluetooth et NFC pour une mise à jour rapide sur site (iOS & Android).</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <i data-lucide="cloud" class="text-purple-600 w-5 h-5 mt-1"></i>
+                            <div>
+                                <p class="font-bold">Plateforme Cloud SEEKINK</p>
+                                <p class="text-sm text-slate-500">Gestion centralisée par WiFi pour piloter tout un parc d'écrans à distance.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-inner">
+                        <p class="text-xs font-bold text-blue-400 uppercase mb-3">Modes Supportés</p>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex items-center gap-2">✔ WiFi Communication (Configuration SSID/KEY)</li>
+                            <li class="flex items-center gap-2">✔ Bluetooth (Mise à jour par lot)</li>
+                            <li class="flex items-center gap-2">✔ NFC (Appairage rapide)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-amber-50 border border-amber-100 p-6 rounded-3xl flex flex-col md:flex-row items-center gap-6">
+                <div class="p-4 bg-white rounded-2xl shadow-sm text-amber-600">
+                    <i data-lucide="battery-charging" class="w-10 h-10"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-amber-900">Maintenance & Autonomie</h3>
+                    <p class="text-sm text-amber-800 leading-relaxed">
+                        Recharge via <strong>Port USB-C</strong>. Nous recommandons une charge complète lorsque la batterie descend sous les 30%. Le voyant s'éteint automatiquement une fois la charge terminée.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="bg-slate-50 p-10 text-center border-t border-slate-100">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Besoin d'aide pour la configuration ?</h2>
+            <p class="text-slate-500 mb-8 max-w-md mx-auto">Nos experts Vertex Displays vous accompagnent pour le déploiement de votre solution E-Paper.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="mailto:contact.fr@vertexdisplays.com?subject=Support Technique E-Paper 13.3" class="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold uppercase hover:bg-slate-800 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="mail" class="w-4 h-4"></i> Contacter le support
+                </a>
+            </div>
+            <div class="mt-10 pt-10 border-t border-slate-200 text-[10px] text-slate-400 uppercase tracking-[0.2em]">
+                Vertex SARL — Monaco — Solutions d'Affichage Dynamique
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
