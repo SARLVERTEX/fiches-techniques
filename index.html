@@ -3,59 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiche Technique - Vertex Displays</title>
+    <title>Fiche Technique - Kiosque Multimédia - Vertex Displays</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 p-2 md:p-8">
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
         
-        <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 md:p-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold uppercase">Kiosque à revues multimédia</h1>
-                    <p class="text-blue-200">Machine intelligente - Vertex Displays</p>
+                    <h1 class="text-2xl md:text-4xl font-bold mb-2 leading-tight uppercase">
+                        Kiosque à revues multimédia intelligent
+                    </h1>
+                    <p class="text-blue-200 text-lg">Machine à journal multimédia intelligente</p>
                 </div>
-                <div class="text-sm border-t md:border-t-0 border-blue-600 pt-4 md:pt-0 w-full md:w-auto">
-                    <a href="tel:+33426317520" class="block hover:underline">📞 +33 (0)4.26.31.75.20</a>
-                    <a href="mailto:contact.fr@vertexdisplays.com" class="block hover:underline">✉️ contact.fr@vertexdisplays.com</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="p-4 md:p-8">
-            <div class="mb-10">
-                <div class="flex items-center gap-3 mb-4 pb-2 border-b-2 border-blue-600">
-                    <i data-lucide="monitor" class="text-blue-600"></i>
-                    <h2 class="text-xl font-bold uppercase">Écran</h2>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                        <span class="text-xs text-blue-600 font-bold block">TAILLE</span>
-                        <span class="font-bold">22 pouces</span>
-                    </div>
-                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                        <span class="text-xs text-blue-600 font-bold block">RÉSOLUTION</span>
-                        <span class="font-bold">1920 x 1080P</span>
-                    </div>
-                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                        <span class="text-xs text-blue-600 font-bold block">LUMINOSITÉ</span>
-                        <span class="font-bold">300 cd/m²</span>
+                <div class="text-left md:text-right space-y-1 border-t md:border-t-0 border-blue-600 pt-4 md:pt-0 w-full md:w-auto">
+                    <div class="text-2xl font-bold tracking-tighter">VERTEX DISPLAYS</div>
+                    <div class="text-blue-200 text-sm">Affichage Dynamique depuis 1999</div>
+                    <div class="pt-2">
+                        <a href="tel:+33426317520" class="block text-sm hover:text-white transition-colors">📞 +33 (0)4.26.31.75.20</a>
+                        <a href="mailto:contact.fr@vertexdisplays.com" class="block text-sm hover:text-white transition-colors">✉️ contact.fr@vertexdisplays.com</a>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <div class="text-center mt-8">
-                <a href="mailto:contact.fr@vertexdisplays.com?subject=Demande Devis Kiosque" 
-                   class="inline-block bg-blue-800 text-white px-8 py-4 rounded-full font-bold uppercase tracking-wide shadow-lg hover:bg-blue-700">
-                    Demander un devis gratuit
+        <main class="p-6 md:p-10">
+            
+            <section class="mb-12">
+                <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-blue-600">
+                    <i data-lucide="monitor" class="text-blue-600 w-6 h-6"></i>
+                    <h2 class="text-xl font-bold text-gray-800 uppercase tracking-wider">Spécifications Écran</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-xs font-bold text-blue-600 uppercase mb-1">Taille</p>
+                        <p class="text-lg font-bold text-blue-900">22 pouces</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-xs font-bold text-blue-600 uppercase mb-1">Résolution</p>
+                        <p class="text-lg font-bold text-blue-900">1080P 1920</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-xs font-bold text-blue-600 uppercase mb-1">Luminosité</p>
+                        <p class="text-lg font-bold text-blue-900">300 cd/m²</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-xs font-bold text-blue-600 uppercase mb-1">Rapport d'aspect</p>
+                        <p class="text-lg font-bold text-blue-900">16:9</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-xs font-bold text-blue-600 uppercase mb-1">Contraste</p>
+                        <p class="text-lg font-bold text-blue-900">1000:1</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-xs font-bold text-blue-600 uppercase mb-1">Couleurs</p>
+                        <p class="text-lg font-bold text-blue-900">16,7M</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-green-600">
+                    <i data-lucide="cpu" class="text-green-600 w-6 h-6"></i>
+                    <h2 class="text-xl font-bold text-gray-800 uppercase tracking-wider">Configurations Système</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                        <h3 class="flex items-center gap-2 font-bold text-green-700 mb-4 uppercase text-sm">
+                            <i data-lucide="zap" class="w-4 h-4"></i> Option Windows
+                        </h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><span class="font-semibold text-gray-500 text-xs block uppercase">Processeur</span> i5-3317U</li>
+                            <li><span class="font-semibold text-gray-500 text-xs block uppercase">Mémoire</span> 4G RAM / 128G SSD</li>
+                            <li><span class="font-semibold text-gray-500 text-xs block uppercase">OS Supportés</span> Win 7 / 8 / 10</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                        <h3 class="flex items-center gap-2 font-bold text-green-700 mb-4 uppercase text-sm">
+                            <i data-lucide="wifi" class="w-4 h-4"></i> Option Android
+                        </h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><span class="font-semibold text-gray-500 text-xs block uppercase">Processeur</span> RK3288</li>
+                            <li><span class="font-semibold text-gray-500 text-xs block uppercase">Mémoire</span> 2G RAM / 8G EMMC</li>
+                            <li><span class="font-semibold text-gray-500 text-xs block uppercase">Version</span> Android 4.4 à 7.1.2</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-orange-600">
+                    <i data-lucide="box" class="text-orange-600 w-6 h-6"></i>
+                    <h2 class="text-xl font-bold text-gray-800 uppercase tracking-wider">Physique & Logistique</h2>
+                </div>
+                <div class="bg-orange-50 rounded-2xl p-6 border border-orange-100">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <p class="text-xs font-bold text-orange-600 uppercase mb-2">Matériaux & Construction</p>
+                            <ul class="text-sm space-y-2 text-gray-700">
+                                <li>• Alliage d'aluminium + Verre trempé</li>
+                                <li>• Coquille : Acier galvanisé 1.0-1.5 mm</li>
+                                <li>• Poids : <span class="italic text-gray-400">Indéterminé</span></li>
+                                <li>• Taille : <span class="italic text-gray-400">Indéterminé</span></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-orange-600 uppercase mb-2">Emballage</p>
+                            <p class="text-sm text-gray-700 leading-relaxed">
+                                Carton avec protection mousse haute densité, renforts bois et protection bulle.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <div class="bg-gradient-to-r from-blue-700 to-purple-700 text-white p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2 uppercase tracking-wide">
+                        <i data-lucide="zap" class="w-6 h-6"></i> Applications Multiples
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
+                        <div class="flex items-center gap-2">✔ Boutiques, halls d'hôtels</div>
+                        <div class="flex items-center gap-2">✔ Librairies & magasins</div>
+                        <div class="flex items-center gap-2">✔ Douanes & aéroports</div>
+                        <div class="flex items-center gap-2">✔ Immeubles d'annonces</div>
+                        <div class="flex items-center gap-2">✔ Espaces publics</div>
+                        <div class="flex items-center gap-2">✔ Centres commerciaux</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="bg-gray-50 border-t p-10 text-center">
+            <div class="text-2xl font-bold text-blue-900 mb-2">VERTEX SARL</div>
+            <p class="text-gray-500 text-sm mb-6">Monaco — Expertise Affichage Dynamique</p>
+            <div class="flex flex-wrap justify-center gap-4 text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                <span>Capacité 3G/4G disponible</span>
+                <span class="hidden md:inline">•</span>
+                <span>Anti-éblouissement optionnel</span>
+            </div>
+            <div class="mt-8">
+                <a href="mailto:contact.fr@vertexdisplays.com?subject=Demande d'informations Kiosque" class="bg-blue-600 text-white px-8 py-4 rounded-full font-bold uppercase hover:bg-blue-700 transition-all shadow-md">
+                    Demander un devis
                 </a>
             </div>
-        </div>
+        </footer>
     </div>
 
     <script>
-        // Initialisation des icônes
+        // Initialisation des icônes Lucide
         lucide.createIcons();
     </script>
 </body>
