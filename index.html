@@ -3,20 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Showroom SARL VERTEX</title>
+    <title>Catalogue Interactif - Vertex Displays Monaco</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; line-height: 1.6; background: #f9f9f9; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1 { color: #238636; }
-        .menu-item { display: block; padding: 15px; margin: 10px 0; background: #eef; text-decoration: none; color: #333; border-radius: 8px; font-weight: bold; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .product-card { transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-10px); }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>SARL VERTEX</h1>
-        <p>Sélectionnez un produit pour voir sa fiche technique :</p>
-        <a href="produit-01.html" class="menu-item">Produit 01 - Nom de la machine</a>
-        <a href="produit-02.html" class="menu-item">Produit 02 - Nom de la machine</a>
-    </div>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 text-white pt-16 pb-24 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tighter italic text-blue-400 uppercase">Vertex Displays</h1>
+            <p class="text-xl text-slate-400 font-light italic">Solutions d'Affichage Dynamique & Bornes Interactives</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 -mt-12 mb-20 flex-grow w-full">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <a href="porte-journal-21.html" class="product-card bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
+                <div class="h-64 bg-slate-100 flex items-center justify-center p-8">
+                    <img src="images/AR06104.jpg" alt="Porte Journal" class="max-h-full object-contain">
+                </div>
+                <div class="p-8">
+                    <span class="text-blue-600 font-bold text-xs uppercase tracking-widest italic">Borne Tactile</span>
+                    <h2 class="text-2xl font-bold mt-2">Porte Journal 21"</h2>
+                    <p class="text-slate-500 text-sm mt-2">Design compact et élégant, idéal pour la consultation de presse digitale.</p>
+                    <div class="mt-6 flex items-center text-blue-600 font-bold gap-2 italic">
+                        Voir la fiche <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </div>
+                </div>
+            </a>
+
+            <a href="stand-by-me-32.html" class="product-card bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col border-2 border-blue-100">
+                <div class="h-64 bg-slate-100 flex items-center justify-center p-8">
+                    <img src="images/GM92.jpg" alt="Stand by me" class="max-h-full object-contain">
+                </div>
+                <div class="p-8">
+                    <span class="text-blue-600 font-bold text-xs uppercase tracking-widest italic">Totem Mobile</span>
+                    <h2 class="text-2xl font-bold mt-2">Stand-by-me 32"</h2>
+                    <p class="text-slate-500 text-sm mt-2">Le totem polyvalent blanc & cuivre avec batterie intégrée.</p>
+                    <div class="mt-6 flex items-center text-blue-600 font-bold gap-2 italic">
+                        Voir la fiche <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </div>
+                </div>
+            </a>
+
+            <a href="double-face.html" class="product-card bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
+                <div class="h-64 bg-slate-100 flex items-center justify-center p-8">
+                    <img src="images/VITRINE55.jpg" alt="Ecran Vitrine" class="max-h-full object-contain">
+                </div>
+                <div class="p-8">
+                    <span class="text-blue-600 font-bold text-xs uppercase tracking-widest italic">Affichage Vitrine</span>
+                    <h2 class="text-2xl font-bold mt-2">Double Face 55"</h2>
+                    <p class="text-slate-500 text-sm mt-2">Haute luminosité mesurée pour une visibilité parfaite en vitrine.</p>
+                    <div class="mt-6 flex items-center text-blue-600 font-bold gap-2 italic">
+                        Voir la fiche <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-10 px-6 text-center italic">
+        <p class="text-sm text-slate-500 font-bold">Vertex Sarl Monaco - MC-98000 Monaco</p>
+    </footer>
+
+    <script>lucide.createIcons();</script>
 </body>
 </html>
