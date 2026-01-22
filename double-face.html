@@ -3,156 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiche Technique - Vitrine Double Face 55" - Vertex Monaco</title>
+    <title>Fiche Technique - Double Face 55" - Vertex Monaco</title>
+    
+    <style>
+        :root {
+            --image-produit: url('images/VITRINE55.jpg');
+        }
+    </style>
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .card-spec { transition: transform 0.2s; border-width: 2px; }
-        .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 800; text-transform: uppercase; }
-        .status-on { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .status-off { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        .photo-produit {
+            background-image: var(--image-produit);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .card-spec { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .card-spec:hover { transform: translateY(-5px); }
+        
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; padding: 0 !important; }
+            .max-w-5xl { max-width: 100% !important; box-shadow: none !important; border: none !important; margin: 0 !important; zoom: 0.82; }
+            header { background: #0f172a !important; color: white !important; -webkit-print-color-adjust: exact !important; padding: 30px !important; }
+            .contact-dark { background: white !important; color: #0f172a !important; border: 1px solid #e2e8f0 !important; }
+            .card-spec { break-inside: avoid; border: 1px solid #f1f5f9 !important; }
+            @page { size: A4; margin: 0; }
+        }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-900 p-4 md:p-8">
+<body class="bg-slate-50 text-slate-900 p-4 md:p-8">
 
-    <div class="max-w-5xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl">
+    <div class="max-w-5xl mx-auto bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-200">
         
-        <header class="bg-gradient-to-r from-slate-900 to-blue-900 text-white p-8 relative">
-            <div class="flex flex-col md:flex-row items-center gap-8">
-                <div class="w-40 h-40 bg-white rounded-full p-2 shadow-inner flex-shrink-0">
-                    <img src="images/VITRINE55.jpg" alt="Ecran Vitrine 55" class="w-full h-full object-contain rounded-full">
-                </div>
-                <div class="text-center md:text-left">
-                    <div class="bg-blue-500/30 inline-block px-4 py-1 rounded-full text-xs font-semibold mb-3 border border-blue-400 text-white uppercase tracking-wider">Solution d'affichage dynamique</div>
-                    <h1 class="text-3xl md:text-5xl font-extrabold mb-1 tracking-tight">Double Face Vitrine 55"</h1>
-                    <p class="text-blue-100 text-xl font-light italic">Série Haute Luminosité - Montage Suspendu</p>
+        <header class="bg-slate-900 text-white p-10 relative">
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="w-48 h-48 bg-white rounded-3xl p-3 shadow-2xl flex-shrink-0 rotate-2 photo-produit"></div>
+                
+                <div class="text-center md:text-left flex-grow">
+                    <h2 class="text-blue-400 font-black uppercase tracking-widest text-xs mb-2">Vertex Displays Monaco</h2>
+                    <h1 class="text-4xl md:text-6xl font-black mb-2 tracking-tighter italic uppercase">Double Face 55"</h1>
+                    <p class="text-slate-400 text-xl font-light italic text-balance uppercase">L'excellence de l'affichage vitrine haute luminosité.</p>
+                    
+                    <div class="mt-8 no-print flex flex-wrap justify-center md:justify-start gap-4">
+                        <button onclick="window.print()" class="bg-white text-slate-900 px-6 py-3 rounded-2xl font-bold text-xs hover:bg-blue-50 transition-all shadow-xl flex items-center gap-2 uppercase">
+                            <i data-lucide="file-down" class="w-4 h-4 text-blue-600"></i> Télécharger PDF
+                        </button>
+                        <button onclick="shareLink()" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold text-xs hover:bg-blue-700 transition-all shadow-xl flex items-center gap-2 uppercase">
+                            <i data-lucide="share-2" class="w-4 h-4"></i> Partager
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <div class="p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <main class="p-8 md:p-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            <div class="card-spec bg-green-50 border-green-200 rounded-2xl p-6">
-                <div class="flex items-center gap-3 mb-4 text-green-700">
-                    <i data-lucide="monitor" class="w-8 h-8"></i>
-                    <h3 class="font-bold uppercase tracking-tight">Affichage</h3>
+            <div class="card-spec bg-slate-50 border-slate-200 rounded-[2rem] p-6">
+                <div class="flex items-center gap-3 mb-4 text-blue-600">
+                    <i data-lucide="monitor" class="w-6 h-6"></i>
+                    <h3 class="font-black uppercase text-xs tracking-widest italic">Écran</h3>
                 </div>
-                <ul class="space-y-3 text-sm">
-                    <li class="flex justify-between border-b border-green-100 pb-1"><strong>Format :</strong> <span>55" (16:9)</span></li>
-                    <li class="flex justify-between border-b border-green-100 pb-1"><strong>Dalle :</strong> <span>Double Face</span></li>
-                    <li class="flex justify-between border-b border-green-100 pb-1"><strong>Résolution :</strong> <span>1920 x 1080</span></li>
-                    <li class="flex justify-between"><strong>Mode :</strong> <span class="text-green-800 font-bold">Affichage Miroir</span></li>
-                </ul>
-            </div>
-
-            <div class="card-spec bg-yellow-50 border-yellow-200 rounded-2xl p-6">
-                <div class="flex items-center gap-3 mb-4 text-yellow-700">
-                    <i data-lucide="sun" class="w-8 h-8"></i>
-                    <h3 class="font-bold uppercase tracking-tight">Luminosité mesurée</h3>
-                </div>
-                <div class="space-y-4">
-                    <div class="bg-white p-3 rounded-xl border border-yellow-100">
-                        <p class="text-[10px] uppercase font-bold text-yellow-600 italic">Face Rue (Extérieur)</p>
-                        <p class="text-2xl font-black text-yellow-800">500 LUX</p>
-                    </div>
-                    <div class="bg-white p-3 rounded-xl border border-yellow-100">
-                        <p class="text-[10px] uppercase font-bold text-yellow-600 italic">Face Magasin (Intérieur)</p>
-                        <p class="text-2xl font-black text-yellow-800">230 LUX</p>
-                    </div>
+                <div class="space-y-2 text-sm italic">
+                    <p class="flex justify-between border-b pb-1 font-medium">Format: <span>55" Full HD</span></p>
+                    <p class="flex justify-between border-b pb-1 font-medium">Type: <span>Double Face</span></p>
+                    <p class="font-black text-blue-700 mt-2 uppercase text-center text-[10px] tracking-widest">Affichage Miroir Actif</p>
                 </div>
             </div>
 
-            <div class="card-spec bg-red-50 border-red-200 rounded-2xl p-6">
-                <div class="flex items-center gap-3 mb-4 text-red-700">
-                    <i data-lucide="share-2" class="w-8 h-8"></i>
-                    <h3 class="font-bold uppercase tracking-tight">Connectivité</h3>
+            <div class="card-spec bg-amber-50 border-amber-100 rounded-[2rem] p-6">
+                <div class="flex items-center gap-3 mb-4 text-amber-600">
+                    <i data-lucide="sun" class="w-6 h-6"></i>
+                    <h3 class="font-black uppercase text-xs tracking-widest italic">Luminosité</h3>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="bg-white p-2 rounded-lg text-center border border-green-200">
-                        <p class="text-[9px] font-bold">WI-FI 2.4</p>
-                        <span class="text-green-600 font-black">OUI</span>
-                    </div>
-                    <div class="bg-white p-2 rounded-lg text-center border border-red-100 opacity-40">
-                        <p class="text-[9px] font-bold">WI-FI 5G</p>
-                        <span class="text-red-600 font-black">NON</span>
-                    </div>
-                    <div class="bg-white p-2 rounded-lg text-center border border-green-200">
-                        <p class="text-[9px] font-bold">BT 5.0</p>
-                        <span class="text-green-600 font-black">OUI</span>
-                    </div>
-                    <div class="bg-white p-2 rounded-lg text-center border border-green-200">
-                        <p class="text-[9px] font-bold">ETHERNET</p>
-                        <span class="text-green-600 font-black">OUI</span>
-                    </div>
+                <div class="text-center bg-white rounded-xl p-3 border border-amber-200 shadow-sm mb-2">
+                    <span class="text-[9px] font-bold text-amber-600 uppercase italic">Face Rue</span>
+                    <p class="text-2xl font-black text-amber-900 italic uppercase">500 LUX</p>
+                </div>
+                <div class="text-center bg-white/50 rounded-xl p-2 border border-amber-100">
+                    <span class="text-[9px] font-bold text-amber-500 uppercase italic">Magasin: 230 LUX</span>
                 </div>
             </div>
 
-            <div class="card-spec bg-purple-50 border-purple-200 rounded-2xl p-6">
-                <div class="flex items-center gap-3 mb-4 text-purple-700">
-                    <i data-lucide="cpu" class="w-8 h-8"></i>
-                    <h3 class="font-bold uppercase tracking-tight">Système</h3>
+            <div class="card-spec bg-slate-50 border-slate-200 rounded-[2rem] p-6">
+                <div class="flex items-center gap-3 mb-4 text-slate-600">
+                    <i data-lucide="layers" class="w-6 h-6"></i>
+                    <h3 class="font-black uppercase text-xs tracking-widest italic">Installation</h3>
                 </div>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between"><span>Android 11</span><span class="status-badge status-on italic">Stable</span></div>
-                    <div class="flex justify-between"><span>RAM</span><span class="font-bold">2 GB</span></div>
-                    <div class="flex justify-between"><span>Stockage</span><span class="font-bold">24 GB</span></div>
-                    <div class="flex justify-between"><span>Architecture</span><span class="font-bold">Rockchip</span></div>
+                <div class="flex flex-col gap-2">
+                    <span class="bg-white px-3 py-1 rounded-lg text-[10px] font-bold border italic uppercase shadow-sm">Suspension Plafond</span>
+                    <span class="bg-white px-3 py-1 rounded-lg text-[10px] font-bold border italic uppercase shadow-sm">Câbles Acier Tressé</span>
                 </div>
             </div>
 
-            <div class="card-spec bg-orange-50 border-orange-200 rounded-2xl p-6">
-                <div class="flex items-center gap-3 mb-4 text-orange-700">
-                    <i data-lucide="anchor" class="w-8 h-8"></i>
-                    <h3 class="font-bold uppercase tracking-tight">Installation</h3>
+            <div class="card-spec bg-indigo-50 border-indigo-100 rounded-[2rem] p-6">
+                <div class="flex items-center gap-3 mb-4 text-indigo-600">
+                    <i data-lucide="cpu" class="w-6 h-6"></i>
+                    <h3 class="font-black uppercase text-xs tracking-widest italic">Système</h3>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-white px-3 py-1 rounded-md text-[11px] font-bold border border-orange-100 shadow-sm">Suspendue Plafond</span>
-                    <span class="bg-white px-3 py-1 rounded-md text-[11px] font-bold border border-orange-100 shadow-sm">Câbles Acier</span>
-                    <span class="bg-white px-3 py-1 rounded-md text-[11px] font-bold border border-orange-100 shadow-sm italic">Dongle Cherry</span>
+                <div class="text-sm italic space-y-1">
+                    <p class="flex justify-between">Android 11 <span class="text-green-600 font-bold uppercase text-[9px]">Stable</span></p>
+                    <p class="flex justify-between font-medium tracking-tighter">Mémoire <span>2 / 24 GB</span></p>
                 </div>
             </div>
 
-            <div class="card-spec bg-cyan-50 border-cyan-200 rounded-2xl p-6">
-                <div class="flex items-center gap-3 mb-4 text-cyan-700">
-                    <i data-lucide="users" class="w-8 h-8"></i>
-                    <h3 class="font-bold uppercase tracking-tight">Direction</h3>
+            <div class="card-spec bg-indigo-50 border-indigo-100 rounded-[2rem] p-6">
+                <div class="flex items-center gap-3 mb-4 text-indigo-600">
+                    <i data-lucide="wifi" class="w-6 h-6"></i>
+                    <h3 class="font-black uppercase text-xs tracking-widest italic text-balance">Réseau & Web</h3>
                 </div>
-                <ul class="space-y-2 text-[10px]">
-                    <li><strong>Dir. Ventes :</strong> Marco Versace</li>
-                    <li class="text-blue-600 truncate underline">marco.versace@vertex-monaco.com</li>
-                    <li><strong>Ass. Direction :</strong> Annalisa Petroccia</li>
-                    <li class="text-blue-600 truncate underline">annalisa@vertex-monaco.com</li>
-                    <li><strong>Commercial :</strong> Allan Pleutin</li>
-                </ul>
+                <div class="flex flex-wrap gap-2 font-bold italic">
+                    <span class="bg-white px-2 py-1 rounded text-[9px] uppercase border">Wi-Fi</span>
+                    <span class="bg-white px-2 py-1 rounded text-[9px] uppercase border">Bluetooth</span>
+                    <span class="bg-white px-2 py-1 rounded text-[9px] uppercase border">RJ45</span>
+                </div>
             </div>
-        </div>
 
-        <footer class="p-8 text-center bg-slate-50 border-t border-slate-100">
-            <a href="pdf/VITRINE55.pdf" target="_blank" class="inline-flex items-center gap-4 bg-slate-900 text-white px-12 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-xl mb-10">
-                <i data-lucide="file-text"></i> TÉLÉCHARGER LA FICHE PDF
-            </a>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-[11px] text-slate-500 text-left px-4">
-                <div>
-                    <div class="font-bold text-blue-900 text-lg mb-1 uppercase tracking-tight">Vertex Sarl Monaco</div>
+            <div class="card-spec contact-dark bg-slate-900 text-white rounded-[2rem] p-6 flex flex-col justify-center">
+                <h3 class="font-black uppercase text-[10px] tracking-widest italic text-blue-400 mb-2">Contact Direct</h3>
+                <p class="font-black text-lg italic tracking-tighter">Marco Versace</p>
+                <p class="text-[10px] text-slate-400 underline truncate">marco.versace@vertex-monaco.com</p>
+                <div class="mt-3 no-print">
+                    <a href="https://wa.me/33621404118" class="text-green-400 font-black text-[9px] uppercase flex items-center gap-1 hover:text-green-300">
+                        <i data-lucide="message-circle" class="w-3 h-3"></i> WhatsApp Direct
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="p-10 border-t border-slate-100 italic bg-slate-50">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-6 text-[10px] text-slate-400 uppercase font-bold">
+                <div class="text-left">
+                    <p class="text-slate-900 text-xl font-black tracking-tighter mb-1 uppercase">Vertex Sarl Monaco</p>
                     <p>9 Avenue Albert II - "LE COPORI" | MC-98000 MONACO</p>
-                    <p class="mt-1">📞 Tél : +377 97 97 48 38 | 🌐 <a href="http://www.vertex.mc" class="text-blue-600 font-semibold">www.vertex.mc</a></p>
-                    <p>✉️ <span class="text-blue-600 font-semibold">contact.fr@vertexdisplays.com</span></p>
-                    <p class="mt-3 font-semibold text-slate-700">Technique : <span class="font-normal">Pietro Sanguedolce (pietro@vertex-monaco.com)</span></p>
+                    <p class="text-blue-600">www.vertex.mc</p>
                 </div>
-                <div class="md:text-right flex flex-col justify-end">
-                    <p><strong>Gérance :</strong> M. Osvaldo Chiavini & M. Marco Versace</p>
-                    <p><strong>Administration :</strong> J.C. OUSSELLY (jc.ousselly@vertex-monaco.com)</p>
-                    <hr class="w-24 ml-auto my-1 border-slate-300">
-                    <p>SARL au capital de 30.000 EUR | RCS 06 S 04575</p>
-                    <p>N° TVA FR04000075043 | Expert : BFM EXPERTS Monaco</p>
+                <div class="md:text-right">
+                    <p>RCS 06 S 04575 | TVA FR04000075043</p>
+                    <p>Technique : P. Sanguedolce | Assistance : A. Petroccia</p>
                 </div>
             </div>
         </footer>
     </div>
 
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+        function shareLink() {
+            const data = { title: 'Vertex Monaco - 55"', text: 'Fiche Technique Double Face 55" :', url: window.location.href };
+            if (navigator.share) { navigator.share(data); }
+            else { navigator.clipboard.writeText(window.location.href); alert("Lien copié !"); }
+        }
+    </script>
 </body>
 </html>
