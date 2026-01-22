@@ -7,7 +7,7 @@
 
     <script>
         // =========================================================
-        // CONFIGURATION INTÉGRALE MISE À JOUR
+        // CONFIGURATION INTÉGRALE (V4 - PDF READY)
         // =========================================================
         const DATA = {
             interne: { ref: "050406202403002001", sn: "2024250001V" },
@@ -40,17 +40,17 @@
                     ["Contraste", "3000:1 (Dynamique)"],
                     ["Dimensions", "1235 x 710 x 25 mm"],
                     ["Poids net", "28.5 kg"],
-                    ["Finition", "Bordure Crystal / Anti-reflet"]
+                    ["Capteur Solaire", "Auto-ajustement dynamique"]
                 ],
                 performance: [
-                    ["Processeur", "Rockchip RK3568 (4 cœurs)"],
-                    ["Mémoire RAM", "2 Go DDR4 (High Speed)"],
-                    ["Stockage", "23.32 Go (EMMC 5.1)"],
+                    ["Gestion Contenu", "Solution Cloud Vertex incluse"],
+                    ["Compatibilité", "Tous CMS Android supportés"],
                     ["Consommation", "Moyenne 145W / Max 190W"],
-                    ["Connectivité", "Wi-Fi Dual / Ethernet Giga"]
+                    ["Réseau", "Wi-Fi Dual / Ethernet Giga"],
+                    ["Stockage", "23.32 Go (EMMC 5.1)"]
                 ],
                 ingenierie: [
-                    ["Système OS", "Android 11 (Optimisé 24/7)"],
+                    ["Éco-conception", "Extinction auto nocturne"],
                     ["Support", "Technique Local Monaco"],
                     ["Énergie", "PMIC fan53555 / Intelligent"],
                     ["Capteur G", "Auto-rotation & Diagnostic"],
@@ -66,7 +66,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
         
-        * { -webkit-tap-highlight-color: transparent; user-select: none; }
+        * { -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Outfit', sans-serif; background-color: #020617; color: white; }
 
         .vertex-card { 
@@ -86,20 +86,40 @@
 
         .zoom-img { 
             aspect-ratio: 1/1; object-fit: cover; border-radius: 1rem; 
-            border: 1px solid #334155; transition: all 0.3s ease;
+            border: 1px solid #334155;
         }
 
         .contact-pill {
-            transition: all 0.2s ease;
             background: rgba(255, 215, 0, 0.05);
             border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.2s ease;
         }
-        .contact-pill:hover { background: rgba(255, 215, 0, 0.15); transform: translateY(-2px); }
 
-        @media print { .no-print { display: none !important; } }
+        /* Styles spécifiques pour l'impression / PDF */
+        @media print {
+            body { background-color: white !important; color: black !important; padding: 0 !important; }
+            .no-print { display: none !important; }
+            .vertex-card { 
+                background: white !important; 
+                border: none !important; 
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                color: black !important;
+            }
+            .card-inner { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: black !important; }
+            .text-slate-300, .text-slate-400, .text-slate-500 { color: #475569 !important; }
+            .accent-yellow { color: #b45309 !important; } /* Un jaune plus sombre pour le PDF */
+            .text-white { color: black !important; }
+            li { border-bottom-color: #e2e8f0 !important; }
+            .contact-pill { border: 1px solid #e2e8f0 !important; background: transparent !important; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
+
+    <button onclick="window.print()" class="no-print fixed bottom-8 right-8 z-50 bg-accent-yellow text-black font-black px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all uppercase text-xs tracking-widest">
+        <i data-lucide="file-down" class="w-5 h-5"></i> Télécharger PDF
+    </button>
 
     <div class="max-w-6xl mx-auto px-4 mb-4 flex justify-between text-[8px] font-mono text-slate-500 uppercase tracking-widest">
         <span id="js-ref"></span>
@@ -154,14 +174,14 @@
 
             <div class="card-inner p-8 rounded-[2.5rem]">
                 <h3 class="text-indigo-400 font-black uppercase text-[10px] mb-6 tracking-widest flex items-center gap-2">
-                    <i data-lucide="cpu" class="w-4 h-4"></i> SYSTÈME & FLUX
+                    <i data-lucide="cpu" class="w-4 h-4"></i> SYSTÈME & GESTION
                 </h3>
                 <ul id="list-performance" class="text-[11px] space-y-4 text-slate-300"></ul>
             </div>
 
             <div class="card-inner p-8 rounded-[2.5rem]">
                 <h3 class="text-amber-400 font-black uppercase text-[10px] mb-6 tracking-widest flex items-center gap-2">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i> FIABILITÉ MONACO
+                    <i data-lucide="leaf" class="w-4 h-4"></i> ÉNERGIE & FIABILITÉ
                 </h3>
                 <ul id="list-ingenierie" class="text-[11px] space-y-4 text-slate-300"></ul>
             </div>
@@ -190,7 +210,6 @@
         document.getElementById('js-logo').src = d.design.logo;
         document.getElementById('js-img-main').src = d.design.img_principale;
 
-        // Contact
         document.getElementById('js-contact-name').innerText = d.contact.nom;
         document.getElementById('js-contact-tel').innerText = d.contact.tel;
         document.getElementById('js-contact-mail').innerText = d.contact.mail;
