@@ -7,50 +7,47 @@
 
     <script>
         // =========================================================
-        // CONFIGURATION INTÉGRALE
+        // CONFIGURATION INTÉGRALE RÉVISÉE
         // =========================================================
         const DATA = {
             interne: { ref: "050406202403002001", sn: "2024250001V" },
             design: {
                 entreprise: "Vertex Sarl Monaco",
-                logo: "images/logo-vertex.png",
+                logo: "images/logo-vertex.png", // À remplacer par votre chemin réel
                 img_principale: "images/VITRINE55.jpg",
                 zooms: [
                     { url: "images/zoom-verre.jpg", label: "Finition Verre" },
-                    { url: "images/zoom-profil.jpg", label: "Profil 25mm" },
-                    { url: "images/zoom-fixation.jpg", label: "Support Acier" },
-                    { url: "images/zoom-detail.jpg", label: "Connectique" }
+                    { url: "images/zoom-profil.jpg", label: "Profil Ultra-fin 25mm" },
+                    { url: "images/zoom-fixation.jpg", label: "Support Acier Renforcé" },
+                    { url: "images/zoom-detail.jpg", label: "Connectique Industrielle" }
                 ]
             },
             contenu: {
                 titre: "Double Face 55\"",
-                usage: "Solution Vitrine : Double flux visuel haute luminosité.",
-                accessoires: ["Câble d'alimentation (3m)", "Kit de suspension", "Antenne Wi-Fi"]
+                usage: "Ingénierie de pointe pour vitrines : Double flux visuel à contraste élevé.",
+                accessoires: ["Câble d'alimentation (3m)", "Kit de suspension plafond", "Antenne Wi-Fi High-Gain"]
             },
             specs: {
                 affichage: [
                     ["Technologie", "Dual Screen (Face à Face)"],
                     ["Résolution", "1920 x 1080 (Full HD) x2"],
-                    ["Fréquence", "60.0 Hz / 320 PPI"],
-                    ["Luminosité", "Haute Performance Solaire"],
-                    ["Finition", "Bordure Crystal Transparent"]
+                    ["Luminosité (Ext/Int)", "3500 nits / 700 nits"],
+                    ["Contraste", "3000:1 (Dynamique)"],
+                    ["Finition", "Bordure Crystal / Verre Anti-reflet"]
                 ],
                 performance: [
                     ["Processeur", "Rockchip RK3568 (4 cœurs A55)"],
-                    ["Fréquence CPU", "408 MHz - 1992 MHz"],
                     ["Graphismes", "Mali-G52 MC1 (Vulkan 1.1)"],
-                    ["Mémoire RAM", "2 Go DDR4 (1957 MiB)"],
-                    ["Stockage", "23.32 Go (EMMC)"],
-                    ["Connectivité", "rtl8723ds / Ethernet YT8512B"]
+                    ["Mémoire RAM", "2 Go DDR4 (Haute Vitesse)"],
+                    ["Stockage", "23.32 Go (EMMC 5.1)"],
+                    ["Connectivité", "Wi-Fi Dual Band / Ethernet Giga"]
                 ],
                 ingenierie: [
-                    ["Système OS", "Android 11 (API 30)"],
-                    ["Noyau Kernel", "4.19.219"],
-                    ["Gestion Énergie", "PMIC fan53555 / rk808"],
-                    ["Audio Codec", "rk809co"],
-                    ["Horloge RTC", "hym8563"],
-                    ["G-Sensor", "gsensor_mxc6655"],
-                    ["Board", "RK3568 EVB1 DDR4 V10"]
+                    ["Système OS", "Android 11 (Optimisé 24/7)"],
+                    ["Noyau Kernel", "4.19.219 (Stable)"],
+                    ["Gestion Énergie", "PMIC fan53555 / Cycle intelligent"],
+                    ["Capteur G-Sensor", "Auto-rotation / Diagnostic"],
+                    ["Maintenance", "Mise à jour Cloud OTA supportée"]
                 ]
             }
         };
@@ -60,88 +57,98 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
         
-        * { -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
-        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; color: white; }
+        * { -webkit-tap-highlight-color: transparent; user-select: none; }
+        body { font-family: 'Outfit', sans-serif; background-color: #020617; color: white; }
 
-        .vertex-card { background: #1e293b; border: 1px solid #334155; }
+        /* Effet de verre pour les cartes */
+        .vertex-card { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.5); 
+        }
         
-        /* COULEURS DES CATÉGORIES */
-        .card-blue { background: rgba(37, 99, 235, 0.05); border: 1px solid rgba(37, 99, 235, 0.2); }
-        .card-indigo { background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.2); }
-        .card-amber { background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .card-inner {
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .card-inner:hover { border-color: rgba(255, 215, 0, 0.3); }
         
         .accent-yellow { color: #FFD700; }
+        .bg-accent-yellow { background-color: #FFD700; }
 
         .zoom-img { 
             aspect-ratio: 1/1; object-fit: cover; border-radius: 1rem; 
-            border: 1px solid #334155; transition: transform 0.2s ease;
+            border: 1px solid #334155; transition: all 0.3s ease;
         }
-        .zoom-img:active { transform: scale(0.96); }
+        .zoom-img:hover { transform: scale(1.05); border-color: #FFD700; }
 
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
-<body class="p-2 md:p-6">
+<body class="p-4 md:p-10">
 
-    <div class="max-w-6xl mx-auto px-4 mb-2 flex justify-between text-[7px] font-mono text-slate-500 uppercase tracking-[0.3em]">
+    <div class="max-w-6xl mx-auto px-4 mb-4 flex justify-between text-[8px] font-mono text-slate-500 uppercase tracking-widest">
         <span id="js-ref"></span>
         <span id="js-sn"></span>
     </div>
 
-    <div class="max-w-6xl mx-auto vertex-card rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl">
+    <div class="max-w-6xl mx-auto vertex-card rounded-[3rem] overflow-hidden shadow-2xl">
         
-        <header class="p-8 md:p-14 border-b border-slate-700 flex flex-col md:flex-row justify-between items-center gap-6">
+        <header class="p-10 md:p-16 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="text-center md:text-left">
-                <p id="js-company" class="accent-yellow font-black uppercase tracking-[0.5em] text-[9px] mb-2"></p>
-                <h1 id="js-titre" class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-2 italic"></h1>
-                <p id="js-usage" class="text-slate-400 text-sm md:text-base font-light italic"></p>
+                <p id="js-company" class="accent-yellow font-bold uppercase tracking-[0.4em] text-[10px] mb-3"></p>
+                <h1 id="js-titre" class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] italic mb-4"></h1>
+                <p id="js-usage" class="text-slate-400 text-base md:text-lg font-light italic max-w-md"></p>
             </div>
-            <img id="js-logo" src="" class="h-14 md:h-20 object-contain">
+            <img id="js-logo" src="" class="h-16 md:h-24 object-contain brightness-110">
         </header>
 
-        <section class="p-8 md:p-14 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="space-y-8">
+        <section class="p-10 md:p-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-10">
                 <div class="flex flex-wrap gap-3" id="js-acc-list"></div>
-                <div class="grid grid-cols-2 gap-4" id="js-gallery"></div>
+                <div class="grid grid-cols-2 gap-6" id="js-gallery"></div>
             </div>
-            <div class="text-center">
-                <img id="js-img-main" src="" class="w-full h-auto object-contain max-h-[450px] drop-shadow-[0_20px_50px_rgba(255,215,0,0.1)]">
-            </div>
-        </section>
-
-        <section class="p-8 md:p-14 bg-slate-900/40 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="card-blue p-6 rounded-3xl">
-                <h3 class="text-blue-400 font-black uppercase text-[10px] mb-5 tracking-widest flex items-center gap-2">
-                    <i data-lucide="monitor" class="w-4 h-4"></i> Affichage
-                </h3>
-                <ul id="list-affichage" class="text-[11px] space-y-3 text-slate-300"></ul>
-            </div>
-
-            <div class="card-indigo p-6 rounded-3xl">
-                <h3 class="text-indigo-400 font-black uppercase text-[10px] mb-5 tracking-widest flex items-center gap-2">
-                    <i data-lucide="cpu" class="w-4 h-4"></i> Architecture
-                </h3>
-                <ul id="list-performance" class="text-[11px] space-y-3 text-slate-300"></ul>
-            </div>
-
-            <div class="card-amber p-6 rounded-3xl">
-                <h3 class="text-amber-400 font-black uppercase text-[10px] mb-5 tracking-widest flex items-center gap-2">
-                    <i data-lucide="settings-2" class="w-4 h-4"></i> Ingénierie Bas-Niveau
-                </h3>
-                <ul id="list-ingenierie" class="text-[11px] space-y-3 text-slate-300"></ul>
+            <div class="relative group">
+                <div class="absolute -inset-4 bg-yellow-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition duration-1000"></div>
+                <img id="js-img-main" src="" class="relative w-full h-auto object-contain max-h-[500px] drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
             </div>
         </section>
 
-        <footer class="p-10 border-t border-slate-700 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest text-center md:text-left">
-                <p>Vertex Sarl Monaco | 9 Avenue Albert II</p>
-                <p class="accent-yellow mt-1 italic">Expertise BFM Monaco Certifiée</p>
+        <section class="p-10 md:p-16 bg-black/20 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="card-inner p-8 rounded-[2rem]">
+                <h3 class="text-blue-400 font-black uppercase text-[11px] mb-6 tracking-[0.2em] flex items-center gap-3">
+                    <i data-lucide="monitor" class="w-5 h-5"></i> AFFICHAGE
+                </h3>
+                <ul id="list-affichage" class="text-[12px] space-y-4 text-slate-300"></ul>
             </div>
-            <div class="text-right italic">
-                <p class="text-[10px] text-slate-400 font-bold uppercase">Direction : Osvaldo Chiavini</p>
-                <p class="text-[9px] text-slate-600 mt-1 uppercase">S/N Verified RK3568-EVB</p>
+
+            <div class="card-inner p-8 rounded-[2rem]">
+                <h3 class="text-indigo-400 font-black uppercase text-[11px] mb-6 tracking-[0.2em] flex items-center gap-3">
+                    <i data-lucide="cpu" class="w-5 h-5"></i> ARCHITECTURE
+                </h3>
+                <ul id="list-performance" class="text-[12px] space-y-4 text-slate-300"></ul>
+            </div>
+
+            <div class="card-inner p-8 rounded-[2rem]">
+                <h3 class="text-amber-400 font-black uppercase text-[11px] mb-6 tracking-[0.2em] flex items-center gap-3">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i> FIABILITÉ
+                </h3>
+                <ul id="list-ingenierie" class="text-[12px] space-y-4 text-slate-300"></ul>
+            </div>
+        </section>
+
+        <footer class="p-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 bg-slate-950/50">
+            <div class="text-[11px] text-slate-500 uppercase font-medium tracking-widest text-center md:text-left">
+                <p class="text-slate-300">Vertex Sarl Monaco | 9 Avenue Albert II</p>
+                <p class="accent-yellow mt-2 font-bold italic">Expertise BFM Monaco Certifiée</p>
+            </div>
+            <div class="text-center md:text-right">
+                <p class="text-[11px] text-slate-400 font-bold uppercase tracking-tighter">Direction : Osvaldo Chiavini</p>
+                <p class="text-[10px] text-slate-600 mt-1 font-mono uppercase">Verified Hardware RK3568-EVB-V10</p>
             </div>
         </footer>
     </div>
@@ -149,35 +156,46 @@
     <script>
         const d = DATA;
         
-        // Header & Identifiants
-        document.getElementById('js-ref').innerText = "REF: " + d.interne.ref;
-        document.getElementById('js-sn').innerText = "S/N: " + d.interne.sn;
+        // Remplissage Header
+        document.getElementById('js-ref').innerText = "RÉFÉRENCE CONTRÔLÉE : " + d.interne.ref;
+        document.getElementById('js-sn').innerText = "S/N UNITÉ : " + d.interne.sn;
         document.getElementById('js-company').innerText = d.design.entreprise;
         document.getElementById('js-titre').innerText = d.contenu.titre;
         document.getElementById('js-usage').innerText = d.contenu.usage;
         document.getElementById('js-logo').src = d.design.logo;
         document.getElementById('js-img-main').src = d.design.img_principale;
 
-        // Accessoires
+        // Accessoires avec icône de validation
         const accBox = document.getElementById('js-acc-list');
         d.contenu.accessoires.forEach(a => {
-            accBox.innerHTML += `<span class="bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-xl text-[9px] font-bold text-slate-300 flex items-center gap-2">✔ ${a}</span>`;
+            accBox.innerHTML += `
+                <span class="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-[10px] font-bold text-slate-200 flex items-center gap-2">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-yellow-500"></i> ${a}
+                </span>`;
         });
 
-        // Galerie
+        // Galerie Photo
         const gallery = document.getElementById('js-gallery');
         d.design.zooms.forEach(z => {
-            gallery.innerHTML += `<div class="relative group">
-                <img src="${z.url}" class="zoom-img w-full">
-                <div class="absolute bottom-2 left-2 bg-black/80 text-[7px] px-2 py-1 rounded-md uppercase font-black text-white border border-slate-700">${z.label}</div>
-            </div>`;
+            gallery.innerHTML += `
+                <div class="relative group cursor-pointer">
+                    <img src="${z.url}" class="zoom-img w-full shadow-lg">
+                    <div class="absolute inset-0 bg-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
+                    <div class="absolute bottom-3 left-3 right-3 bg-black/90 backdrop-blur-md text-[8px] p-2 rounded-lg uppercase font-black text-white border border-white/10 text-center">
+                        ${z.label}
+                    </div>
+                </div>`;
         });
 
-        // Fonctions de remplissage de listes
+        // Injection des listes techniques
         const fill = (arr, id) => {
             const el = document.getElementById(id);
             arr.forEach(i => {
-                el.innerHTML += `<li class="flex justify-between border-b border-slate-800/50 pb-2 italic">${i[0]} <span class="text-white font-bold ml-2">${i[1]}</span></li>`;
+                el.innerHTML += `
+                    <li class="flex justify-between items-center border-b border-white/5 pb-3">
+                        <span class="text-slate-500 font-medium italic">${i[0]}</span> 
+                        <span class="text-white font-bold ml-2 text-right">${i[1]}</span>
+                    </li>`;
             });
         }
 
