@@ -3,46 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco - Fiche Technique</title>
+    <title>Vertex Monaco - Full Technical Sheet</title>
 
     <script>
         // =========================================================
-        // CONFIGURATION RAPIDE
+        // CONFIGURATION INTÉGRALE
         // =========================================================
         const DATA = {
             interne: { ref: "050406202403002001", sn: "2024250001V" },
             design: {
                 entreprise: "Vertex Sarl Monaco",
-                logo: "images/logo-vertex.png", // Votre logo
-                couleur_logo: "#FFD700",      // Jaune/Or du logo
+                logo: "images/logo-vertex.png",
                 img_principale: "images/VITRINE55.jpg",
                 zooms: [
                     { url: "images/zoom-verre.jpg", label: "Finition Verre" },
                     { url: "images/zoom-profil.jpg", label: "Profil 25mm" },
                     { url: "images/zoom-fixation.jpg", label: "Support Acier" },
-                    { url: "images/zoom-detail.jpg", label: "Détail Structure" }
+                    { url: "images/zoom-detail.jpg", label: "Connectique" }
                 ]
             },
             contenu: {
                 titre: "Double Face 55\"",
-                usage: "Affichage dynamique vitrine : Communication simultanée intérieur/extérieur.",
+                usage: "Solution Vitrine : Double flux visuel haute luminosité.",
                 accessoires: ["Câble d'alimentation (3m)", "Kit de suspension", "Antenne Wi-Fi"]
             },
             specs: {
                 affichage: [
-                    ["Technologie", "Dual Screen FHD"],
-                    ["Luminosité", "Haute Visibilité Solaire"],
+                    ["Technologie", "Dual Screen (Face à Face)"],
+                    ["Résolution", "1920 x 1080 (Full HD) x2"],
+                    ["Fréquence", "60.0 Hz / 320 PPI"],
+                    ["Luminosité", "Haute Performance Solaire"],
                     ["Finition", "Bordure Crystal Transparent"]
                 ],
                 performance: [
-                    ["Processeur", "RK3568 (4 cœurs)"],
-                    ["Mémoire", "2 Go DDR4 / 24 Go EMMC"],
-                    ["Système", "Android 11 (API 30)"]
+                    ["Processeur", "Rockchip RK3568 (4 cœurs A55)"],
+                    ["Fréquence CPU", "408 MHz - 1992 MHz"],
+                    ["Graphismes", "Mali-G52 MC1 (Vulkan 1.1)"],
+                    ["Mémoire RAM", "2 Go DDR4 (1957 MiB)"],
+                    ["Stockage", "23.32 Go (EMMC)"],
+                    ["Connectivité", "rtl8723ds / Ethernet YT8512B"]
                 ],
                 ingenierie: [
-                    ["Noyau", "Kernel 4.19.219"],
-                    ["Énergie", "PMIC fan53555 / rk808"],
-                    ["RTC / G-Sensor", "hym8563 / mxc6655"]
+                    ["Système OS", "Android 11 (API 30)"],
+                    ["Noyau Kernel", "4.19.219"],
+                    ["Gestion Énergie", "PMIC fan53555 / rk808"],
+                    ["Audio Codec", "rk809co"],
+                    ["Horloge RTC", "hym8563"],
+                    ["G-Sensor", "gsensor_mxc6655"],
+                    ["Board", "RK3568 EVB1 DDR4 V10"]
                 ]
             }
         };
@@ -54,94 +62,94 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap');
         
-        * { 
-            -webkit-tap-highlight-color: transparent; 
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
+        * { -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
         body { font-family: 'Outfit', sans-serif; background-color: #0f172a; color: white; }
 
         .vertex-card { background: #1e293b; border: 1px solid #334155; }
-        .accent-text { color: #FFD700; } /* Couleur Jaune/Or */
-        .accent-bg { background-color: #FFD700; }
+        
+        /* COULEURS DES CATÉGORIES */
+        .card-blue { background: rgba(37, 99, 235, 0.05); border: 1px solid rgba(37, 99, 235, 0.2); }
+        .card-indigo { background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.2); }
+        .card-amber { background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); }
+        
+        .accent-yellow { color: #FFD700; }
 
         .zoom-img { 
-            aspect-ratio: 1/1; 
-            object-fit: cover; 
-            border-radius: 1rem; 
-            border: 1px solid #334155;
-            transition: transform 0.3s ease;
+            aspect-ratio: 1/1; object-fit: cover; border-radius: 1rem; 
+            border: 1px solid #334155; transition: transform 0.2s ease;
         }
-        .zoom-img:active { transform: scale(0.95); }
+        .zoom-img:active { transform: scale(0.96); }
 
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body class="p-2 md:p-6">
 
-    <div class="max-w-5xl mx-auto px-4 mb-2 flex justify-between text-[7px] font-mono text-slate-500 uppercase tracking-[0.3em]">
+    <div class="max-w-6xl mx-auto px-4 mb-2 flex justify-between text-[7px] font-mono text-slate-500 uppercase tracking-[0.3em]">
         <span id="js-ref"></span>
         <span id="js-sn"></span>
     </div>
 
-    <div class="max-w-5xl mx-auto vertex-card rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl">
+    <div class="max-w-6xl mx-auto vertex-card rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl">
         
-        <header class="p-8 md:p-12 border-b border-slate-700 flex flex-col md:flex-row justify-between items-center gap-6">
+        <header class="p-8 md:p-14 border-b border-slate-700 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="text-center md:text-left">
-                <p id="js-company" class="accent-text font-black uppercase tracking-[0.5em] text-[9px] mb-2"></p>
-                <h1 id="js-titre" class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-1"></h1>
-                <p id="js-usage" class="text-slate-400 text-xs md:text-sm font-light italic"></p>
+                <p id="js-company" class="accent-yellow font-black uppercase tracking-[0.5em] text-[9px] mb-2"></p>
+                <h1 id="js-titre" class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-2 italic"></h1>
+                <p id="js-usage" class="text-slate-400 text-sm md:text-base font-light italic"></p>
             </div>
-            <img id="js-logo" src="" class="h-12 md:h-16 object-contain">
+            <img id="js-logo" src="" class="h-14 md:h-20 object-contain">
         </header>
 
-        <section class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div class="space-y-6">
-                <div class="flex flex-wrap gap-2" id="js-acc-list"></div>
-                
-                <div class="grid grid-cols-2 gap-3" id="js-gallery"></div>
+        <section class="p-8 md:p-14 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <div class="flex flex-wrap gap-3" id="js-acc-list"></div>
+                <div class="grid grid-cols-2 gap-4" id="js-gallery"></div>
             </div>
-
-            <div class="relative group">
-                <img id="js-img-main" src="" class="w-full h-auto object-contain max-h-[400px] drop-shadow-[0_20px_50px_rgba(255,215,0,0.15)]">
+            <div class="text-center">
+                <img id="js-img-main" src="" class="w-full h-auto object-contain max-h-[450px] drop-shadow-[0_20px_50px_rgba(255,215,0,0.1)]">
             </div>
         </section>
 
-        <section class="p-8 bg-slate-900/50 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h3 class="accent-text font-black uppercase text-[10px] mb-4 tracking-widest flex items-center gap-2">
-                    <i data-lucide="monitor" class="w-3 h-3"></i> Affichage
+        <section class="p-8 md:p-14 bg-slate-900/40 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="card-blue p-6 rounded-3xl">
+                <h3 class="text-blue-400 font-black uppercase text-[10px] mb-5 tracking-widest flex items-center gap-2">
+                    <i data-lucide="monitor" class="w-4 h-4"></i> Affichage
                 </h3>
-                <ul id="list-visuel" class="text-[11px] space-y-2 text-slate-300"></ul>
+                <ul id="list-affichage" class="text-[11px] space-y-3 text-slate-300"></ul>
             </div>
-            <div>
-                <h3 class="accent-text font-black uppercase text-[10px] mb-4 tracking-widest flex items-center gap-2">
-                    <i data-lucide="cpu" class="w-3 h-3"></i> Performance
+
+            <div class="card-indigo p-6 rounded-3xl">
+                <h3 class="text-indigo-400 font-black uppercase text-[10px] mb-5 tracking-widest flex items-center gap-2">
+                    <i data-lucide="cpu" class="w-4 h-4"></i> Architecture
                 </h3>
-                <ul id="list-systeme" class="text-[11px] space-y-2 text-slate-300"></ul>
+                <ul id="list-performance" class="text-[11px] space-y-3 text-slate-300"></ul>
             </div>
-            <div>
-                <h3 class="accent-text font-black uppercase text-[10px] mb-4 tracking-widest flex items-center gap-2">
-                    <i data-lucide="shield-check" class="w-3 h-3"></i> Ingénierie
+
+            <div class="card-amber p-6 rounded-3xl">
+                <h3 class="text-amber-400 font-black uppercase text-[10px] mb-5 tracking-widest flex items-center gap-2">
+                    <i data-lucide="settings-2" class="w-4 h-4"></i> Ingénierie Bas-Niveau
                 </h3>
-                <div id="grid-eng" class="grid grid-cols-1 gap-2 text-[10px]"></div>
+                <ul id="list-ingenierie" class="text-[11px] space-y-3 text-slate-300"></ul>
             </div>
         </section>
 
-        <footer class="p-8 border-t border-slate-700 flex justify-between items-end">
-            <div class="text-[9px] text-slate-500 uppercase font-bold tracking-widest">
-                <p>9 Avenue Albert II | Monaco</p>
-                <p class="accent-text mt-1">Expertise BFM Monaco</p>
+        <footer class="p-10 border-t border-slate-700 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest text-center md:text-left">
+                <p>Vertex Sarl Monaco | 9 Avenue Albert II</p>
+                <p class="accent-yellow mt-1 italic">Expertise BFM Monaco Certifiée</p>
             </div>
-            <div class="text-right">
-                <p class="text-[9px] text-slate-400 font-bold uppercase italic">Management : Osvaldo Chiavini</p>
+            <div class="text-right italic">
+                <p class="text-[10px] text-slate-400 font-bold uppercase">Direction : Osvaldo Chiavini</p>
+                <p class="text-[9px] text-slate-600 mt-1 uppercase">S/N Verified RK3568-EVB</p>
             </div>
         </footer>
     </div>
 
     <script>
         const d = DATA;
+        
+        // Header & Identifiants
         document.getElementById('js-ref').innerText = "REF: " + d.interne.ref;
         document.getElementById('js-sn').innerText = "S/N: " + d.interne.sn;
         document.getElementById('js-company').innerText = d.design.entreprise;
@@ -153,31 +161,29 @@
         // Accessoires
         const accBox = document.getElementById('js-acc-list');
         d.contenu.accessoires.forEach(a => {
-            accBox.innerHTML += `<span class="bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-[9px] font-bold text-slate-300 flex items-center gap-2">● ${a}</span>`;
+            accBox.innerHTML += `<span class="bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-xl text-[9px] font-bold text-slate-300 flex items-center gap-2">✔ ${a}</span>`;
         });
 
         // Galerie
         const gallery = document.getElementById('js-gallery');
         d.design.zooms.forEach(z => {
             gallery.innerHTML += `<div class="relative group">
-                <img src="${z.url}" class="zoom-img">
-                <div class="absolute bottom-2 left-2 bg-black/80 text-[7px] px-2 py-0.5 rounded-md uppercase font-bold tracking-tighter text-white border border-slate-700">${z.label}</div>
+                <img src="${z.url}" class="zoom-img w-full">
+                <div class="absolute bottom-2 left-2 bg-black/80 text-[7px] px-2 py-1 rounded-md uppercase font-black text-white border border-slate-700">${z.label}</div>
             </div>`;
         });
 
-        // Lists
-        const mapList = (arr, id) => {
-            const container = document.getElementById(id);
-            arr.forEach(i => { container.innerHTML += `<li class="flex justify-between border-b border-slate-800 pb-1 italic">${i[0]} <span class="text-white font-bold">${i[1]}</span></li>`; });
+        // Fonctions de remplissage de listes
+        const fill = (arr, id) => {
+            const el = document.getElementById(id);
+            arr.forEach(i => {
+                el.innerHTML += `<li class="flex justify-between border-b border-slate-800/50 pb-2 italic">${i[0]} <span class="text-white font-bold ml-2">${i[1]}</span></li>`;
+            });
         }
-        mapList(d.specs.affichage, 'list-visuel');
-        mapList(d.specs.performance, 'list-systeme');
 
-        // Engineering
-        const engGrid = document.getElementById('grid-eng');
-        d.specs.ingenierie.forEach(i => {
-            engGrid.innerHTML += `<div class="flex justify-between text-slate-500 italic border-b border-slate-800 pb-1"><span>${i[0]}</span> <span class="text-slate-300">${i[1]}</span></div>`;
-        });
+        fill(d.specs.affichage, 'list-affichage');
+        fill(d.specs.performance, 'list-performance');
+        fill(d.specs.ingenierie, 'list-ingenierie');
 
         lucide.createIcons();
     </script>
