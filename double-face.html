@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco - Fiche Produit</title>
+    <title>Vertex Monaco - Fiche Produit Officielle</title>
     
     <link rel="icon" type="image/png" id="favicon" href="">
 
     <script>
         // ##########################################################################
-        // #   📦 ZONE DE CONFIGURATION UNIQUE (MODIFIEZ UNIQUEMENT ICI)            #
+        // #   📦 ZONE DE CONFIGURATION TOTALE                                      #
         // ##########################################################################
 
         const CONFIG = {
@@ -25,7 +25,6 @@
                 ref: "050406202403002001",
                 sn: "2024250001V"
             },
-            // 📏 DIMENSIONS POUR LE GABARIT 3D
             dimensions: {
                 largeur: "710 mm",
                 hauteur: "1235 mm",
@@ -42,10 +41,22 @@
                 ]
             },
             accessoires: [
-                { nom: "Câble d'alimentation", detail: "Longueur 3m - Qualité Pro" },
-                { nom: "Kit de suspension", detail: "Acier renforcé - Plafond" },
+                { nom: "Câble d'alimentation", detail: "3m - Qualité Pro" },
+                { nom: "Kit de suspension", detail: "Acier renforcé" },
                 { nom: "Antenne Wi-Fi", detail: "High-Gain Dual Band" },
                 { nom: "Solution Cloud", detail: "Vertex OS pré-installé" }
+            ],
+            options: [
+                { nom: "Traitement Anti-Reflet", icone: "sun" },
+                { nom: "Support à Roulettes Pro", icone: "move" },
+                { nom: "Couleurs RAL Personnalisables", icone: "palette" },
+                { nom: "Capteur de mouvement", icone: "eye" }
+            ],
+            entretien: [
+                "Nettoyage avec un chiffon microfibre sec uniquement.",
+                "Éviter les produits solvants ou abrasifs sur les dalles.",
+                "Vérification annuelle des fixations de suspension.",
+                "Dépoussiérage des grilles de ventilation latérales."
             ],
             specifications: [
                 {
@@ -54,9 +65,10 @@
                     couleur: "blue",
                     lignes: [
                         ["Luminosité (Ext/Int)", "3500 nits / 700 nits"],
-                        ["Contraste", "3000:1 (Dynamique)"],
+                        ["Contraste", "3000:1"],
+                        ["Dimensions", "1235 x 710 x 25 mm"],
                         ["Poids net", "28.5 kg"],
-                        ["Capteur Solaire", "Auto-ajustement dynamique"]
+                        ["Capteur Solaire", "Auto-ajustement"]
                     ]
                 },
                 {
@@ -66,9 +78,9 @@
                     lignes: [
                         ["Gestion Contenu", "Cloud Vertex inclus"],
                         ["Compatibilité", "Tous CMS Android"],
-                        ["Consommation", "Moyenne 145W / Max 190W"],
-                        ["Réseau", "Wi-Fi / Ethernet Giga"],
-                        ["Stockage", "23.32 Go (EMMC 5.1)"]
+                        ["Consommation", "Moyenne 145W"],
+                        ["Réseau", "Wi-Fi / Ethernet"],
+                        ["Stockage", "23.32 Go"]
                     ]
                 },
                 {
@@ -76,11 +88,11 @@
                     icone: "leaf",
                     couleur: "amber",
                     lignes: [
-                        ["Garantie", "36 mois (Sérénité Vertex)"],
+                        ["Garantie", "36 mois"],
                         ["Éco-conception", "Extinction nocturne"],
-                        ["Support", "Technique Local Monaco"],
+                        ["Support", "Local Monaco"],
                         ["Énergie", "Cycle Intelligent"],
-                        ["Maintenance", "Mise à jour Cloud OTA"]
+                        ["Maintenance", "Cloud OTA"]
                     ]
                 }
             ],
@@ -103,20 +115,60 @@
         .vertex-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.5); }
         .card-inner { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
         .glow-band { background: linear-gradient(90deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 215, 0, 0.08) 50%, rgba(255, 215, 0, 0.02) 100%); border: 1px solid rgba(255, 215, 0, 0.15) !important; }
+        
+        /* 3D GABARIT */
+        .scene-3d { perspective: 1200px; width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; }
+        .screen-3d { width: 120px; height: 210px; position: relative; transform-style: preserve-3d; transform: rotateY(-25deg) rotateX(10deg); }
+        .face { position: absolute; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 215, 0, 0.3); }
+        .face-front { width: 100%; height: 100%; transform: translateZ(8px); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .face-right { width: 16px; height: 100%; right: -8px; transform: rotateY(90deg); }
+        .face-top { width: 100%; height: 16px; top: -8px; transform: rotateX(90deg); }
+        
+        .gloss-effect { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 55%, transparent 65%); animation: shine 5s infinite linear; }
+        @keyframes shine { from { transform: translateX(-150%); } to { transform: translateX(150%); } }
 
-        /* --- STYLES GABARIT 3D --- */
-        .scene-3d { perspective: 1000px; width: 100%; height: 320px; display: flex; align-items: center; justify-content: center; }
-        .screen-3d { width: 130px; height: 230px; position: relative; transform-style: preserve-3d; transform: rotateY(-20deg) rotateX(10deg); }
-        .face { position: absolute; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255, 215, 0, 0.3); }
-        .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .face-right { width: 20px; height: 100%; right: -10px; transform: rotateY(90deg); }
-        .face-top { width: 100%; height: 20px; top: -10px; transform: rotateX(90deg); }
-        .diagonal-dotted { position: absolute; width: 140%; height: 1px; background: repeating-linear-gradient(90deg, #FFD700, #FFD700 4px, transparent 4px, transparent 8px); top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-60deg); opacity: 0.6; }
+        .diagonal-dotted { position: absolute; width: 140%; height: 1px; background: repeating-linear-gradient(90deg, #FFD700, #FFD700 4px, transparent 4px, transparent 8px); top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-60deg); opacity: 0.3; }
         .label-3d { position: absolute; color: #FFD700; font-size: 10px; font-weight: 900; white-space: nowrap; }
 
         .zoom-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(20px); z-index: 100; cursor: zoom-out; }
         .zoom-overlay.active { display: flex; align-items: center; justify-content: center; }
-        @media print { .no-print { display: none !important; } body { background: white !important; color: black !important; } }
+
+        /* ##########################################################################
+           #   🖨️ MODULE PRINT-FRIENDLY (OPTIMISATION ENCRE & PDF)                 #
+           ########################################################################## */
+        @media print { 
+            .no-print { display: none !important; } 
+            
+            /* Fond Blanc pour économiser l'encre */
+            body { background: white !important; color: #0f172a !important; padding: 0 !important; }
+            .vertex-card { background: white !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; color: #0f172a !important; }
+            
+            /* Sauts de page */
+            header, .section-main { page-break-after: always; }
+            .section-equipe { page-break-before: always; }
+
+            /* Ajustement des cadres pour fond blanc */
+            .card-inner { 
+                background: #f8fafc !important; 
+                border: 1px solid #e2e8f0 !important; 
+                color: #0f172a !important;
+                break-inside: avoid;
+            }
+            .glow-band { 
+                background: #fffbeb !important; 
+                border: 1px solid #fde68a !important; 
+                color: #0f172a !important;
+                break-inside: avoid;
+            }
+            
+            /* Textes & Titres en noir */
+            h1, p, span, li { color: #0f172a !important; }
+            #ui-company, .label-3d, #val-diag, .text-amber-500, .text-blue-400, .text-indigo-400, .text-emerald-400 { color: #b45309 !important; } /* Or/Ambre foncé pour lisibilité */
+            
+            /* On garde l'aspect de l'écran 3D pour le style */
+            .face-front { background: #0f172a !important; -webkit-print-color-adjust: exact; }
+            .face-top, .face-right { background: #1e293b !important; -webkit-print-color-adjust: exact; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -124,6 +176,10 @@
     <div id="lightbox" class="zoom-overlay no-print" onclick="this.classList.remove('active')">
         <img id="zoom-img" src="" class="max-w-[95%] max-h-[95%] object-contain rounded-xl">
     </div>
+
+    <button onclick="window.print()" class="no-print fixed bottom-8 right-8 bg-[#FFD700] text-black font-black px-8 py-4 rounded-full shadow-2xl hover:scale-105 transition-all flex items-center gap-3 z-50 uppercase text-xs tracking-widest">
+        <i data-lucide="file-text" class="w-5 h-5"></i> Générer PDF / Imprimer
+    </button>
 
     <div class="max-w-6xl mx-auto vertex-card rounded-[3rem] overflow-hidden shadow-2xl mb-12">
         
@@ -136,50 +192,60 @@
             <img id="ui-logo" src="" class="h-12 md:h-16 object-contain">
         </header>
 
-        <section class="p-6 md:p-14 border-b border-white/5">
+        <section class="section-main p-6 md:p-14 border-b border-white/5">
             <div class="flex flex-col lg:flex-row gap-8 items-stretch">
                 <div class="flex-1 flex flex-col gap-6">
                     <div class="bg-black/20 rounded-[2.5rem] p-8 flex items-center justify-center border border-white/5 relative overflow-hidden group">
-                        <img id="ui-img-main" src="" class="max-w-full max-h-[400px] object-contain cursor-zoom-in transition-transform group-hover:scale-105" onclick="openZoom(this.src)">
+                        <img id="ui-img-main" src="" class="max-w-full max-h-[420px] object-contain cursor-zoom-in transition-transform group-hover:scale-105" onclick="openZoom(this.src)">
                     </div>
 
-                    <div class="card-inner rounded-[2.5rem] p-6 flex flex-col items-center">
-                        <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.3em] mb-4 italic">Spécifications Dimensionnelles</p>
+                    <div class="card-inner rounded-[2.5rem] p-8 flex flex-col items-center">
+                        <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.3em] mb-4 italic">Gabarit Technique de l'Écran</p>
                         <div class="scene-3d">
                             <div class="screen-3d">
                                 <div class="face face-top"></div>
                                 <div class="face face-right"></div>
                                 <div class="face face-front">
+                                    <div class="gloss-effect"></div>
                                     <div class="diagonal-dotted"></div>
                                     <span class="text-[14px] font-black text-[#FFD700] bg-[#020617] px-2 z-20 italic" id="val-diag"></span>
                                 </div>
-                                <div class="absolute -left-14 top-0 bottom-0 border-l border-dashed border-[#FFD700]/30 flex items-center"><span class="label-3d -rotate-90" id="val-h"></span></div>
+                                <div class="absolute -left-16 top-0 bottom-0 border-l border-dashed border-[#FFD700]/30 flex items-center"><span class="label-3d -rotate-90" id="val-h"></span></div>
                                 <div class="absolute -top-12 left-0 right-0 border-t border-dashed border-[#FFD700]/30 flex justify-center pt-2"><span class="label-3d" id="val-w"></span></div>
-                                <div class="absolute -bottom-10 right-0 flex items-center gap-2">
-                                    <span class="text-[8px] text-slate-500 font-bold uppercase">Épaisseur</span>
-                                    <span class="label-3d text-white" id="val-e"></span>
-                                </div>
+                                <div class="absolute -bottom-10 right-0 flex items-center gap-2"><span class="text-[8px] text-slate-500 font-bold uppercase">Épaisseur</span><span class="label-3d text-white" id="val-e"></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div id="ui-galerie" class="lg:w-1/3 grid grid-cols-2 gap-3 md:gap-4"></div>
             </div>
 
             <div class="mt-10 glow-band p-6 md:p-8 rounded-[2.5rem]">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="bg-amber-500/20 p-2 rounded-lg"><i data-lucide="package" class="w-4 h-4 text-[#FFD700]"></i></div>
-                    <span class="text-[11px] font-black uppercase tracking-[0.2em] text-white italic">Configuration Standard</span>
+                    <span class="text-[11px] font-black uppercase tracking-[0.2em] text-white italic">Configuration Standard Inclus</span>
                 </div>
                 <div id="ui-accessoires" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
             </div>
         </section>
 
-        <section id="ui-specs" class="p-6 md:p-14 bg-black/10 grid grid-cols-1 md:grid-cols-3 gap-6"></section>
+        <div class="section-details">
+            <section class="p-6 md:p-14 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-white/5 bg-black/5">
+                <div class="card-inner p-8 rounded-[2.5rem]">
+                    <h3 class="text-[#FFD700] font-black text-[10px] tracking-widest mb-6 uppercase flex items-center gap-3"><i data-lucide="plus-square" class="w-4 h-4"></i> Options Vertex sur mesure</h3>
+                    <div id="ui-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
+                <div class="card-inner p-8 rounded-[2.5rem]">
+                    <h3 class="text-emerald-400 font-black text-[10px] tracking-widest mb-6 uppercase flex items-center gap-3"><i data-lucide="heart-handshake" class="w-4 h-4"></i> Maintenance & Conseils</h3>
+                    <ul id="ui-entretien" class="space-y-3 text-[11px] italic text-slate-400"></ul>
+                </div>
+            </section>
 
-        <section class="p-6 md:p-14 border-t border-white/5 bg-black/20">
-            <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.4em] mb-8 italic text-center md:text-left">Support technique Monaco</p>
+            <section id="ui-specs" class="p-6 md:p-14 bg-black/10 grid grid-cols-1 md:grid-cols-3 gap-6"></section>
+        </div>
+
+        <section class="section-equipe p-6 md:p-14 border-t border-white/5 bg-black/20">
+            <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.4em] mb-8 italic text-center md:text-left">Support Technique & Administratif Monaco</p>
             <div id="ui-equipe" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3"></div>
         </section>
 
@@ -191,49 +257,44 @@
 
     <script>
         function initApp() {
-            document.getElementById('favicon').href = CONFIG.design.logo;
             document.getElementById('ui-logo').src = CONFIG.design.logo;
             document.getElementById('ui-company').innerText = CONFIG.design.entreprise;
             document.getElementById('ui-titre').innerText = CONFIG.produit.titre;
             document.getElementById('ui-phrase').innerText = CONFIG.produit.phraseAccroche;
             document.getElementById('ui-img-main').src = CONFIG.media.imagePrincipale;
 
-            // Gabarit 3D
             document.getElementById('val-h').innerText = CONFIG.dimensions.hauteur;
             document.getElementById('val-w').innerText = CONFIG.dimensions.largeur;
             document.getElementById('val-e').innerText = CONFIG.dimensions.epaisseur;
             document.getElementById('val-diag').innerText = CONFIG.dimensions.diagonale;
 
-            // Galerie
+            const optBox = document.getElementById('ui-options');
+            CONFIG.options.forEach(o => { optBox.innerHTML += `<div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5"><i data-lucide="${o.icone}" class="w-3 h-3 text-[#FFD700]"></i><span class="text-[10px] font-bold text-white uppercase">${o.nom}</span></div>`; });
+            
+            const entBox = document.getElementById('ui-entretien');
+            CONFIG.entretien.forEach(e => { entBox.innerHTML += `<li class="flex items-start gap-2"><span class="text-[#FFD700] font-bold">•</span>${e}</li>`; });
+
             const galBox = document.getElementById('ui-galerie');
-            CONFIG.media.galerie.forEach(g => {
-                galBox.innerHTML += `<div class="relative cursor-zoom-in h-full overflow-hidden rounded-2xl border border-white/10" onclick="openZoom('${g.url}')"><img src="${g.url}" class="w-full h-full object-cover"><div class="absolute bottom-2 left-2 right-2 bg-black/90 text-[8px] md:text-[10px] px-2 py-1.5 rounded font-black text-white uppercase text-center">${g.label}</div></div>`;
-            });
+            CONFIG.media.galerie.forEach(g => { galBox.innerHTML += `<div class="relative cursor-zoom-in h-full overflow-hidden rounded-2xl border border-white/10" onclick="openZoom('${g.url}')"><img src="${g.url}" class="w-full h-full object-cover"><div class="absolute bottom-2 left-2 right-2 bg-black/90 text-[8px] md:text-[10px] px-2 py-1.5 rounded font-black text-white uppercase text-center tracking-wider">${g.label}</div></div>`; });
 
-            // Accessoires
             const accBox = document.getElementById('ui-accessoires');
-            CONFIG.accessoires.forEach(a => {
-                accBox.innerHTML += `<div class="flex items-start gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-[#FFD700] shrink-0 mt-0.5"></i><div><p class="text-[10px] font-black uppercase text-white leading-tight mb-1">${a.nom}</p><p class="text-[9px] text-slate-400 italic">${a.detail}</p></div></div>`;
-            });
+            CONFIG.accessoires.forEach(a => { accBox.innerHTML += `<div class="flex items-start gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-[#FFD700] shrink-0 mt-0.5"></i><div><p class="text-[10px] font-black uppercase text-white leading-tight mb-1">${a.nom}</p><p class="text-[9px] text-slate-400 italic">${a.detail}</p></div></div>`; });
 
-            // Specs
             const specBox = document.getElementById('ui-specs');
             CONFIG.specifications.forEach(col => {
                 let listHtml = col.lignes.map(i => `<li class="flex justify-between border-b border-white/5 pb-2 italic text-[11px] items-start"><span class="text-slate-500 mr-2">${i[0]}</span><span class="text-white font-bold text-right">${i[1]}</span></li>`).join('');
                 specBox.innerHTML += `<div class="card-inner p-8 rounded-[2.5rem]"><h3 class="text-${col.couleur}-400 font-black uppercase text-[10px] mb-6 tracking-widest flex items-center gap-2"><i data-lucide="${col.icone}" class="w-4 h-4"></i> ${col.titre}</h3><ul class="space-y-4">${listHtml}</ul></div>`;
             });
 
-            // Équipe
             const eqBox = document.getElementById('ui-equipe');
             CONFIG.equipe.forEach(m => {
-                eqBox.innerHTML += `<div class="contact-pill p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex flex-col justify-between h-full hover:bg-white/[0.08] transition-all"><div><div class="flex items-center gap-2 mb-2"><i data-lucide="${m.icone}" class="w-3 h-3 text-amber-500"></i><p class="text-[10px] md:text-[9px] font-black uppercase text-white">${m.nom}</p></div><p class="text-[7px] text-slate-500 uppercase font-bold mb-3">${m.poste}</p></div><div class="flex gap-4 pt-2 border-t border-white/5">${m.tel ? `<a href="tel:${m.tel}" class="text-slate-400 hover:text-white"><i data-lucide="phone" class="w-3.5 h-3.5"></i></a>` : ''}<a href="mailto:${m.mail}" class="text-slate-400 hover:text-white"><i data-lucide="mail" class="w-3.5 h-3.5"></i></a></div></div>`;
+                eqBox.innerHTML += `<div class="contact-pill p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex flex-col justify-between h-full hover:bg-white/[0.08] transition-all"><div><div class="flex items-center gap-2 mb-2"><i data-lucide="${m.icone}" class="w-3 h-3 text-amber-500"></i><p class="text-[10px] md:text-[9px] font-black uppercase text-white leading-none">${m.nom}</p></div><p class="text-[7px] text-slate-500 uppercase font-bold mb-3">${m.poste}</p></div><div class="flex gap-4 pt-2 border-t border-white/5">${m.tel ? `<a href="tel:${m.tel}" class="text-slate-400 hover:text-white"><i data-lucide="phone" class="w-3 h-3"></i></a>` : ''}<a href="mailto:${m.mail}" class="text-slate-400 hover:text-white"><i data-lucide="mail" class="w-3 h-3"></i></a></div></div>`;
             });
 
             document.getElementById('ui-footer-addr').innerText = CONFIG.design.entreprise + " | 9 Avenue Albert II";
             document.getElementById('ui-footer-ids').innerText = "S/N : " + CONFIG.produit.sn + " | REF : " + CONFIG.produit.ref;
             lucide.createIcons();
         }
-
         window.openZoom = (url) => { document.getElementById('zoom-img').src = url; document.getElementById('lightbox').classList.add('active'); };
         window.onload = initApp;
     </script>
