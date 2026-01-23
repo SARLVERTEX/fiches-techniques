@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <link rel="icon" type="image/png" href="images/logo-vertex.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vertex Monaco - Fiche Produit</title>
@@ -10,7 +9,7 @@
         const CONFIG = {
             design: {
                 entreprise: "Vertex Sarl Monaco",
-                logo: "images/logo-vertex.png", // Chemin vers le logo
+                logo: "images/logo-vertex.png",
                 couleurAccent: "#FFD700",
                 fondPage: "#020617"
             },
@@ -57,7 +56,7 @@
                 {
                     titre: "OPTIQUE & PHYSIQUE",
                     icone: "monitor",
-                    couleur: "blue", // Utilise les couleurs Tailwind (blue, indigo, amber, etc.)
+                    couleur: "blue",
                     lignes: [
                         ["Luminosité (Ext/Int)", "3500 nits / 700 nits"],
                         ["Contraste", "3000:1"],
@@ -94,27 +93,34 @@
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
         body { font-family: 'Outfit', sans-serif; background-color: #020617; color: white; margin: 0; -webkit-font-smoothing: antialiased; }
         
-        /* Styles de composants */
         .vertex-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.5); }
         .card-inner { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
         .glow-band { background: linear-gradient(90deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 215, 0, 0.08) 50%, rgba(255, 215, 0, 0.02) 100%); border: 1px solid rgba(255, 215, 0, 0.15) !important; }
         
-        /* Lightbox / Zoom */
         .zoom-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(20px); z-index: 100; cursor: zoom-out; }
         .zoom-overlay.active { display: flex; align-items: center; justify-content: center; }
 
-        /* Gabarit 3D dynamique */
-        .scene-3d { perspective: 1200px; width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; }
+        /* SCÈNE 3D */
+        .scene-3d { perspective: 1200px; width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; }
         .screen-3d { width: 90px; height: 160px; position: relative; transform-style: preserve-3d; transform: rotateY(-20deg) rotateX(5deg); }
         .face { position: absolute; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 215, 0, 0.3); }
         .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .face-right { width: 20px; height: 100%; right: -10px; transform: rotateY(90deg); }
+        .face-right { width: 20px; height: 100%; right: -10px; transform: rotateY(90deg); background: #1e293b; border-left: 2px solid #FFD700; }
         .face-top { width: 100%; height: 20px; top: -10px; transform: rotateX(90deg); }
         
         .diagonal-dotted { position: absolute; width: 140%; height: 1px; background: repeating-linear-gradient(90deg, #FFD700, #FFD700 4px, transparent 4px, transparent 8px); top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-60deg); opacity: 0.3; }
-        .label-3d { position: absolute; color: #FFD700; font-size: 10px; font-weight: 900; white-space: nowrap; }
+        .label-3d { position: absolute; color: #FFD700; font-size: 11px; font-weight: 900; white-space: nowrap; }
 
-        @media print { .no-print { display: none !important; } .vertex-card { border: none; box-shadow: none; } }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            .vertex-card { background: white !important; border: 1px solid #eee !important; box-shadow: none !important; color: black !important; border-radius: 0 !important; }
+            .card-inner, .bg-black\/20 { background: white !important; border: 1px solid #eee !important; color: black !important; }
+            .text-white, .text-slate-400, .text-slate-500 { color: black !important; }
+            .text-\[\#FFD700\] { color: #b8860b !important; }
+            .face-front { background: #f8fafc !important; }
+            .glow-band { background: #fffbeb !important; border: 1px solid #fde68a !important; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -124,7 +130,7 @@
     </div>
 
     <button onclick="window.print()" class="no-print fixed bottom-6 right-6 bg-[#FFD700] text-black font-black px-6 py-3 rounded-full shadow-2xl hover:scale-105 transition-all flex items-center gap-3 z-50 uppercase text-[10px] tracking-widest">
-        <i data-lucide="file-text" class="w-4 h-4"></i> Imprimer / PDF
+        <i data-lucide="printer" class="w-4 h-4"></i> Imprimer / PDF
     </button>
 
     <div class="max-w-6xl mx-auto vertex-card rounded-[2.5rem] overflow-hidden shadow-2xl mb-8">
@@ -147,16 +153,25 @@
                     </div>
 
                     <div class="card-inner rounded-[2rem] p-6 flex flex-col items-center flex-1 justify-center relative">
-                        <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.3em] mb-4 italic">Gabarit & Encombrement</p>
+                        <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.3em] mb-4 italic">Gabarit & Encombrement Ultra-Slim</p>
                         <div class="scene-3d">
                             <div class="screen-3d">
-                                <div class="face face-top"></div><div class="face face-right"></div>
-                                <div class="face face-front"><div class="diagonal-dotted"></div><span class="text-[14px] font-black text-[#FFD700] bg-[#020617] px-2 z-20 italic" id="val-diag"></span></div>
-                                <div class="absolute -left-16 top-0 bottom-0 border-l border-dashed border-[#FFD700]/30 flex items-center"><span class="label-3d -rotate-90" id="val-h"></span></div>
+                                <div class="face face-top"></div>
+                                <div class="face face-right"></div>
+                                <div class="face face-front">
+                                    <div class="diagonal-dotted"></div>
+                                    <span class="text-[14px] font-black text-[#FFD700] bg-[#020617] px-2 z-20 italic print:bg-white" id="val-diag"></span>
+                                </div>
                                 <div class="absolute -top-12 left-0 right-0 border-t border-dashed border-[#FFD700]/30 flex justify-center pt-2"><span class="label-3d" id="val-w"></span></div>
-                                <div class="absolute -bottom-10 right-0 flex items-center gap-2">
-                                    <span class="text-[7px] text-slate-500 font-black uppercase tracking-widest">Épaisseur</span>
-                                    <span class="label-3d text-white" id="val-e"></span>
+                                <div class="absolute -left-16 top-0 bottom-0 border-l border-dashed border-[#FFD700]/30 flex items-center"><span class="label-3d -rotate-90" id="val-h"></span></div>
+                                
+                                <div class="absolute -right-28 top-1/2 -translate-y-1/2 flex flex-col items-start">
+                                    <span class="text-[#FFD700] text-[15px] font-black leading-none mb-0.5" id="val-e"></span>
+                                    <span class="text-slate-500 text-[8px] font-black uppercase tracking-widest mb-1">Épaisseur</span>
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="arrow-left" class="w-3 h-3 text-[#FFD700]"></i>
+                                        <div class="w-8 h-px bg-[#FFD700]/40"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -169,11 +184,11 @@
         <section class="p-6 md:p-10 border-b border-white/5 glow-band mx-6 my-6 rounded-[2rem]">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div>
-                    <h3 class="text-white font-black text-[10px] tracking-widest uppercase mb-6 flex items-center gap-2"><i data-lucide="package" class="w-4 h-4 text-[#FFD700]"></i> Inclus en pack</h3>
+                    <h3 class="text-white font-black text-[10px] tracking-widest uppercase mb-6 flex items-center gap-2 print:text-black"><i data-lucide="package" class="w-4 h-4 text-[#FFD700]"></i> Inclus en pack</h3>
                     <div id="ui-accessoires" class="grid grid-cols-2 gap-6"></div>
                 </div>
                 <div>
-                    <h3 class="text-white font-black text-[10px] tracking-widest uppercase mb-6 flex items-center gap-2"><i data-lucide="plus-circle" class="w-4 h-4 text-[#FFD700]"></i> Options disponibles</h3>
+                    <h3 class="text-white font-black text-[10px] tracking-widest uppercase mb-6 flex items-center gap-2 print:text-black"><i data-lucide="plus-circle" class="w-4 h-4 text-[#FFD700]"></i> Options disponibles</h3>
                     <div id="ui-options" class="grid grid-cols-2 gap-4"></div>
                 </div>
             </div>
@@ -184,7 +199,7 @@
             <div class="card-inner p-6 rounded-[2rem] border-l-2 border-[#FFD700]">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="p-2 bg-[#FFD700]/10 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5 text-[#FFD700]"></i></div>
-                    <h3 class="text-white font-black uppercase text-[10px] tracking-widest">Entretien & Durabilité</h3>
+                    <h3 class="text-white font-black uppercase text-[10px] tracking-widest print:text-black">Entretien & Durabilité</h3>
                 </div>
                 <ul id="ui-entretien" class="space-y-3"></ul>
             </div>
@@ -208,8 +223,6 @@
 
         function initApp() {
             const d = document;
-            
-            // Header & Dimensions
             d.getElementById('ui-logo').src = CONFIG.design.logo;
             d.getElementById('ui-company').innerText = CONFIG.design.entreprise;
             d.getElementById('ui-titre').innerText = CONFIG.produit.titre;
@@ -220,28 +233,24 @@
             d.getElementById('val-e').innerText = CONFIG.dimensions.epaisseur;
             d.getElementById('val-diag').innerText = CONFIG.dimensions.diagonale;
 
-            // Galerie
             CONFIG.media.galerie.forEach(g => { 
                 d.getElementById('ui-galerie').innerHTML += `<div class="relative overflow-hidden rounded-xl border border-white/10 h-full group cursor-zoom-in" onclick="openZoom('${g.url}')"><img src="${g.url}" class="w-full h-full object-cover transition-transform group-hover:scale-110"><div class="absolute top-2 right-2 bg-black/60 p-1.5 rounded-full border border-[#FFD700]/30"><i data-lucide="zoom-in" class="w-3 h-3 text-[#FFD700]"></i></div><div class="absolute bottom-2 left-2 right-2 bg-black/80 text-[7px] py-1 rounded font-black text-white uppercase text-center">${g.label}</div></div>`; 
             });
 
-            // Accessoires & Options
-            CONFIG.accessoires.forEach(a => { d.getElementById('ui-accessoires').innerHTML += `<div><p class="text-[9px] font-black text-white uppercase mb-1">${a.nom}</p><p class="text-[8px] text-slate-400 italic">${a.detail}</p></div>`; });
-            CONFIG.options.forEach(o => { d.getElementById('ui-options').innerHTML += `<div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5"><i data-lucide="${o.icone}" class="w-3 h-3 text-[#FFD700]"></i><span class="text-[9px] font-bold uppercase text-slate-200">${o.nom}</span></div>`; });
+            CONFIG.accessoires.forEach(a => { d.getElementById('ui-accessoires').innerHTML += `<div><p class="text-[9px] font-black text-white uppercase mb-1 print:text-black">${a.nom}</p><p class="text-[8px] text-slate-400 italic">${a.detail}</p></div>`; });
+            CONFIG.options.forEach(o => { d.getElementById('ui-options').innerHTML += `<div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5 print:bg-white"><i data-lucide="${o.icone}" class="w-3 h-3 text-[#FFD700]"></i><span class="text-[9px] font-black uppercase text-slate-200 print:text-black">${o.nom}</span></div>`; });
 
-            // Specifications
             CONFIG.specifications.forEach(col => {
-                let list = col.lignes.map(i => `<li class="flex justify-between border-b border-white/5 pb-1 italic text-[10px]"><span class="text-slate-500">${i[0]}</span><span class="text-white font-bold">${i[1]}</span></li>`).join('');
-                d.getElementById('ui-specs-grid').innerHTML += `<div class="card-inner p-6 rounded-[1.5rem]"><h3 class="text-${col.couleur}-400 font-black uppercase text-[9px] mb-4 tracking-widest flex items-center gap-2"><i data-lucide="${col.icone}" class="w-3 h-3"></i> ${col.titre}</h3><ul class="space-y-2">${list}</ul></div>`;
+                let list = col.lignes.map(i => `<li class="flex justify-between border-b border-white/5 pb-1 italic text-[10px] print:border-gray-200"><span class="text-slate-500">${i[0]}</span><span class="text-white font-black print:text-black">${i[1]}</span></li>`).join('');
+                d.getElementById('ui-specs-grid').innerHTML += `<div class="card-inner p-6 rounded-[1.5rem] print:border-gray-200"><h3 class="text-${col.couleur}-400 font-black uppercase text-[9px] mb-4 tracking-widest flex items-center gap-2 print:text-black"><i data-lucide="${col.icone}" class="w-3 h-3"></i> ${col.titre}</h3><ul class="space-y-2">${list}</ul></div>`;
             });
 
-            // Entretien
-            CONFIG.entretien.forEach(e => { d.getElementById('ui-entretien').innerHTML += `<li class="text-[9px] text-slate-400 flex items-start gap-2 italic leading-relaxed"><span class="text-[#FFD700]">•</span> ${e}</li>`; });
+            CONFIG.entretien.forEach(e => { d.getElementById('ui-entretien').innerHTML += `<li class="text-[9px] text-slate-400 flex items-start gap-2 italic leading-relaxed print:text-black"><span class="text-[#FFD700]">•</span> ${e}</li>`; });
 
-            // Equipe
-            CONFIG.equipe.forEach(m => { d.getElementById('ui-equipe').innerHTML += `<div class="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]"><div><p class="text-[9px] font-black uppercase text-white leading-none mb-1">${m.nom}</p><p class="text-[7px] text-slate-500 uppercase">${m.poste}</p></div><div class="flex gap-3 mt-2 pt-2 border-t border-white/5">${m.tel ? `<a href="tel:${m.tel}" class="text-slate-400 hover:text-white"><i data-lucide="phone" class="w-3 h-3"></i></a>` : ''}<a href="mailto:${m.mail}" class="text-slate-400 hover:text-white"><i data-lucide="mail" class="w-3 h-3"></i></a></div></div>`; });
+            CONFIG.equipe.forEach(m => { 
+                d.getElementById('ui-equipe').innerHTML += `<div class="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] print:border-gray-200"><div><p class="text-[9px] font-black uppercase text-white leading-none mb-1 print:text-black">${m.nom}</p><p class="text-[7px] text-slate-500 uppercase">${m.poste}</p></div><div class="flex gap-3 mt-2 pt-2 border-t border-white/5 no-print">${m.tel ? `<a href="tel:${m.tel}" class="text-slate-400 hover:text-white"><i data-lucide="phone" class="w-3 h-3"></i></a>` : ''}<a href="mailto:${m.mail}" class="text-slate-400 hover:text-white"><i data-lucide="mail" class="w-3 h-3"></i></a></div></div>`; 
+            });
 
-            // Footer
             d.getElementById('ui-footer-addr').innerText = CONFIG.design.entreprise + " | 9 Avenue Albert II";
             d.getElementById('ui-footer-ids').innerText = "REF : " + CONFIG.produit.ref;
             
