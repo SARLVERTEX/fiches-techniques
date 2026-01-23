@@ -116,26 +116,25 @@
         .card-inner { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
         .glow-band { background: linear-gradient(90deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 215, 0, 0.08) 50%, rgba(255, 215, 0, 0.02) 100%); border: 1px solid rgba(255, 215, 0, 0.15) !important; }
         
-        /* RÉDUCTION HAUTEUR GABARIT */
-        .scene-3d { perspective: 1000px; width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; }
-        .screen-3d { width: 75px; height: 130px; position: relative; transform-style: preserve-3d; transform: rotateY(-25deg) rotateX(10deg); }
+        /* GABARIT AFFINÉ VERTICALEMENT */
+        .scene-3d { perspective: 1000px; width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; }
+        .screen-3d { width: 60px; height: 140px; position: relative; transform-style: preserve-3d; transform: rotateY(-20deg) rotateX(5deg); }
         .face { position: absolute; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 215, 0, 0.3); }
-        .face-front { width: 100%; height: 100%; transform: translateZ(8px); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .face-right { width: 12px; height: 100%; right: -6px; transform: rotateY(90deg); }
-        .face-top { width: 100%; height: 12px; top: -6px; transform: rotateX(90deg); }
+        .face-front { width: 100%; height: 100%; transform: translateZ(6px); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .face-right { width: 10px; height: 100%; right: -5px; transform: rotateY(90deg); }
+        .face-top { width: 100%; height: 10px; top: -5px; transform: rotateX(90deg); }
         
         .gloss-effect { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 55%, transparent 65%); animation: shine 5s infinite linear; }
         @keyframes shine { from { transform: translateX(-150%); } to { transform: translateX(150%); } }
 
-        .diagonal-dotted { position: absolute; width: 140%; height: 1px; background: repeating-linear-gradient(90deg, #FFD700, #FFD700 4px, transparent 4px, transparent 8px); top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-60deg); opacity: 0.3; }
-        .label-3d { position: absolute; color: #FFD700; font-size: 9px; font-weight: 900; white-space: nowrap; }
+        .diagonal-dotted { position: absolute; width: 140%; height: 1px; background: repeating-linear-gradient(90deg, #FFD700, #FFD700 4px, transparent 4px, transparent 8px); top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-68deg); opacity: 0.3; }
+        .label-3d { position: absolute; color: #FFD700; font-size: 8px; font-weight: 900; white-space: nowrap; }
 
         @media print { 
             .no-print { display: none !important; } 
             body { background: white !important; color: #0f172a !important; padding: 0 !important; }
             .vertex-card { background: white !important; border: none !important; border-radius: 0 !important; }
-            header, .section-main { page-break-after: auto; }
-            .card-inner { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: #0f172a !important; break-inside: avoid; }
+            .card-inner { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: #0f172a !important; }
             h1, p, span, li { color: #0f172a !important; }
             #ui-company, .label-3d, #val-diag { color: #b45309 !important; }
         }
@@ -149,8 +148,8 @@
 
     <div class="max-w-6xl mx-auto vertex-card rounded-[2.5rem] overflow-hidden shadow-2xl mb-8">
         
-        <header class="p-8 md:p-10 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-            <div>
+        <header class="p-8 md:p-10 border-b border-white/5 flex flex-col md:row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
                 <p id="ui-company" class="text-[#FFD700] font-bold uppercase tracking-[0.4em] text-[9px] mb-2"></p>
                 <h1 id="ui-titre" class="text-4xl md:text-5xl font-black uppercase tracking-tighter italic mb-2 text-white leading-none"></h1>
                 <p id="ui-phrase" class="text-slate-400 text-[12px] italic max-w-md mx-auto md:mx-0"></p>
@@ -159,14 +158,15 @@
         </header>
 
         <section class="section-main p-6 md:p-10 border-b border-white/5">
-            <div class="flex flex-col lg:flex-row gap-6 items-start">
-                <div class="w-full lg:w-3/5 flex flex-col gap-4">
-                    <div class="bg-black/20 rounded-[2rem] p-4 flex items-center justify-center border border-white/5 relative overflow-hidden h-[300px]">
+            <div class="grid lg:grid-cols-10 gap-6 items-stretch">
+                
+                <div class="lg:col-span-4 flex flex-col gap-4 h-full">
+                    <div class="bg-black/20 rounded-[2rem] p-4 flex items-center justify-center border border-white/5 relative h-[350px]">
                         <img id="ui-img-main" src="" class="max-w-full max-h-full object-contain">
                     </div>
 
-                    <div class="card-inner rounded-[2rem] p-4 flex flex-col items-center">
-                        <p class="text-[8px] uppercase font-black text-slate-500 tracking-[0.3em] mb-2 italic">Gabarit Technique</p>
+                    <div class="card-inner rounded-[2rem] p-6 flex flex-col items-center flex-1 justify-center">
+                        <p class="text-[8px] uppercase font-black text-slate-500 tracking-[0.3em] mb-4 italic">Gabarit Technique</p>
                         <div class="scene-3d">
                             <div class="screen-3d">
                                 <div class="face face-top"></div>
@@ -174,7 +174,7 @@
                                 <div class="face face-front">
                                     <div class="gloss-effect"></div>
                                     <div class="diagonal-dotted"></div>
-                                    <span class="text-[12px] font-black text-[#FFD700] bg-[#020617] px-2 z-20 italic" id="val-diag"></span>
+                                    <span class="text-[11px] font-black text-[#FFD700] bg-[#020617] px-2 z-20 italic" id="val-diag"></span>
                                 </div>
                                 <div class="absolute -left-14 top-0 bottom-0 border-l border-dashed border-[#FFD700]/30 flex items-center"><span class="label-3d -rotate-90" id="val-h"></span></div>
                                 <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/30 flex justify-center pt-2"><span class="label-3d" id="val-w"></span></div>
@@ -184,7 +184,7 @@
                     </div>
                 </div>
 
-                <div id="ui-galerie" class="w-full lg:w-2/5 grid grid-cols-2 gap-3"></div>
+                <div id="ui-galerie" class="lg:col-span-6 grid grid-cols-2 gap-3 h-full"></div>
             </div>
 
             <div class="mt-8 glow-band p-6 rounded-[2rem]">
@@ -217,7 +217,9 @@
             document.getElementById('val-diag').innerText = CONFIG.dimensions.diagonale;
 
             const galBox = document.getElementById('ui-galerie');
-            CONFIG.media.galerie.forEach(g => { galBox.innerHTML += `<div class="relative h-[200px] overflow-hidden rounded-xl border border-white/10"><img src="${g.url}" class="w-full h-full object-cover"><div class="absolute bottom-2 left-2 right-2 bg-black/80 text-[8px] py-1 rounded font-black text-white uppercase text-center">${g.label}</div></div>`; });
+            CONFIG.media.galerie.forEach(g => { 
+                galBox.innerHTML += `<div class="relative overflow-hidden rounded-xl border border-white/10 h-full"><img src="${g.url}" class="w-full h-full object-cover"><div class="absolute bottom-2 left-2 right-2 bg-black/80 text-[8px] py-1 rounded font-black text-white uppercase text-center">${g.label}</div></div>`; 
+            });
 
             const accBox = document.getElementById('ui-accessoires');
             CONFIG.accessoires.forEach(a => { accBox.innerHTML += `<div><p class="text-[9px] font-black uppercase text-white mb-1">${a.nom}</p><p class="text-[8px] text-slate-400 italic">${a.detail}</p></div>`; });
