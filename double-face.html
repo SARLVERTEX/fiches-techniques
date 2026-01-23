@@ -116,8 +116,8 @@
         .card-inner { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
         .glow-band { background: linear-gradient(90deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 215, 0, 0.08) 50%, rgba(255, 215, 0, 0.02) 100%); border: 1px solid rgba(255, 215, 0, 0.15) !important; }
         
-        .scene-3d { perspective: 1200px; width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; }
-        .screen-3d { width: 100px; height: 180px; position: relative; transform-style: preserve-3d; transform: rotateY(-25deg) rotateX(10deg); }
+        .scene-3d { perspective: 1200px; width: 100%; height: 240px; display: flex; align-items: center; justify-content: center; }
+        .screen-3d { width: 90px; height: 160px; position: relative; transform-style: preserve-3d; transform: rotateY(-25deg) rotateX(10deg); }
         .face { position: absolute; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 215, 0, 0.3); }
         .face-front { width: 100%; height: 100%; transform: translateZ(8px); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .face-right { width: 14px; height: 100%; right: -7px; transform: rotateY(90deg); }
@@ -129,9 +129,6 @@
         .diagonal-dotted { position: absolute; width: 140%; height: 1px; background: repeating-linear-gradient(90deg, #FFD700, #FFD700 4px, transparent 4px, transparent 8px); top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-60deg); opacity: 0.3; }
         .label-3d { position: absolute; color: #FFD700; font-size: 10px; font-weight: 900; white-space: nowrap; }
 
-        .zoom-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(20px); z-index: 100; cursor: zoom-out; }
-        .zoom-overlay.active { display: flex; align-items: center; justify-content: center; }
-
         @media print { 
             .no-print { display: none !important; } 
             body { background: white !important; color: #0f172a !important; padding: 0 !important; }
@@ -140,17 +137,11 @@
             .section-equipe { page-break-before: always; }
             .card-inner { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: #0f172a !important; break-inside: avoid; }
             .glow-band { background: #fffbeb !important; border: 1px solid #fde68a !important; color: #0f172a !important; break-inside: avoid; }
-            h1, p, span, li { color: #0f172a !important; }
-            #ui-company, .label-3d, #val-diag { color: #b45309 !important; }
             .face-front { background: #0f172a !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
 <body class="p-4 md:p-8">
-
-    <div id="lightbox" class="zoom-overlay no-print" onclick="this.classList.remove('active')">
-        <img id="zoom-img" src="" class="max-w-[95%] max-h-[95%] object-contain rounded-xl">
-    </div>
 
     <button onclick="window.print()" class="no-print fixed bottom-8 right-8 bg-[#FFD700] text-black font-black px-8 py-4 rounded-full shadow-2xl hover:scale-105 transition-all flex items-center gap-3 z-50 uppercase text-xs tracking-widest">
         <i data-lucide="file-text" class="w-5 h-5"></i> Générer PDF / Imprimer
@@ -168,13 +159,13 @@
         </header>
 
         <section class="section-main p-6 md:p-14 border-b border-white/5">
-            <div class="flex flex-col lg:flex-row gap-8 items-start">
-                <div class="w-full lg:w-3/5 flex flex-col gap-6">
-                    <div class="bg-black/20 rounded-[2.5rem] p-6 flex items-center justify-center border border-white/5 relative overflow-hidden group">
-                        <img id="ui-img-main" src="" class="max-w-full max-h-[380px] object-contain cursor-zoom-in transition-transform group-hover:scale-105" onclick="openZoom(this.src)">
+            <div class="flex flex-col lg:flex-row gap-6 items-stretch">
+                <div class="w-full lg:w-[70%] flex flex-col gap-6">
+                    <div class="bg-black/20 rounded-[2.5rem] p-6 flex items-center justify-center border border-white/5 relative overflow-hidden h-[450px]">
+                        <img id="ui-img-main" src="" class="max-w-full max-h-full object-contain cursor-zoom-in group-hover:scale-105" onclick="openZoom(this.src)">
                     </div>
 
-                    <div class="card-inner rounded-[2.5rem] p-6 flex flex-col items-center">
+                    <div class="card-inner rounded-[2.5rem] p-6 flex flex-col items-center flex-1 justify-center">
                         <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.3em] mb-4 italic">Gabarit Technique de l'Écran</p>
                         <div class="scene-3d">
                             <div class="screen-3d">
@@ -193,7 +184,7 @@
                     </div>
                 </div>
 
-                <div id="ui-galerie" class="w-full lg:w-2/5 grid grid-cols-2 gap-4"></div>
+                <div id="ui-galerie" class="w-full lg:w-[30%] grid grid-cols-1 gap-4"></div>
             </div>
 
             <div class="mt-10 glow-band p-6 md:p-8 rounded-[2.5rem]">
@@ -248,8 +239,9 @@
             const entBox = document.getElementById('ui-entretien');
             CONFIG.entretien.forEach(e => { entBox.innerHTML += `<li class="flex items-start gap-2"><span class="text-[#FFD700] font-bold">•</span>${e}</li>`; });
 
+            // MODIFICATION ICI : grid-cols-1 pour l'alignement vertical total
             const galBox = document.getElementById('ui-galerie');
-            CONFIG.media.galerie.forEach(g => { galBox.innerHTML += `<div class="relative cursor-zoom-in h-full overflow-hidden rounded-2xl border border-white/10" onclick="openZoom('${g.url}')"><img src="${g.url}" class="w-full h-full object-cover"><div class="absolute bottom-2 left-2 right-2 bg-black/90 text-[8px] md:text-[10px] px-2 py-1.5 rounded font-black text-white uppercase text-center tracking-wider">${g.label}</div></div>`; });
+            CONFIG.media.galerie.forEach(g => { galBox.innerHTML += `<div class="relative cursor-zoom-in h-full overflow-hidden rounded-2xl border border-white/10" onclick="openZoom('${g.url}')"><img src="${g.url}" class="w-full h-full object-cover min-h-[150px]"><div class="absolute bottom-2 left-2 right-2 bg-black/90 text-[10px] px-2 py-1.5 rounded font-black text-white uppercase text-center tracking-wider">${g.label}</div></div>`; });
 
             const accBox = document.getElementById('ui-accessoires');
             CONFIG.accessoires.forEach(a => { accBox.innerHTML += `<div class="flex items-start gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-[#FFD700] shrink-0 mt-0.5"></i><div><p class="text-[10px] font-black uppercase text-white leading-tight mb-1">${a.nom}</p><p class="text-[9px] text-slate-400 italic">${a.detail}</p></div></div>`; });
@@ -269,7 +261,6 @@
             document.getElementById('ui-footer-ids').innerText = "S/N : " + CONFIG.produit.sn + " | REF : " + CONFIG.produit.ref;
             lucide.createIcons();
         }
-        window.openZoom = (url) => { document.getElementById('zoom-img').src = url; document.getElementById('lightbox').classList.add('active'); };
         window.onload = initApp;
     </script>
 </body>
