@@ -116,13 +116,12 @@
         .card-inner { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
         .glow-band { background: linear-gradient(90deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 215, 0, 0.08) 50%, rgba(255, 215, 0, 0.02) 100%); border: 1px solid rgba(255, 215, 0, 0.15) !important; }
         
-        /* 3D GABARIT */
-        .scene-3d { perspective: 1200px; width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; }
-        .screen-3d { width: 120px; height: 210px; position: relative; transform-style: preserve-3d; transform: rotateY(-25deg) rotateX(10deg); }
+        .scene-3d { perspective: 1200px; width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; }
+        .screen-3d { width: 100px; height: 180px; position: relative; transform-style: preserve-3d; transform: rotateY(-25deg) rotateX(10deg); }
         .face { position: absolute; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 215, 0, 0.3); }
         .face-front { width: 100%; height: 100%; transform: translateZ(8px); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .face-right { width: 16px; height: 100%; right: -8px; transform: rotateY(90deg); }
-        .face-top { width: 100%; height: 16px; top: -8px; transform: rotateX(90deg); }
+        .face-right { width: 14px; height: 100%; right: -7px; transform: rotateY(90deg); }
+        .face-top { width: 100%; height: 14px; top: -7px; transform: rotateX(90deg); }
         
         .gloss-effect { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 55%, transparent 65%); animation: shine 5s infinite linear; }
         @keyframes shine { from { transform: translateX(-150%); } to { transform: translateX(150%); } }
@@ -133,41 +132,17 @@
         .zoom-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(20px); z-index: 100; cursor: zoom-out; }
         .zoom-overlay.active { display: flex; align-items: center; justify-content: center; }
 
-        /* ##########################################################################
-           #   🖨️ MODULE PRINT-FRIENDLY (OPTIMISATION ENCRE & PDF)                 #
-           ########################################################################## */
         @media print { 
             .no-print { display: none !important; } 
-            
-            /* Fond Blanc pour économiser l'encre */
             body { background: white !important; color: #0f172a !important; padding: 0 !important; }
             .vertex-card { background: white !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; color: #0f172a !important; }
-            
-            /* Sauts de page */
             header, .section-main { page-break-after: always; }
             .section-equipe { page-break-before: always; }
-
-            /* Ajustement des cadres pour fond blanc */
-            .card-inner { 
-                background: #f8fafc !important; 
-                border: 1px solid #e2e8f0 !important; 
-                color: #0f172a !important;
-                break-inside: avoid;
-            }
-            .glow-band { 
-                background: #fffbeb !important; 
-                border: 1px solid #fde68a !important; 
-                color: #0f172a !important;
-                break-inside: avoid;
-            }
-            
-            /* Textes & Titres en noir */
+            .card-inner { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: #0f172a !important; break-inside: avoid; }
+            .glow-band { background: #fffbeb !important; border: 1px solid #fde68a !important; color: #0f172a !important; break-inside: avoid; }
             h1, p, span, li { color: #0f172a !important; }
-            #ui-company, .label-3d, #val-diag, .text-amber-500, .text-blue-400, .text-indigo-400, .text-emerald-400 { color: #b45309 !important; } /* Or/Ambre foncé pour lisibilité */
-            
-            /* On garde l'aspect de l'écran 3D pour le style */
+            #ui-company, .label-3d, #val-diag { color: #b45309 !important; }
             .face-front { background: #0f172a !important; -webkit-print-color-adjust: exact; }
-            .face-top, .face-right { background: #1e293b !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -193,13 +168,13 @@
         </header>
 
         <section class="section-main p-6 md:p-14 border-b border-white/5">
-            <div class="flex flex-col lg:flex-row gap-8 items-stretch">
-                <div class="flex-1 flex flex-col gap-6">
-                    <div class="bg-black/20 rounded-[2.5rem] p-8 flex items-center justify-center border border-white/5 relative overflow-hidden group">
-                        <img id="ui-img-main" src="" class="max-w-full max-h-[420px] object-contain cursor-zoom-in transition-transform group-hover:scale-105" onclick="openZoom(this.src)">
+            <div class="flex flex-col lg:flex-row gap-8 items-start">
+                <div class="w-full lg:w-3/5 flex flex-col gap-6">
+                    <div class="bg-black/20 rounded-[2.5rem] p-6 flex items-center justify-center border border-white/5 relative overflow-hidden group">
+                        <img id="ui-img-main" src="" class="max-w-full max-h-[380px] object-contain cursor-zoom-in transition-transform group-hover:scale-105" onclick="openZoom(this.src)">
                     </div>
 
-                    <div class="card-inner rounded-[2.5rem] p-8 flex flex-col items-center">
+                    <div class="card-inner rounded-[2.5rem] p-6 flex flex-col items-center">
                         <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.3em] mb-4 italic">Gabarit Technique de l'Écran</p>
                         <div class="scene-3d">
                             <div class="screen-3d">
@@ -217,7 +192,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="ui-galerie" class="lg:w-1/3 grid grid-cols-2 gap-3 md:gap-4"></div>
+
+                <div id="ui-galerie" class="w-full lg:w-2/5 grid grid-cols-2 gap-4"></div>
             </div>
 
             <div class="mt-10 glow-band p-6 md:p-8 rounded-[2.5rem]">
@@ -240,7 +216,6 @@
                     <ul id="ui-entretien" class="space-y-3 text-[11px] italic text-slate-400"></ul>
                 </div>
             </section>
-
             <section id="ui-specs" class="p-6 md:p-14 bg-black/10 grid grid-cols-1 md:grid-cols-3 gap-6"></section>
         </div>
 
@@ -262,7 +237,6 @@
             document.getElementById('ui-titre').innerText = CONFIG.produit.titre;
             document.getElementById('ui-phrase').innerText = CONFIG.produit.phraseAccroche;
             document.getElementById('ui-img-main').src = CONFIG.media.imagePrincipale;
-
             document.getElementById('val-h').innerText = CONFIG.dimensions.hauteur;
             document.getElementById('val-w').innerText = CONFIG.dimensions.largeur;
             document.getElementById('val-e').innerText = CONFIG.dimensions.epaisseur;
