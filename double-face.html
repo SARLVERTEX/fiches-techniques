@@ -95,12 +95,11 @@
         
         body { font-family: 'Outfit', sans-serif; background-color: #020617; color: white; margin: 0; -webkit-font-smoothing: antialiased; }
         
-        /* Composants Graphiques */
         .vertex-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.5); }
         .card-inner { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
         .glow-band { background: linear-gradient(90deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 215, 0, 0.08) 50%, rgba(255, 215, 0, 0.02) 100%); border: 1px solid rgba(255, 215, 0, 0.15) !important; }
 
-        /* Scène 3D Rectifiée */
+        /* Scène 3D */
         .scene-3d { perspective: 1200px; width: 100%; height: 280px; display: flex; align-items: center; justify-content: center; }
         .screen-3d { width: 90px; height: 160px; position: relative; transform-style: preserve-3d; transform: rotateY(-30deg) rotateX(10deg); }
         
@@ -112,7 +111,6 @@
         .label-3d { color: #FFD700; font-size: 11px; font-weight: 900; white-space: nowrap; }
         .diagonal-dotted { position: absolute; width: 140%; height: 1px; background: repeating-linear-gradient(90deg, #FFD700, #FFD700 4px, transparent 4px, transparent 8px); top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-60deg); opacity: 0.2; }
 
-        /* Mesure Profondeur en Diagonal */
         .depth-measure {
             position: absolute;
             top: -45px;
@@ -134,7 +132,16 @@
             .card-inner { background: white !important; border: 1px solid #eee !important; }
             .text-white, .text-slate-400, .text-slate-500 { color: black !important; }
             .text-\[\#FFD700\] { color: #b8860b !important; }
-            .face-front { background: #f1f5f9 !important; }
+            
+            /* Ajustement Gabarit pour l'impression */
+            .print-full-row { grid-column: span 10 / span 10 !important; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
+            .scene-3d { height: 350px !important; }
+            .face-front { background: #f8fafc !important; border: 2px solid #b8860b !important; }
+            .label-3d { color: #856404 !important; font-size: 13px !important; z-index: 99 !important; }
+            .diagonal-dotted { opacity: 0.4 !important; }
+            .depth-measure { right: -75px !important; }
+            
+            section { page-break-inside: avoid; break-inside: avoid; }
         }
     </style>
 </head>
@@ -164,10 +171,10 @@
                 <div class="lg:col-span-6 flex flex-col gap-4">
                     <div class="bg-black/20 rounded-[2rem] p-4 flex items-center justify-center border border-white/5 relative h-[420px] group cursor-zoom-in" onclick="openZoom(CONFIG.media.imagePrincipale)">
                         <img id="ui-img-main" src="" class="max-w-full max-h-full object-contain transition-transform group-hover:scale-105">
-                        <div class="absolute top-4 right-4 bg-black/60 p-2 rounded-full border border-[#FFD700]/30"><i data-lucide="search" class="w-4 h-4 text-[#FFD700]"></i></div>
+                        <div class="absolute top-4 right-4 bg-black/60 p-2 rounded-full border border-[#FFD700]/30 no-print"><i data-lucide="search" class="w-4 h-4 text-[#FFD700]"></i></div>
                     </div>
 
-                    <div class="card-inner rounded-[2rem] p-8 flex flex-col items-center justify-center relative min-h-[300px]">
+                    <div class="card-inner rounded-[2rem] p-8 flex flex-col items-center justify-center relative min-h-[300px] print-full-row">
                         <p class="text-[9px] uppercase font-black text-slate-500 tracking-[0.3em] mb-8 italic">Encombrement & Géométrie</p>
                         <div class="scene-3d">
                             <div class="screen-3d">
@@ -179,7 +186,6 @@
                                 </div>
                                 
                                 <div class="absolute -top-12 left-0 right-0 border-t border-dashed border-[#FFD700]/30 flex justify-center pt-2"><span class="label-3d" id="val-w"></span></div>
-                                
                                 <div class="absolute -left-20 top-0 bottom-0 border-l border-dashed border-[#FFD700]/30 flex items-center"><span class="label-3d -rotate-90" id="val-h"></span></div>
                                 
                                 <div class="depth-measure">
