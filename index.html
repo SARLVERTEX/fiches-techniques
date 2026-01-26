@@ -20,46 +20,57 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        
-        body { -webkit-font-smoothing: antialiased; min-height: 100vh; transition: opacity 0.5s ease; }
-
-        .vertex-card { 
-            transition: all 0.4s ease;
-            border: 1px solid rgba(51, 65, 85, 0.5); 
-        }
-        .vertex-card:hover {
-            transform: translateY(-8px);
-            border-color: #FFD700;
-        }
-
-        .filter-btn {
-            padding: 8px 20px;
-            border-radius: 99px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
-            color: #94a3b8;
-            background: rgba(255, 255, 255, 0.03);
-            transition: 0.3s;
-        }
-        .filter-btn.active {
-            background: #FFD700;
-            color: black;
-            border-color: #FFD700;
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
-            color: black;
-            font-weight: 900;
-        }
+        body { -webkit-font-smoothing: antialiased; min-height: 100vh; transition: opacity 0.5s ease; opacity: 0; }
+        body.loaded { opacity: 1; }
+        .vertex-card { transition: all 0.4s ease; border: 1px solid rgba(51, 65, 85, 0.5); }
+        .vertex-card:hover { transform: translateY(-8px); border-color: #FFD700; }
+        .filter-btn { padding: 8px 20px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 215, 0, 0.1); color: #94a3b8; background: rgba(255, 255, 255, 0.03); transition: 0.3s; }
+        .filter-btn.active { background: #FFD700; color: black; border-color: #FFD700; }
+        .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: black; font-weight: 900; }
     </style>
 </head>
 <body class="p-6 md:p-12">
 
-<header class="max-w-6xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
+    <script>
+        // 1. ORDRE DES CATÉGORIES (L'ordre dans lequel les boutons apparaissent)
+        const ORDRE_CATEGORIES = [
+            "all", 
+            "Vitrines", 
+            "Smart City", 
+            "LED", 
+            "Totems", 
+            "Ecrans Indoor", 
+            "Lecteur Multimédias", 
+            "Software Compatible"
+        ];
+
+        // 2. TON CATALOGUE (Ajoute tes produits ici)
+        const CATALOGUE = [
+            {
+                titre: "Double Face 55\"",
+                categorie: "Vitrines",
+                image: "images/VITRINE55.jpg",
+                lien: "double-face.html",
+                desc: "3500 nits - Haute luminosité."
+            },
+            {
+                titre: "Totem Outdoor 65\"",
+                categorie: "Smart City",
+                image: "images/TOTEM65.jpg",
+                lien: "porte-journal-21.html", 
+                desc: "Résistant IP65 - Gestion thermique."
+            },
+            {
+                titre: "LED Souple P2.5",
+                categorie: "LED",
+                image: "images/led-souple.jpg",
+                lien: "", 
+                desc: "Technologie flexible pour designs courbes."
+            }
+            // Pour ajouter un produit : copie le bloc { ... } ci-dessus, mets une virgule, et colle-le.
+        ];
+    </script>
+    <header class="max-w-6xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
     <div class="text-center md:text-left">
         <p id="ui-brand-name" class="text-[#FFD700] font-bold uppercase tracking-[0.5em] text-[10px] mb-3"></p>
         <h1 class="text-5xl md:text-6xl font-black uppercase tracking-tighter italic leading-none text-white">
@@ -94,28 +105,9 @@
     </footer>
 
     <script>
-        // CATALOGUE LOCAL
-        const CATALOGUE = [
-            {
-                titre: "Double Face 55\"",
-                categorie: "Vitrines",
-                image: "images/VITRINE55.jpg",
-                lien: "double-face.html",
-                desc: "3500 nits - Haute luminosité."
-            },
-            {
-                titre: "Totem Outdoor 65\"",
-                categorie: "Smart City",
-                image: "images/TOTEM65.jpg",
-                lien: "", 
-                desc: "Résistant IP65 - Gestion thermique."
-            }
-        ];
-
         let categorieActive = 'all';
 
         function init() {
-            // Sécurité : Si GLOBAL_CONFIG n'est pas encore là, on attend 100ms
             if (typeof GLOBAL_CONFIG === 'undefined') {
                 setTimeout(init, 100);
                 return;
@@ -128,30 +120,20 @@
         }
 
         function appliquerBranding() {
-            const bc = GLOBAL_CONFIG;
-            const ds = GLOBAL_CONFIG.style;
-
+            const bc = GLOBAL_CONFIG, ds = GLOBAL_CONFIG.style;
             document.body.style.backgroundColor = ds.couleurFond;
             document.body.style.fontFamily = ds.police;
-            
             document.getElementById('ui-brand-name').innerText = bc.brand.nom;
             document.getElementById('ui-main-logo').src = bc.brand.logo;
             document.getElementById('ui-footer-copyright').innerText = bc.brand.copyright;
-
-            let link = document.querySelector("link[rel~='icon']");
-            if (!link) {
-                link = document.createElement('link');
-                link.rel = 'icon';
-                document.head.appendChild(link);
-            }
-            link.href = bc.brand.favicon;
         }
 
         function genererFiltres() {
             const container = document.getElementById('filter-container');
-            const categories = ['all', ...new Set(CATALOGUE.map(p => p.categorie))];
-            
-            container.innerHTML = categories.map(cat => `
+            const categoriesExistantes = [...new Set(CATALOGUE.map(p => p.categorie))];
+            const categoriesFinales = ORDRE_CATEGORIES.filter(cat => cat === "all" || categoriesExistantes.includes(cat));
+
+            container.innerHTML = categoriesFinales.map(cat => `
                 <button class="filter-btn ${cat === 'all' ? 'active' : ''}" onclick="setFilter('${cat}', this)">
                     ${cat === 'all' ? 'Tous' : cat}
                 </button>
@@ -167,50 +149,39 @@
 
         function filtrerCatalogue() {
             const recherche = document.getElementById('search-bar').value.toLowerCase();
-            const badge = document.getElementById('product-count');
-            
             const resultats = CATALOGUE.filter(p => {
                 const matchTexte = p.titre.toLowerCase().includes(recherche) || p.desc.toLowerCase().includes(recherche);
                 const matchCat = categorieActive === 'all' || p.categorie === categorieActive;
                 return matchTexte && matchCat;
             });
-
-            badge.innerText = resultats.length > 1 ? `${resultats.length} Solutions` : `${resultats.length} Solution`;
+            document.getElementById('product-count').innerText = resultats.length + (resultats.length > 1 ? " Solutions" : " Solution");
             afficherCards(resultats);
         }
 
         function afficherCards(liste) {
             const container = document.getElementById('product-container');
             const ds = GLOBAL_CONFIG.style;
-
             if (liste.length === 0) {
                 container.innerHTML = `<p class="col-span-full text-center opacity-50 py-10">Aucun produit trouvé</p>`;
                 return;
             }
-
-            container.innerHTML = liste.map(p => {
-                const lienFinal = (p.lien && p.lien !== "") ? p.lien : "404.html";
-                const texteBouton = (p.lien && p.lien !== "") ? "Fiche Technique" : "Bientôt disponible";
-
-                return `
-                    <div class="vertex-card rounded-[${ds.arrondi}] p-8 flex flex-col h-full bg-slate-800/40 backdrop-blur-md">
-                        <div class="h-48 mb-6 flex items-center justify-center bg-black/20 rounded-2xl p-4">
-                            <img src="${p.image}" class="max-h-full max-w-full object-contain">
-                        </div>
-                        <div class="flex-grow">
-                            <p class="text-[#FFD700] text-[9px] font-black uppercase mb-2">${p.categorie}</p>
-                            <h3 class="text-2xl font-black uppercase italic mb-3 text-white">${p.titre}</h3>
-                            <p class="text-slate-400 text-xs mb-8">${p.desc}</p>
-                        </div>
-                        <a href="${lienFinal}" class="btn-gold text-center py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
-                            ${texteBouton} <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                        </a>
+            container.innerHTML = liste.map(p => `
+                <div class="vertex-card rounded-[${ds.arrondi}] p-8 flex flex-col h-full bg-slate-800/40 backdrop-blur-md">
+                    <div class="h-48 mb-6 flex items-center justify-center bg-black/20 rounded-2xl p-4">
+                        <img src="${p.image}" class="max-h-full max-w-full object-contain" onerror="this.src='https://via.placeholder.com/400x300/1e293b/FFD700?text=Vertex+Monaco'">
                     </div>
-                `;
-            }).join('');
+                    <div class="flex-grow">
+                        <p class="text-[#FFD700] text-[9px] font-black uppercase mb-2">${p.categorie}</p>
+                        <h3 class="text-2xl font-black uppercase italic mb-3 text-white">${p.titre}</h3>
+                        <p class="text-slate-400 text-xs mb-8">${p.desc}</p>
+                    </div>
+                    <a href="${(p.lien && p.lien !== '') ? p.lien : '404.html'}" class="btn-gold text-center py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
+                        ${(p.lien && p.lien !== '') ? 'Fiche Technique' : 'Bientôt disponible'} <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                    </a>
+                </div>
+            `).join('');
             lucide.createIcons();
         }
-
         window.onload = init;
     </script>
 </body>
