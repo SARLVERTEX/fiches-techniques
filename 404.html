@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche en cours | Vertex Monaco</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #020617; 
+            color: white; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .error-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 3rem;
+            border-radius: 3rem;
+            text-align: center;
+            max-width: 500px;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+            color: black;
+            font-weight: 900;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="error-card animate-in fade-in zoom-in duration-700">
+        <div class="mb-6 flex justify-center">
+            <div class="p-4 bg-[#FFD700]/10 rounded-full">
+                <i data-lucide="file-clock" class="w-12 h-12 text-[#FFD700]"></i>
+            </div>
+        </div>
+        
+        <p class="text-[#FFD700] font-bold uppercase tracking-[0.4em] text-[10px] mb-4">Vertex Monaco</p>
+        <h1 class="text-3xl font-black uppercase italic mb-4 leading-tight">Fiche en cours de rédaction</h1>
+        <p class="text-slate-400 text-sm mb-8 leading-relaxed">
+            Nous mettons à jour nos spécifications techniques pour vous offrir la meilleure précision. Cette fiche sera disponible très prochainement.
+        </p>
+
+        <div class="flex flex-col gap-3">
+            <a href="index.html" class="btn-gold py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Retour au Showroom
+            </a>
+            <a href="https://wa.me/33626734869" class="border border-white/10 hover:border-[#FFD700]/50 py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all">
+                Nous contacter sur WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
