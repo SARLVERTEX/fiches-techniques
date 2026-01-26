@@ -45,14 +45,12 @@ const GLOBAL_CONFIG = {
         boutonRetour: "Retour au Showroom",
         contactBouton: "Demander un devis"
     }
-}; // <--- L'objet GLOBAL_CONFIG s'arrête ICI
+}; // <--- CETTE ACCOLADE ET CE POINT-VIRGULE SONT VITAUX !
 
-// --- 6. SÉCURITÉ ANTI-IMAGES CASSÉES (En dehors de l'objet) ---
+// --- 6. SÉCURITÉ ANTI-IMAGES CASSÉES (On le met APRÈS la config) ---
 document.addEventListener('error', function (e) {
     if (e.target.tagName && e.target.tagName.toLowerCase() === 'img') {
-        // Évite une boucle infinie si le logo lui-même est introuvable
         if (e.target.src.includes('images/logo-vertex.png')) return;
-        
         e.target.src = 'images/logo-vertex.png'; 
         e.target.style.opacity = '0.5';
     }
