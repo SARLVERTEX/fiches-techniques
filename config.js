@@ -47,11 +47,28 @@ const GLOBAL_CONFIG = {
     }
 }; // <--- CETTE ACCOLADE ET CE POINT-VIRGULE SONT VITAUX !
 
-// --- 6. SÉCURITÉ ANTI-IMAGES CASSÉES (On le met APRÈS la config) ---
+// --- 6. SÉCURITÉ ANTI-IMAGES CASSÉES (Version Or & Lisibilité) ---
 document.addEventListener('error', function (e) {
     if (e.target.tagName && e.target.tagName.toLowerCase() === 'img') {
-        if (e.target.src.includes('images/logo-vertex.png')) return;
-        e.target.src = 'images/logo-vertex.png'; 
-        e.target.style.opacity = '0.5';
+        const img = e.target;
+        
+        const replacement = document.createElement('div');
+        // On utilise un style Or avec une bordure en pointillés pour l'aspect "en construction"
+        replacement.className = "flex flex-col items-center justify-center w-full h-full min-h-[180px] rounded-[2rem] border-2 border-dashed border-[#FFD700]/20 bg-[#FFD700]/5";
+        
+        replacement.innerHTML = `
+            <svg xmlns="http://www.w3.org/2001/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px; opacity:0.8;">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span style="font-size:10px; color:#FFD700; text-transform:uppercase; font-weight:900; letter-spacing:2px; text-align:center; padding:0 10px;">
+                Information non disponible
+            </span>
+            <span style="font-size:7px; color:#94a3b8; text-transform:uppercase; margin-top:5px; font-weight:bold; letter-spacing:1px;">
+                Document en cours de mise à jour
+            </span>
+        `;
+
+        // Remplacement de l'image par le bloc stylisé
+        img.parentNode.replaceChild(replacement, img);
     }
 }, true);
