@@ -44,5 +44,14 @@ const GLOBAL_CONFIG = {
         ficheEnCoursDesc: "Nous finalisons les spécifications techniques de cette solution. Contactez-nous pour un dossier complet.",
         boutonRetour: "Retour au Showroom",
         contactBouton: "Demander un devis"
+    },
+
+    // Sécurité anti-images cassées
+document.addEventListener('error', function (e) {
+    if (e.target.tagName.toLowerCase() === 'img') {
+        // Remplace par ton logo si l'image produit est introuvable
+        e.target.src = 'images/logo-vertex.png'; 
+        e.target.style.opacity = '0.5'; // Optionnel : on grise un peu pour montrer que c'est un visuel par défaut
     }
+}, true);
 };
