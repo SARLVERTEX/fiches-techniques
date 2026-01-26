@@ -47,13 +47,18 @@ const GLOBAL_CONFIG = {
     }
 }; // <--- CETTE ACCOLADE ET CE POINT-VIRGULE SONT VITAUX !
 
-// --- 6. SÉCURITÉ ANTI-IMAGES CASSÉES (Version Or & Lisibilité) ---
+// --- 6. SÉCURITÉ ANTI-IMAGES CASSÉES (Version Intelligente) ---
 document.addEventListener('error', function (e) {
     if (e.target.tagName && e.target.tagName.toLowerCase() === 'img') {
         const img = e.target;
         
+        // PARE-FEU : On n'applique JAMAIS le remplacement sur les logos ou icônes vitaux
+        if (img.id === 'ui-main-logo' || img.id === 'ui-logo' || img.src.includes('logo')) {
+            console.warn("Logo manquant détecté, remplacement ignoré pour éviter de bloquer l'index.");
+            return;
+        }
+
         const replacement = document.createElement('div');
-        // On utilise un style Or avec une bordure en pointillés pour l'aspect "en construction"
         replacement.className = "flex flex-col items-center justify-center w-full h-full min-h-[180px] rounded-[2rem] border-2 border-dashed border-[#FFD700]/20 bg-[#FFD700]/5";
         
         replacement.innerHTML = `
@@ -68,7 +73,6 @@ document.addEventListener('error', function (e) {
             </span>
         `;
 
-        // Remplacement de l'image par le bloc stylisé
         img.parentNode.replaceChild(replacement, img);
     }
 }, true);
