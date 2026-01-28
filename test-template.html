@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco - Fiche Haute Performance</title>
+    <title>Vertex Monaco - Catalogue Premium</title>
     <script src="config.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
@@ -22,69 +22,71 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        body { opacity: 0; transition: opacity 0.6s ease; overflow-x: hidden; }
+        body { opacity: 0; transition: opacity 0.6s ease; background: #020617; color: white; }
         body.loaded { opacity: 1; }
-        .vertex-card { border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.4s ease; }
-        .glow-band { background: linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.05) 50%, transparent 100%); border-top: 1px solid rgba(255,215,0,0.1); border-bottom: 1px solid rgba(255,215,0,0.1); }
+        .vertex-card { border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glow-band { background: linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.05) 50%, transparent 100%); border-y: 1px solid rgba(255,215,0,0.1); }
         .scene-3d { perspective: 1200px; height: 260px; display: flex; align-items: center; justify-content: center; }
-        .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-20deg) rotateX(5deg); box-shadow: 20px 20px 50px rgba(0,0,0,0.5); }
+        .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-20deg) rotateX(5deg); }
         .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); }
-        @media print { .no-print { display: none !important; } body { background: white !important; color: black !important; } .vertex-card { background: white !important; border: 1px solid #eee !important; color: black !important; } }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div id="main-card" class="max-w-6xl mx-auto vertex-card shadow-2xl rounded-[3rem] overflow-hidden">
+        
         <header class="p-10 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="flex-1">
                 <p id="ui-brand" class="font-bold uppercase tracking-[0.5em] text-[11px] mb-4 text-[#FFD700]"></p>
-                <h1 id="ui-titre" class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-[0.9] mb-6 text-white"></h1>
+                <h1 id="ui-titre" class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-[0.9] mb-6"></h1>
                 <div id="ui-badges" class="flex flex-wrap gap-3"></div>
             </div>
             <img id="ui-logo" src="" class="h-20 object-contain">
         </header>
 
-        <div class="grid lg:grid-cols-2 gap-1 px-10 pt-10">
-            <div class="bg-black/30 rounded-[3rem] p-10 border border-white/5 flex items-center justify-center min-h-[450px] overflow-hidden group">
-                <img id="ui-main-img" src="" class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-1000">
+        <div class="grid lg:grid-cols-2 gap-8 p-10">
+            <div class="space-y-6">
+                <div class="bg-black/30 rounded-[3rem] p-10 border border-white/5 flex items-center justify-center min-h-[400px]">
+                    <img id="ui-main-img" src="" class="max-w-full max-h-full object-contain">
+                </div>
+                <div id="ui-galerie" class="grid grid-cols-3 gap-4"></div>
             </div>
+
             <div class="bg-white/[0.03] rounded-[3rem] p-10 border border-white/5 flex flex-col items-center justify-center">
                 <div class="scene-3d w-full">
                     <div id="ui-3d" class="screen-3d">
                         <div class="face-front rounded-sm"><span id="val-diag" class="text-lg font-black italic text-[#FFD700]"></span></div>
-                        <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/40 flex justify-center pt-2"><span id="val-w" class="text-[10px] font-bold text-[#FFD700]"></span></div>
-                        <div class="absolute -left-16 top-0 bottom-0 border-l border-dashed border-[#FFD700]/40 flex items-center"><span id="val-h" class="text-[10px] font-bold text-[#FFD700] -rotate-90"></span></div>
+                        <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/40 flex justify-center pt-2 text-[#FFD700] text-[10px] font-bold" id="val-w"></div>
+                        <div class="absolute -left-16 top-0 bottom-0 border-l border-dashed border-[#FFD700]/40 flex items-center text-[#FFD700] text-[10px] font-bold" id="val-h-container"><span id="val-h" class="-rotate-90"></span></div>
                     </div>
                 </div>
                 <div class="mt-12 bg-black/50 p-6 rounded-3xl border border-[#FFD700]/20 w-full flex items-center gap-5">
                     <div class="grid grid-cols-2 gap-2"><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div></div>
-                    <div><p class="text-[9px] uppercase text-slate-500 font-black">Standard Fixation</p><p id="val-vesa" class="text-sm font-black text-[#FFD700] uppercase"></p></div>
+                    <div><p class="text-[9px] uppercase text-slate-500 font-black tracking-widest">Standard Fixation</p><p id="val-vesa" class="text-sm font-black text-[#FFD700] uppercase"></p></div>
                 </div>
             </div>
         </div>
 
-        <section class="glow-band my-10 py-12 px-10 flex flex-col md:flex-row gap-16">
+        <section class="glow-band py-12 px-10 flex flex-col md:flex-row gap-16">
             <div class="flex-1">
-                <h3 class="text-[#FFD700] font-black text-[12px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3">
-                    <i data-lucide="package" class="w-5 h-5"></i> Équipement Inclus
-                </h3>
-                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-8 text-white"></div>
+                <h3 class="text-[#FFD700] font-black text-[12px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"><i data-lucide="package" class="w-5 h-5"></i> Équipement Inclus</h3>
+                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-8"></div>
             </div>
             <div class="flex-1">
-                <h3 class="text-[#FFD700] font-black text-[12px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3">
-                    <i data-lucide="zap" class="w-5 h-5"></i> Options Disponibles
-                </h3>
+                <h3 class="text-[#FFD700] font-black text-[12px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"><i data-lucide="zap" class="w-5 h-5"></i> Options Disponibles</h3>
                 <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
         </section>
 
         <div class="p-10 grid lg:grid-cols-3 gap-10">
             <div id="ui-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-8"></div>
-            <div class="space-y-10">
+            
+            <div class="flex flex-col gap-8">
                 <div class="bg-white/[0.03] p-8 rounded-[2.5rem] border-l-4 border-[#FFD700]">
-                    <h3 class="text-white font-black uppercase text-[12px] mb-6 tracking-widest">Équipe Vertex</h3>
-                    <div id="ui-team" class="space-y-6"></div>
+                    <h3 class="font-black uppercase text-[12px] mb-8 tracking-widest">Équipe Vertex</h3>
+                    <div id="ui-team" class="space-y-8"></div>
                 </div>
-                <div id="ui-maintenance" class="bg-black/20 p-8 rounded-[2.5rem] border border-white/5">
+
+                <div class="bg-black/20 p-8 rounded-[2.5rem] border border-white/5">
                     <h3 class="text-[#FFD700] font-black uppercase text-[12px] mb-6 tracking-widest">Maintenance</h3>
                     <ul id="ui-entret-list" class="space-y-3 text-[11px] text-slate-400 italic"></ul>
                 </div>
@@ -93,33 +95,38 @@
 
         <footer class="p-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
             <p id="ui-addr"></p>
-            <div class="flex gap-10 text-white">
-                <p id="ui-ref"></p><p id="ui-sn" class="opacity-50"></p>
-            </div>
+            <div class="flex gap-10 text-white"><p id="ui-ref"></p><p id="ui-sn" class="opacity-50"></p></div>
         </footer>
     </div>
 
     <script>
         function initApp() {
             const gc = GLOBAL_CONFIG, pc = window.PRODUCT_CONFIG, d = document;
-            if(!pc) return;
-
-            d.body.style.backgroundColor = gc.style.couleurFond;
-            d.body.style.fontFamily = gc.style.police;
-            const mc = d.getElementById('main-card');
-            mc.style.background = gc.style.couleurCarte;
-            mc.style.backdropFilter = gc.style.effetFlou;
-
+            
+            // Appliquer Thème
+            d.getElementById('main-card').style.background = gc.style.couleurCarte;
+            d.getElementById('main-card').style.backdropFilter = gc.style.effetFlou;
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
+            d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + gc.brand.copyright;
+
+            // Produit
             d.getElementById('ui-titre').innerText = pc.produit.titre;
             d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
-            d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + gc.brand.copyright;
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
 
-            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 text-white text-[10px] font-black uppercase tracking-wider"><i data-lucide="${b.icone}" class="w-3.5 h-3.5 ${b.couleur}"></i>${b.label}</div>`).join('');
+            // Badges
+            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-wider"><i data-lucide="${b.icone}" class="w-3.5 h-3.5 ${b.couleur}"></i>${b.label}</div>`).join('');
 
+            // Galerie (Photos secondaires)
+            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `
+                <div class="bg-black/40 rounded-2xl p-2 border border-white/5 overflow-hidden group">
+                    <img src="${img.url}" class="w-full h-24 object-cover rounded-xl group-hover:scale-110 transition-transform">
+                    <p class="text-[8px] text-center mt-2 opacity-50 uppercase font-bold">${img.label}</p>
+                </div>`).join('');
+
+            // 3D & Dimensions
             const isLand = pc.dimensions.orientation === "landscape";
             const s3d = d.getElementById('ui-3d');
             s3d.style.width = isLand ? "200px" : "120px";
@@ -129,13 +136,18 @@
             d.getElementById('val-h').innerText = pc.dimensions.hauteur;
             d.getElementById('val-vesa').innerText = "VESA " + pc.dimensions.vesa;
 
+            // Équipe Complète (On ne limite plus)
+            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `
+                <div class="border-b border-white/5 pb-4 last:border-0">
+                    <p class="font-black text-[12px] uppercase text-white">${m.nom}</p>
+                    <p class="text-slate-500 text-[9px] uppercase mb-2 tracking-tighter">${m.poste}</p>
+                    ${m.tel ? `<p class="text-[#FFD700] font-bold text-[10px] tracking-widest">${m.tel}</p>` : ''}
+                </div>`).join('');
+
+            // Specs & Maintenance
+            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-8 rounded-[2.5rem] border border-white/5"><h4 class="text-${s.couleur}-400 font-black text-[11px] mb-6 flex items-center gap-3 uppercase tracking-widest"><i data-lucide="${s.icone}" class="w-5 h-5"></i>${s.titre}</h4><div class="space-y-3">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-2 text-[12px]"><span class="text-slate-500 italic">${l[0]}</span><span class="font-bold uppercase">${l[1]}</span></div>`).join('')}</div></div>`).join('');
             d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[11px] uppercase">${a.nom}</p><p class="text-[10px] text-slate-500 italic uppercase mt-1">${a.detail}</p></div>`).join('');
-            d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-center gap-3 text-white text-[10px] font-bold uppercase"><i data-lucide="${o.icone}" class="w-4 h-4 text-[#FFD700]"></i>${o.nom}</div>`).join('');
-
-            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-8 rounded-[2.5rem] border border-white/5"><h4 class="text-${s.couleur}-400 font-black text-[11px] mb-6 flex items-center gap-3 uppercase tracking-widest"><i data-lucide="${s.icone}" class="w-5 h-5"></i>${s.titre}</h4><div class="space-y-3">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-2 text-[12px]"><span class="text-slate-500 italic">${l[0]}</span><span class="font-bold text-white uppercase">${l[1]}</span></div>`).join('')}</div></div>`).join('');
-
-            d.getElementById('ui-team').innerHTML = gc.equipe.filter(m => m.tel).slice(0,2).map(m => `<div><p class="text-white font-black text-[11px] uppercase">${m.nom}</p><p class="text-slate-500 text-[9px] uppercase mb-2">${m.poste}</p><p class="text-[#FFD700] font-bold text-[10px] tracking-widest">${m.tel}</p></div>`).join('');
-            
+            d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-center gap-3 font-bold uppercase text-[10px]"><i data-lucide="${o.icone}" class="w-4 h-4 text-[#FFD700]"></i>${o.nom}</div>`).join('');
             d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2"><span class="text-[#FFD700] mt-1">▹</span>${e}</li>`).join('');
 
             lucide.createIcons();
