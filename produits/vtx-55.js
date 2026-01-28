@@ -1,7 +1,7 @@
 // Données spécifiques au produit VTX-55
 window.PRODUCT_DATA = {
     produit: {
-        titre: "ÉCRAN VITRINE 55\"",
+        titre: "ÉCRAN VITRINE 55''",
         phraseAccroche: "Haute luminosité pour une visibilité maximale en plein soleil.",
         ref: "VTX-55-HB",
         sn: "SN-2024-X1"
@@ -12,8 +12,11 @@ window.PRODUCT_DATA = {
         { label: "4K UHD", icone: "monitor", couleur: "text-blue-400" }
     ],
     dimensions: {
-        largeur: "1240 mm", hauteur: "715 mm", diagonale: "55\"", 
-        orientation: "landscape", vesa: "400 x 400"
+        largeur: "1240 mm", 
+        hauteur: "715 mm", 
+        diagonale: "55''", 
+        orientation: "landscape", 
+        vesa: "400 x 400"
     },
     media: {
         imagePrincipale: "images/screen55.jpg",
