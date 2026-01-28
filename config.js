@@ -1,5 +1,5 @@
 // config.js - TOUR DE CONTRÔLE GÉNÉRALE VERTEX MONACO
-const GLOBAL_CONFIG = {
+window.GLOBAL_CONFIG = {
     // --- 1. IDENTITÉ DE MARQUE ---
     brand: {
         nom: "Vertex Sarl Monaco",
