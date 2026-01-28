@@ -9,14 +9,13 @@
         // --- SYSTÈME ANTI-CACHE (Timestamp unique) ---
         const version = new Date().getTime();
 
-        // 1. Chargement de la config générale avec version
-        const configScript = document.createElement('script');
-        configScript.src = `config.js?v=${version}`;
-        document.head.appendChild(configScript);
+// 1. Chargement de la config avec le bon chemin
+configScript.src = "config.js?v=" + version;
 
-        // 2. Chargement du produit spécifique avec version
-        const params = new URLSearchParams(window.location.search);
-        const produitId = params.get('id');
+// ... plus bas ...
+
+// 2. Chargement du produit (on s'assure que le chemin est relatif au dossier actuel)
+productScript.src = "produits/" + produitId + ".js?v=" + version;
 
         if (produitId) {
             const productScript = document.createElement('script');
