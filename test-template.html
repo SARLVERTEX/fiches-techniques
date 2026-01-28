@@ -3,31 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco - Catalogue</title>
+    <title>Vertex Monaco - Fiche Technique</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        body { background: #020617; color: white; font-family: 'Outfit', sans-serif; transition: opacity 0.5s; }
-        #main-card { display: none; opacity: 0; }
-        .glow-band { background: linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.05) 50%, transparent 100%); border-y: 1px solid rgba(255,215,0,0.1); }
-        .scene-3d { perspective: 1200px; height: 260px; display: flex; align-items: center; justify-content: center; }
+        body { background: #020617; color: white; font-family: 'Outfit', sans-serif; }
+        #main-card { display: none; opacity: 0; transition: opacity 0.8s ease-in-out; }
+        
+        .scene-3d { perspective: 1200px; display: flex; align-items: center; justify-content: center; min-height: 300px; }
         .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-20deg) rotateX(5deg); }
         .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); }
+
+        /* --- STYLE POUR L'IMPRESSION --- */
+        @media print {
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            #main-card { display: block !important; opacity: 1 !important; border: none !important; shadow: none !important; background: white !important; }
+            .glow-band, .bg-white\/\[0\.03\], .bg-black\/30, .bg-black\/50 { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: black !important; }
+            .text-white { color: black !important; }
+            .text-slate-500, .text-slate-400 { color: #64748b !important; }
+            #btn-print, #debug-console { display: none !important; }
+            .scene-3d { transform: scale(0.8); }
+            .face-front { background: #f1f5f9 !important; border-color: #000 !important; }
+            h1, h3, h4 { color: black !important; }
+            #ui-brand, #val-diag, .text-\[\#FFD700\] { color: #856404 !important; } /* Doré plus sombre pour impression */
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div id="debug-console" class="max-w-2xl mx-auto mt-10 bg-black/50 border border-white/10 rounded-xl p-6 font-monospace">
-        <h1 class="text-[#FFD700] font-bold mb-4 uppercase tracking-widest text-sm">Diagnostic Vertex</h1>
-        <div id="debug-status" class="space-y-2 text-xs"></div>
+    <button id="btn-print" onclick="window.print()" class="fixed bottom-8 right-8 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-xs">
+        <i data-lucide="printer" class="w-5 h-5"></i> Imprimer / PDF
+    </button>
+
+    <div id="debug-console" style="display:none;" class="max-w-2xl mx-auto mt-10 bg-red-900/20 border border-red-500/50 rounded-xl p-6 font-mono text-xs">
+        <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur</h1>
+        <div id="debug-status" class="space-y-1 text-white"></div>
     </div>
 
-    <div id="main-card" class="max-w-6xl mx-auto border border-white/5 shadow-2xl rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl">
+    <div id="main-card" class="max-w-6xl mx-auto border border-white/5 rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl">
         <header class="p-10 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="flex-1">
                 <p id="ui-brand" class="font-bold uppercase tracking-[0.5em] text-[11px] mb-4 text-[#FFD700]"></p>
-                <h1 id="ui-titre" class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-[0.9] mb-6"></h1>
+                <h1 id="ui-titre" class="text-4xl md:text-7xl font-black uppercase tracking-tighter italic leading-[0.9] mb-6"></h1>
                 <div id="ui-badges" class="flex flex-wrap gap-3"></div>
             </div>
             <img id="ui-logo" src="" class="h-16 object-contain">
@@ -40,29 +58,30 @@
                 </div>
                 <div id="ui-galerie" class="grid grid-cols-3 gap-4"></div>
             </div>
+            
             <div class="bg-white/[0.03] rounded-[3rem] p-10 border border-white/5 flex flex-col items-center justify-center">
                 <div class="scene-3d w-full">
                     <div id="ui-3d" class="screen-3d">
-                        <div class="face-front rounded-sm"><span id="val-diag" class="text-lg font-black italic text-[#FFD700]"></span></div>
+                        <div class="face-front rounded-sm"><span id="val-diag" class="font-black italic text-[#FFD700]"></span></div>
                         <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/40 flex justify-center pt-2 text-[#FFD700] text-[10px] font-bold" id="val-w"></div>
                         <div class="absolute -left-16 top-0 bottom-0 border-l border-dashed border-[#FFD700]/40 flex items-center text-[#FFD700] text-[10px] font-bold"><span id="val-h" class="-rotate-90"></span></div>
                     </div>
                 </div>
                 <div class="mt-12 bg-black/50 p-6 rounded-3xl border border-[#FFD700]/20 w-full flex items-center gap-5">
                     <div class="grid grid-cols-2 gap-2"><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div></div>
-                    <div><p class="text-[9px] uppercase text-slate-500 font-black tracking-widest">VESA Mount</p><p id="val-vesa" class="text-sm font-black text-[#FFD700] uppercase"></p></div>
+                    <div><p class="text-[9px] uppercase text-slate-500 font-black tracking-widest">Fixation</p><p id="val-vesa" class="text-sm font-black text-[#FFD700] uppercase"></p></div>
                 </div>
             </div>
         </div>
 
-        <section class="glow-band py-12 px-10 flex flex-col md:flex-row gap-16">
+        <section class="glow-band py-12 px-10 flex flex-col md:flex-row gap-16 border-y border-white/5">
             <div class="flex-1">
-                <h3 class="text-[#FFD700] font-black text-[11px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"><i data-lucide="package" class="w-5 h-5"></i> Équipement Inclus</h3>
-                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-8"></div>
+                <h3 class="text-[#FFD700] font-black text-[11px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"><i data-lucide="package" class="w-5 h-5"></i> Inclus</h3>
+                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-8 text-white"></div>
             </div>
             <div class="flex-1">
                 <h3 class="text-[#FFD700] font-black text-[11px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"><i data-lucide="zap" class="w-5 h-5"></i> Options</h3>
-                <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white"></div>
             </div>
         </section>
 
@@ -70,7 +89,7 @@
             <div id="ui-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-8"></div>
             <div class="flex flex-col gap-8">
                 <div class="bg-white/[0.03] p-8 rounded-[2.5rem] border-l-4 border-[#FFD700]">
-                    <h3 class="font-black uppercase text-[11px] mb-8 tracking-widest">Équipe Vertex</h3>
+                    <h3 class="font-black uppercase text-[11px] mb-8 tracking-widest text-white">Équipe Vertex</h3>
                     <div id="ui-team" class="space-y-6"></div>
                 </div>
                 <div class="bg-black/20 p-8 rounded-[2.5rem] border border-white/5">
@@ -87,19 +106,15 @@
     </div>
 
     <script>
-        const log = (msg) => document.getElementById('debug-status').innerHTML += `<p>> ${msg}</p>`;
         const version = new Date().getTime();
         const params = new URLSearchParams(window.location.search);
         const produitId = params.get('id');
 
-        // CHARGEMENT
         window.onload = () => {
-            if(!produitId) return log("ERREUR: ID manquant dans l'URL");
-            
+            if(!produitId) return showError("ID manquant");
             const cScript = document.createElement('script');
             cScript.src = "config.js?v=" + version;
             document.head.appendChild(cScript);
-
             const pScript = document.createElement('script');
             pScript.src = "produits/" + produitId + ".js?v=" + version;
             pScript.onload = () => {
@@ -107,21 +122,24 @@
                     if (window.PRODUCT_DATA && window.GLOBAL_CONFIG) {
                         window.PRODUCT_CONFIG = window.PRODUCT_DATA;
                         initApp();
-                    } else { log("ERREUR: Données incomplètes"); }
-                }, 200);
+                    } else { showError("Données incomplètes."); }
+                }, 100);
             };
             document.head.appendChild(pScript);
         };
+
+        function showError(m) {
+            document.getElementById('debug-console').style.display = 'block';
+            document.getElementById('debug-status').innerText = m;
+        }
 
         function initApp() {
             const gc = window.GLOBAL_CONFIG;
             const pc = window.PRODUCT_CONFIG;
             const d = document;
 
-            d.getElementById('debug-console').style.display = 'none';
-            const mc = d.getElementById('main-card');
-            mc.style.display = 'block';
-            setTimeout(() => mc.style.opacity = "1", 50);
+            d.getElementById('main-card').style.display = 'block';
+            setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
@@ -131,23 +149,23 @@
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
 
-            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase"><i data-lucide="${b.icone}" class="w-3.5 h-3.5 ${b.couleur}"></i>${b.label}</div>`).join('');
-            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `<div class="bg-black/40 rounded-2xl p-2 border border-white/5"><img src="${img.url}" class="w-full h-20 object-cover rounded-xl"><p class="text-[7px] mt-1 opacity-50 text-center uppercase font-black">${img.label}</p></div>`).join('');
+            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3.5 h-3.5 ${b.couleur}"></i>${b.label}</div>`).join('');
+            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `<div class="bg-black/40 rounded-2xl p-2 border border-white/5"><img src="${img.url}" class="w-full h-20 object-cover rounded-xl"><p class="text-[7px] mt-1 text-center font-black uppercase opacity-50 text-white">${img.label}</p></div>`).join('');
 
-            const isLand = pc.dimensions.orientation === "landscape";
+            const isPortrait = pc.dimensions.orientation === "portrait";
             const s3d = d.getElementById('ui-3d');
-            s3d.style.width = isLand ? "200px" : "120px";
-            s3d.style.height = isLand ? "120px" : "200px";
+            s3d.style.width = isPortrait ? "160px" : "260px";
+            s3d.style.height = isPortrait ? "260px" : "160px";
             d.getElementById('val-diag').innerText = pc.dimensions.diagonale;
             d.getElementById('val-w').innerText = pc.dimensions.largeur;
             d.getElementById('val-h').innerText = pc.dimensions.hauteur;
             d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
 
-            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 last:border-0"><p class="font-black text-[12px] uppercase text-white">${m.nom}</p><p class="text-slate-500 text-[9px] uppercase">${m.poste}</p>${m.tel ? `<p class="text-[#FFD700] font-bold text-[10px] mt-1">${m.tel}</p>` : ''}</div>`).join('');
-            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-8 rounded-[2.5rem] border border-white/5"><h4 class="text-${s.couleur}-400 font-black text-[11px] mb-6 flex items-center gap-3 uppercase"><i data-lucide="${s.icone}" class="w-5 h-5"></i>${s.titre}</h4><div class="space-y-3">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-2 text-[12px]"><span class="text-slate-500 italic">${l[0]}</span><span class="font-bold uppercase">${l[1]}</span></div>`).join('')}</div></div>`).join('');
+            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 text-white last:border-0"><p class="font-black text-[12px] uppercase">${m.nom}</p><p class="text-slate-500 text-[9px] uppercase">${m.poste}</p>${m.tel ? `<p class="text-[#FFD700] font-bold text-[10px] mt-1">${m.tel}</p>` : ''}</div>`).join('');
+            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-8 rounded-[2.5rem] border border-white/5 text-white"><h4 class="text-${s.couleur}-400 font-black text-[11px] mb-6 flex items-center gap-3 uppercase"><i data-lucide="${s.icone}" class="w-5 h-5"></i>${s.titre}</h4><div class="space-y-3">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-2 text-[11px]"><span class="text-slate-500 italic">${l[0]}</span><span class="font-bold uppercase text-white">${l[1]}</span></div>`).join('')}</div></div>`).join('');
             d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[11px] uppercase">${a.nom}</p><p class="text-[10px] text-slate-500 italic uppercase">${a.detail}</p></div>`).join('');
             d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-center gap-3 font-bold uppercase text-[10px]"><i data-lucide="${o.icone}" class="w-4 h-4 text-[#FFD700]"></i>${o.nom}</div>`).join('');
-            d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2"><span class="text-[#FFD700]">▹</span>${e}</li>`).join('');
+            d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${e}</li>`).join('');
 
             lucide.createIcons();
         }
