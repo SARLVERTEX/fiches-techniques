@@ -17,49 +17,79 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        
-        /* Smooth Scroll au niveau du HTML pour tout le document */
         html { scroll-behavior: smooth; }
-
         body { background: #020617; color: white; font-family: 'Outfit', sans-serif; opacity: 0; transition: opacity 0.5s ease; -webkit-font-smoothing: antialiased; }
         body.loaded { opacity: 1; }
-        
         .vertex-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; }
         .vertex-card:hover { transform: translateY(-10px); border-color: #FFD700; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        
         .filter-btn { padding: 8px 24px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 215, 0, 0.1); color: #94a3b8; background: rgba(255, 255, 255, 0.03); transition: 0.3s; }
         .filter-btn.active { background: #FFD700; color: black; border-color: #FFD700; box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-        
         .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: black; font-weight: 900; }
         .btn-disabled { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); pointer-events: none; }
-        
         .badge-new { position: absolute; top: 20px; right: 20px; background: #FFD700; color: black; font-size: 8px; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 10; }
     </style>
 </head>
 <body class="p-6 md:p-12">
 
     <script>
+        const params = new URLSearchParams(window.location.search);
+        const currentLang = params.get('lang') || 'fr';
+
+        // Helper pour la traduction
+        const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : obj;
+
+        const UI_STRINGS = {
+            fr: { 
+                all: "Toutes les solutions", 
+                search: "Rechercher une solution...", 
+                results: "Solutions disponibles",
+                discover: "Découvrir la solution",
+                soon: "Bientôt disponible",
+                new: "Nouveau"
+            },
+            en: { 
+                all: "All Solutions", 
+                search: "Search for a solution...", 
+                results: "Solutions available",
+                discover: "Discover solution",
+                soon: "Coming soon",
+                new: "New"
+            }
+        };
+
         const ORDRE_CATEGORIES = ["all", "Vitrines", "Smart City", "LED", "Totems", "Ecrans Indoor", "E-Paper"];
 
+        // CATALOGUE ADAPTÉ (Titres et Descriptions bilingues)
         const CATALOGUE = [
             {
                 id: "vtx-55", 
-                titre: "Double Face 55\"",
+                titre: { fr: "Double Face 55\"", en: "Double Sided 55\"" },
                 categorie: "Vitrines",
                 image: "images/VITRINE55.jpg",
-                desc: "3500 nits - Haute luminosité pour vitrines ensoleillées.",
+                desc: { 
+                    fr: "3500 nits - Haute luminosité pour vitrines ensoleillées.", 
+                    en: "3500 nits - High brightness for sunny storefronts." 
+                },
                 isNew: true 
             },
             {
                 id: "totem-65",
-                titre: "Totem Outdoor 65\"",
+                titre: { fr: "Totem Outdoor 65\"", en: "Outdoor Totem 65\"" },
                 categorie: "Smart City",
                 image: "images/TOTEM65.jpg",
-                desc: "Résistant IP65 - Gestion thermique avancée.",
+                desc: { 
+                    fr: "Résistant IP65 - Gestion thermique avancée.", 
+                    en: "IP65 rated - Advanced thermal management." 
+                },
                 isNew: false
             }
         ];
     </script>
+
+    <div class="fixed top-6 right-6 z-50 flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/10">
+        <button onclick="changeLang('fr')" id="lang-fr" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">FR</button>
+        <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">EN</button>
+    </div>
 
     <header id="top-header" class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="text-center md:text-left">
@@ -74,13 +104,10 @@
     <section class="max-w-6xl mx-auto mb-12">
         <div class="flex flex-col md:flex-row gap-6 items-center justify-between">
             <div class="relative w-full max-w-md">
-                <input type="text" id="search-bar" onkeyup="filtrerCatalogue()" placeholder="Rechercher une solution..." 
-                       class="w-full bg-white/5 border border-white/10 p-5 pl-14 rounded-2xl text-sm focus:outline-none focus:border-[#FFD700] text-white transition-all">
+                <input type="text" id="search-bar" onkeyup="filtrerCatalogue()" class="w-full bg-white/5 border border-white/10 p-5 pl-14 rounded-2xl text-sm focus:outline-none focus:border-[#FFD700] text-white transition-all">
                 <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#FFD700]"></i>
             </div>
-            <div id="product-count" class="bg-white/5 border border-white/10 px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-[#FFD700]">
-                Chargement...
-            </div>
+            <div id="product-count" class="bg-white/5 border border-white/10 px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-[#FFD700]"></div>
         </div>
     </section>
 
@@ -100,6 +127,9 @@
                 setTimeout(init, 100);
                 return;
             }
+            document.getElementById(`lang-${currentLang}`).classList.add('bg-[#FFD700]', 'text-black');
+            document.getElementById('search-bar').placeholder = UI_STRINGS[currentLang].search;
+            
             appliquerBranding();
             genererFiltres();
             filtrerCatalogue();
@@ -107,11 +137,16 @@
             document.body.classList.add('loaded');
         }
 
+        function changeLang(l) {
+            params.set('lang', l);
+            window.location.search = params.toString();
+        }
+
         function appliquerBranding() {
             const bc = GLOBAL_CONFIG;
             document.getElementById('ui-brand-name').innerText = bc.brand.nom;
             document.getElementById('ui-main-logo').src = bc.brand.logo;
-            document.getElementById('ui-footer-copyright').innerText = bc.brand.copyright;
+            document.getElementById('ui-footer-copyright').innerText = t(bc.brand.copyright);
         }
 
         function genererFiltres() {
@@ -121,7 +156,7 @@
 
             container.innerHTML = categoriesFinales.map(cat => `
                 <button class="filter-btn ${cat === 'all' ? 'active' : ''}" onclick="setFilter('${cat}', this)">
-                    ${cat === 'all' ? 'Toutes les solutions' : cat}
+                    ${cat === 'all' ? UI_STRINGS[currentLang].all : cat}
                 </button>
             `).join('');
         }
@@ -130,45 +165,45 @@
             categorieActive = cat;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // 1. AJOUT DU SMOOTH SCROLL AU CLIC
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
             filtrerCatalogue();
         }
 
         function filtrerCatalogue() {
             const recherche = document.getElementById('search-bar').value.toLowerCase();
             const resultats = CATALOGUE.filter(p => {
-                const matchTexte = p.titre.toLowerCase().includes(recherche) || p.desc.toLowerCase().includes(recherche);
+                const matchTexte = t(p.titre).toLowerCase().includes(recherche) || t(p.desc).toLowerCase().includes(recherche);
                 const matchCat = categorieActive === 'all' || p.categorie === categorieActive;
                 return matchTexte && matchCat;
             });
-            document.getElementById('product-count').innerText = resultats.length + (resultats.length > 1 ? " Solutions disponibles" : " Solution disponible");
+            document.getElementById('product-count').innerText = resultats.length + " " + UI_STRINGS[currentLang].results;
             afficherCards(resultats);
         }
 
         function afficherCards(liste) {
             const container = document.getElementById('product-container');
+            const ui = UI_STRINGS[currentLang];
+            
             if (liste.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center opacity-30 py-20 uppercase tracking-widest text-xs">Aucun résultat pour cette recherche</div>`;
+                container.innerHTML = `<div class="col-span-full text-center opacity-30 py-20 uppercase tracking-widest text-xs">Aucun résultat / No results</div>`;
                 return;
             }
+
             container.innerHTML = liste.map(p => `
                 <div class="vertex-card rounded-[2.5rem] p-10 flex flex-col h-full bg-slate-900/40 backdrop-blur-xl">
-                    ${p.isNew ? '<div class="badge-new uppercase italic">Nouveau</div>' : ''}
+                    ${p.isNew ? `<div class="badge-new uppercase italic">${ui.new}</div>` : ''}
                     <div class="h-56 mb-8 flex items-center justify-center bg-black/40 rounded-[2rem] p-6 border border-white/5">
                         <img src="${p.image}" class="max-h-full max-w-full object-contain drop-shadow-2xl" 
                              onerror="this.src='https://via.placeholder.com/400x300/020617/FFD700?text=Image+en+attente'">
                     </div>
                     <div class="flex-grow">
                         <p class="text-[#FFD700] text-[10px] font-black uppercase tracking-[0.2em] mb-3">${p.categorie}</p>
-                        <h3 class="text-3xl font-black uppercase italic mb-4 leading-none text-white">${p.titre}</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed mb-10">${p.desc}</p>
+                        <h3 class="text-3xl font-black uppercase italic mb-4 leading-none text-white">${t(p.titre)}</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed mb-10">${t(p.desc)}</p>
                     </div>
-                    <a href="${p.id ? 'test-template.html?id=' + p.id : '#'}" 
+                    <a href="${p.id ? 'test-template.html?id=' + p.id + '&lang=' + currentLang : '#'}" 
                        class="${p.id ? 'btn-gold' : 'btn-disabled'} text-center py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all">
-                        ${p.id ? 'Découvrir la solution' : 'Bientôt disponible'} 
+                        ${p.id ? ui.discover : ui.soon} 
                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </a>
                 </div>
