@@ -6,17 +6,33 @@
     <title>Vertex Monaco | Info</title>
     
     <script>
-        // ==========================================
-        // CONFIGURATION 404 (MODIFIABLE)
-        // ==========================================
+        // Détection de la langue
+        const params = new URLSearchParams(window.location.search);
+        const currentLang = params.get('lang') || 'fr';
+
+        // Configuration Bilingue
         const CONFIG_404 = {
-            titre: "Fiche en cours de rédaction",
-            message: "Nous finalisons les spécifications techniques de ce produit pour vous garantir une information certifiée. Cette fiche sera disponible très prochainement.",
-            boutonRetour: "Retour au Showroom",
-            boutonContact: "Contacter un expert Vertex",
-            whatsapp: "33609779003", // Ton numéro sans le +
+            titre: { 
+                fr: "Fiche en cours de rédaction", 
+                en: "Technical sheet under review" 
+            },
+            message: { 
+                fr: "Nous finalisons les spécifications techniques de ce produit pour vous garantir une information certifiée. Cette fiche sera disponible très prochainement.", 
+                en: "We are finalizing the technical specifications for this product to ensure certified information. This sheet will be available very soon." 
+            },
+            boutonRetour: { 
+                fr: "Retour au Showroom", 
+                en: "Back to Showroom" 
+            },
+            boutonContact: { 
+                fr: "Contacter un expert Vertex", 
+                en: "Contact a Vertex expert" 
+            },
+            whatsapp: "33609779003",
             email: "allan.pleutin@vertex-monaco.com"
         };
+
+        const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : obj;
     </script>
 
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -24,7 +40,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
         body { font-family: 'Outfit', sans-serif; background-color: #020617; color: white; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .error-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 215, 0, 0.2); padding: 3rem; border-radius: 3rem; text-align: center; max-width: 500px; }
+        .error-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 215, 0, 0.2); padding: 3rem; border-radius: 3rem; text-align: center; max-width: 500px; margin: 20px; }
         .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: black; font-weight: 900; transition: transform 0.3s ease; }
         .btn-gold:hover { transform: scale(1.05); }
     </style>
@@ -43,7 +59,7 @@
         <p id="ui-message" class="text-slate-400 text-sm mb-8 leading-relaxed"></p>
 
         <div class="flex flex-col gap-3">
-            <a href="index.html" class="btn-gold py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
+            <a id="ui-back-link" href="index.html" class="btn-gold py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
                 <i data-lucide="layout-grid" class="w-4 h-4"></i> <span id="ui-btn-back"></span>
             </a>
             <a id="ui-wa-link" href="#" class="border border-white/10 hover:border-[#FFD700]/50 py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all">
@@ -53,11 +69,16 @@
     </div>
 
     <script>
-        // Remplissage automatique des textes
-        document.getElementById('ui-titre').innerText = CONFIG_404.titre;
-        document.getElementById('ui-message').innerText = CONFIG_404.message;
-        document.getElementById('ui-btn-back').innerText = CONFIG_404.boutonRetour;
-        document.getElementById('ui-btn-contact').innerText = CONFIG_404.boutonContact;
+        // Remplissage automatique des textes avec traduction
+        document.getElementById('ui-titre').innerText = t(CONFIG_404.titre);
+        document.getElementById('ui-message').innerText = t(CONFIG_404.message);
+        document.getElementById('ui-btn-back').innerText = t(CONFIG_404.boutonRetour);
+        document.getElementById('ui-btn-contact').innerText = t(CONFIG_404.boutonContact);
+        
+        // Maintien de la langue pour le retour au showroom
+        document.getElementById('ui-back-link').href = `index.html?lang=${currentLang}`;
+        
+        // Lien WhatsApp
         document.getElementById('ui-wa-link').href = `https://wa.me/${CONFIG_404.whatsapp}`;
         
         lucide.createIcons();
