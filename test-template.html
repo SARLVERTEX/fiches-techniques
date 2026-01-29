@@ -13,12 +13,10 @@
         body { background: #020617; color: white; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         #main-card { display: none; opacity: 0; transition: opacity 0.8s ease-in-out; }
         
-        /* 3D Visualizer */
         .scene-3d { perspective: 1200px; display: flex; align-items: center; justify-content: center; min-height: 250px; width: 100%; }
         .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-15deg) rotateX(5deg); transition: transform 0.5s ease; }
         .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
 
-        /* Zoom Lightbox System */
         .zoomable-container { position: relative; cursor: pointer; overflow: hidden; }
         .zoomable-container::after { 
             content: '🔍'; position: absolute; bottom: 10px; right: 10px; 
@@ -36,11 +34,9 @@
         }
         #zoom-overlay img { max-width: 90%; max-height: 90%; border-radius: 1rem; box-shadow: 0 0 50px rgba(0,0,0,0.5); object-fit: contain; }
 
-        /* Effet boutons contact */
-        .contact-link { transition: all 0.2s ease; }
-        .contact-link:hover { transform: scale(1.15); filter: brightness(1.2); }
+        .contact-link { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .contact-link:hover { transform: translateY(-3px) scale(1.1); filter: brightness(1.2); }
 
-        /* --- CONFIGURATION IMPRESSION --- */
         @media print {
             @page { size: A4; margin: 0; }
             body { background: #020617 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
@@ -65,11 +61,9 @@
         <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">EN</button>
     </div>
 
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-        <button id="btn-print" onclick="window.print()" class="bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
-            <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print" class="hidden md:inline"></span>
-        </button>
-    </div>
+    <button id="btn-print" onclick="window.print()" class="fixed bottom-6 right-6 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
+        <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print" class="hidden md:inline"></span>
+    </button>
 
     <div id="debug-console" style="display:none;" class="max-w-2xl mx-auto mt-20 bg-red-900/20 border border-red-500/50 rounded-xl p-6 font-mono text-xs text-center">
         <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur</h1>
@@ -167,10 +161,10 @@
                     if (window.PRODUCT_DATA && window.GLOBAL_CONFIG) {
                         window.PRODUCT_CONFIG = window.PRODUCT_DATA;
                         initApp();
-                    } else { showError("Erreur de chargement des données."); }
+                    } else { showError("Erreur de chargement."); }
                 }, 150);
             };
-            pScript.onerror = () => showError("Fichier produit introuvable.");
+            pScript.onerror = () => showError("Produit introuvable.");
             document.head.appendChild(pScript);
         };
 
@@ -204,7 +198,6 @@
             d.getElementById('main-card').style.display = 'block';
             setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
-            // Textes UI
             d.getElementById('txt-showroom').innerText = ui.showroom;
             d.getElementById('txt-print').innerText = ui.print;
             d.getElementById('txt-fixation').innerText = ui.fixation;
@@ -213,25 +206,28 @@
             d.getElementById('txt-expert-title').innerText = ui.expert;
             d.getElementById('txt-entretien-title').innerText = ui.entretien;
 
-            // Données de base
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
             d.getElementById('ui-titre').innerText = t(pc.produit.titre);
             d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
             
-            // Zoom Image Principale
             const mainImgCont = d.getElementById('main-img-container');
             mainImgCont.classList.add('zoomable-container');
             mainImgCont.onclick = () => openZoom(pc.media.imagePrincipale);
 
-            // Génération de l'équipe avec logos contact
+            // GÉNÉRATION ÉQUIPE AVEC TES VARIABLES (nom, poste, mail, tel)
             d.getElementById('ui-team').innerHTML = gc.equipe.map(m => {
+                // Nettoyage du tel pour WhatsApp (enlever espaces et ajouter +33 si besoin)
+                let waNumber = m.tel ? m.tel.replace(/\s+/g, '') : '';
+                if(waNumber.startsWith('0')) waNumber = '33' + waNumber.substring(1);
+
                 const whatsappHtml = m.tel ? `
-                    <a href="https://wa.me/${m.tel.replace(/\+/g, '').replace(/\s+/g, '')}" target="_blank" class="contact-link bg-[#25D366] text-white p-2 rounded-full shadow-lg">
+                    <a href="https://wa.me/${waNumber}" target="_blank" class="contact-link bg-[#25D366] text-white p-2 rounded-full shadow-lg">
                         <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                     </a>` : '';
-                const emailHtml = m.email ? `
-                    <a href="mailto:${m.email}" class="contact-link bg-white/10 border border-white/20 text-white p-2 rounded-full shadow-lg">
+
+                const emailHtml = m.mail ? `
+                    <a href="mailto:${m.mail}" class="contact-link bg-white/10 border border-white/20 text-white p-2 rounded-full shadow-lg">
                         <i data-lucide="mail" class="w-3.5 h-3.5"></i>
                     </a>` : '';
 
@@ -246,7 +242,6 @@
                 `;
             }).join('');
 
-            // Autres éléments (Galerie, Badges, Specs...)
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
