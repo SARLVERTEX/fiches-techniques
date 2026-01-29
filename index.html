@@ -14,20 +14,144 @@
         html { scroll-behavior: smooth; }
         body { background: #020617; color: white; font-family: 'Outfit', sans-serif; opacity: 0; transition: opacity 0.5s ease; -webkit-font-smoothing: antialiased; }
         body.loaded { opacity: 1; }
-        
         .vertex-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
         .vertex-card:hover { transform: translateY(-10px); border-color: #FFD700; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        
         .filter-btn { padding: 8px 24px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 215, 0, 0.1); color: #94a3b8; background: rgba(255, 255, 255, 0.03); transition: 0.3s; }
         .filter-btn.active { background: #FFD700; color: black; border-color: #FFD700; box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-        
         .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: black; font-weight: 900; }
         .badge-new { position: absolute; top: 20px; right: 20px; background: #FFD700; color: black; font-size: 8px; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 10; }
-        
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
 <body class="p-6 md:p-12">
+
+    <script>
+        /* ============================================================
+           GESTION DU CATALOGUE - AJOUTEZ VOS NOUVEAUX PRODUITS ICI
+           ============================================================ */
+        const PRODUITS_LISTE = [
+            "vtx-55",
+            "totem-65",
+            "led-p2",
+            "epaper-13"
+        ];
+        /* ============================================================ */
+
+        const version = new Date().getTime();
+        const params = new URLSearchParams(window.location.search);
+        const currentLang = params.get('lang') || 'fr';
+        const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : obj;
+
+        let CATALOGUE_COMPLET = [];
+        let categorieActive = 'all';
+
+        const UI_STRINGS = {
+            fr: { all: "Toutes les solutions", search: "Rechercher...", results: "Solutions", discover: "Découvrir", new: "Nouveau" },
+            en: { all: "All Solutions", search: "Search...", results: "Solutions", discover: "Discover", new: "New" }
+        };
+
+        async function init() {
+            await loadExternalScript("config.js");
+            const chargements = PRODUITS_LISTE.map(id => chargerProduit(id));
+            const resultats = await Promise.all(chargements);
+            CATALOGUE_COMPLET = resultats.filter(r => r !== null);
+
+            document.getElementById(`lang-${currentLang}`).classList.add('bg-[#FFD700]', 'text-black');
+            document.getElementById('search-bar').placeholder = UI_STRINGS[currentLang].search;
+            
+            appliquerBranding();
+            genererFiltres();
+            filtrerAffichage();
+            
+            document.body.classList.add('loaded');
+            lucide.createIcons();
+        }
+
+        function loadExternalScript(src) {
+            return new Promise(resolve => {
+                const s = document.createElement('script');
+                s.src = src + "?v=" + version;
+                s.onload = resolve;
+                document.head.appendChild(s);
+            });
+        }
+
+        function chargerProduit(id) {
+            return new Promise(resolve => {
+                const s = document.createElement('script');
+                s.src = `produits/${id}.js?v=${version}`;
+                s.onload = () => {
+                    const data = JSON.parse(JSON.stringify(window.PRODUCT_DATA));
+                    resolve({ id: id, ...data });
+                };
+                s.onerror = () => {
+                    console.error("Erreur de chargement pour le produit : " + id);
+                    resolve(null);
+                };
+                document.head.appendChild(s);
+            });
+        }
+
+        function appliquerBranding() {
+            const bc = GLOBAL_CONFIG;
+            document.getElementById('ui-brand-name').innerText = bc.brand.nom;
+            document.getElementById('ui-main-logo').src = bc.brand.logo;
+            document.getElementById('ui-footer-copyright').innerText = t(bc.brand.copyright);
+        }
+
+        function genererFiltres() {
+            const container = document.getElementById('filter-container');
+            const categoriesTrouvees = [...new Set(CATALOGUE_COMPLET.map(p => p.produit.categorie))];
+            const cats = ["all", ...categoriesTrouvees];
+            container.innerHTML = cats.map(cat => `
+                <button class="filter-btn ${cat === 'all' ? 'active' : ''}" onclick="setFilter('${cat}', this)">
+                    ${cat === 'all' ? UI_STRINGS[currentLang].all : cat}
+                </button>
+            `).join('');
+        }
+
+        function setFilter(cat, btn) {
+            categorieActive = cat;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filtrerAffichage();
+        }
+
+        function filtrerAffichage() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filtered = CATALOGUE_COMPLET.filter(p => {
+                const matchCat = categorieActive === 'all' || p.produit.categorie === categorieActive;
+                const matchSearch = t(p.produit.titre).toLowerCase().includes(query) || 
+                                    (p.produit.description_courte && t(p.produit.description_courte).toLowerCase().includes(query));
+                return matchCat && matchSearch;
+            });
+            document.getElementById('product-count').innerText = filtered.length + " " + UI_STRINGS[currentLang].results;
+            document.getElementById('product-container').innerHTML = filtered.map(p => `
+                <div class="vertex-card rounded-[2.5rem] p-10 bg-slate-900/40 backdrop-blur-xl">
+                    ${p.produit.isNew ? `<div class="badge-new uppercase italic">${UI_STRINGS[currentLang].new}</div>` : ''}
+                    <div class="h-56 mb-8 flex items-center justify-center bg-black/40 rounded-[2rem] p-6 border border-white/5">
+                        <img src="${p.media.imagePrincipale}" class="max-h-full max-w-full object-contain drop-shadow-2xl">
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-[#FFD700] text-[10px] font-black uppercase tracking-[0.2em] mb-3">${p.produit.categorie}</p>
+                        <h3 class="text-3xl font-black uppercase italic mb-4 leading-none text-white">${t(p.produit.titre)}</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed mb-10 line-clamp-2">${t(p.produit.description_courte || p.produit.titre)}</p>
+                    </div>
+                    <a href="test-template.html?id=${p.id}&lang=${currentLang}" class="btn-gold text-center py-5 rounded-2xl text-[10px] font-black uppercase flex items-center justify-center gap-3">
+                        ${UI_STRINGS[currentLang].discover} <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function changeLang(l) {
+            params.set('lang', l);
+            window.location.search = params.toString();
+        }
+
+        window.onload = init;
+    </script>
 
     <div class="fixed top-6 right-6 z-50 flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/10">
         <button onclick="changeLang('fr')" id="lang-fr" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">FR</button>
@@ -55,141 +179,11 @@
     </section>
 
     <div id="filter-container" class="max-w-6xl mx-auto mb-16 flex flex-wrap gap-4 justify-center md:justify-start"></div>
-
     <main id="product-container" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></main>
 
     <footer class="max-w-6xl mx-auto mt-32 pb-12 border-t border-white/5 text-center">
         <p id="ui-footer-copyright" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-8"></p>
     </footer>
 
-    <script>
-        const version = new Date().getTime();
-        const params = new URLSearchParams(window.location.search);
-        const currentLang = params.get('lang') || 'fr';
-        const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : obj;
-
-        let CATALOGUE_COMPLET = [];
-        let categorieActive = 'all';
-
-        const UI_STRINGS = {
-            fr: { all: "Toutes les solutions", search: "Rechercher...", results: "Solutions", discover: "Découvrir", new: "Nouveau" },
-            en: { all: "All Solutions", search: "Search...", results: "Solutions", discover: "Discover", new: "New" }
-        };
-
-        // INTEGRATION DU CATALOGUE (L'aiguillage)
-        const PRODUITS_LISTE = ["vtx-55", "totem-65", "led-p2", "epaper-13"];
-
-        async function init() {
-            // 1. Charger la configuration globale
-            await loadExternalScript("config.js");
-
-            // 2. Charger tous les fichiers produits de la liste en parallèle
-            const chargements = PRODUITS_LISTE.map(id => chargerProduit(id));
-            const resultats = await Promise.all(chargements);
-            
-            // On ne garde que les produits qui ont réussi à charger
-            CATALOGUE_COMPLET = resultats.filter(r => r !== null);
-
-            // 3. Initialisation de l'interface
-            document.getElementById(`lang-${currentLang}`).classList.add('bg-[#FFD700]', 'text-black');
-            document.getElementById('search-bar').placeholder = UI_STRINGS[currentLang].search;
-            
-            appliquerBranding();
-            genererFiltres();
-            filtrerAffichage();
-            
-            document.body.classList.add('loaded');
-            lucide.createIcons();
-        }
-
-        function loadExternalScript(src) {
-            return new Promise(resolve => {
-                const s = document.createElement('script');
-                s.src = src + "?v=" + version;
-                s.onload = resolve;
-                document.head.appendChild(s);
-            });
-        }
-
-        function chargerProduit(id) {
-            return new Promise(resolve => {
-                const s = document.createElement('script');
-                s.src = `produits/${id}.js?v=${version}`;
-                s.onload = () => {
-                    // Important : on clone l'objet pour éviter que le prochain script ne l'écrase
-                    const data = JSON.parse(JSON.stringify(window.PRODUCT_DATA));
-                    resolve({ id: id, ...data });
-                };
-                s.onerror = () => {
-                    console.error("Erreur de chargement pour le produit : " + id);
-                    resolve(null);
-                };
-                document.head.appendChild(s);
-            });
-        }
-
-        function appliquerBranding() {
-            const bc = GLOBAL_CONFIG;
-            document.getElementById('ui-brand-name').innerText = bc.brand.nom;
-            document.getElementById('ui-main-logo').src = bc.brand.logo;
-            document.getElementById('ui-footer-copyright').innerText = t(bc.brand.copyright);
-        }
-
-        function genererFiltres() {
-            const container = document.getElementById('filter-container');
-            const categoriesTrouvees = [...new Set(CATALOGUE_COMPLET.map(p => p.produit.categorie))];
-            const cats = ["all", ...categoriesTrouvees];
-            
-            container.innerHTML = cats.map(cat => `
-                <button class="filter-btn ${cat === 'all' ? 'active' : ''}" onclick="setFilter('${cat}', this)">
-                    ${cat === 'all' ? UI_STRINGS[currentLang].all : cat}
-                </button>
-            `).join('');
-        }
-
-        function setFilter(cat, btn) {
-            categorieActive = cat;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filtrerAffichage();
-        }
-
-        function filtrerAffichage() {
-            const query = document.getElementById('search-bar').value.toLowerCase();
-            const filtered = CATALOGUE_COMPLET.filter(p => {
-                const matchCat = categorieActive === 'all' || p.produit.categorie === categorieActive;
-                const matchSearch = t(p.produit.titre).toLowerCase().includes(query) || 
-                                    (p.produit.description_courte && t(p.produit.description_courte).toLowerCase().includes(query));
-                return matchCat && matchSearch;
-            });
-            
-            document.getElementById('product-count').innerText = filtered.length + " " + UI_STRINGS[currentLang].results;
-            
-            document.getElementById('product-container').innerHTML = filtered.map(p => `
-                <div class="vertex-card rounded-[2.5rem] p-10 bg-slate-900/40 backdrop-blur-xl">
-                    ${p.produit.isNew ? `<div class="badge-new uppercase italic">${UI_STRINGS[currentLang].new}</div>` : ''}
-                    <div class="h-56 mb-8 flex items-center justify-center bg-black/40 rounded-[2rem] p-6 border border-white/5">
-                        <img src="${p.media.imagePrincipale}" class="max-h-full max-w-full object-contain drop-shadow-2xl">
-                    </div>
-                    <div class="flex-grow">
-                        <p class="text-[#FFD700] text-[10px] font-black uppercase tracking-[0.2em] mb-3">${p.produit.categorie}</p>
-                        <h3 class="text-3xl font-black uppercase italic mb-4 leading-none text-white">${t(p.produit.titre)}</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed mb-10 line-clamp-2">${t(p.produit.description_courte || p.produit.titre)}</p>
-                    </div>
-                    <a href="test-template.html?id=${p.id}&lang=${currentLang}" class="btn-gold text-center py-5 rounded-2xl text-[10px] font-black uppercase flex items-center justify-center gap-3">
-                        ${UI_STRINGS[currentLang].discover} <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </a>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function changeLang(l) {
-            params.set('lang', l);
-            window.location.search = params.toString();
-        }
-
-        window.onload = init;
-    </script>
 </body>
 </html>
