@@ -17,26 +17,33 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
+        
+        /* Smooth Scroll au niveau du HTML pour tout le document */
+        html { scroll-behavior: smooth; }
+
         body { background: #020617; color: white; font-family: 'Outfit', sans-serif; opacity: 0; transition: opacity 0.5s ease; -webkit-font-smoothing: antialiased; }
         body.loaded { opacity: 1; }
+        
         .vertex-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; }
         .vertex-card:hover { transform: translateY(-10px); border-color: #FFD700; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        
         .filter-btn { padding: 8px 24px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 215, 0, 0.1); color: #94a3b8; background: rgba(255, 255, 255, 0.03); transition: 0.3s; }
         .filter-btn.active { background: #FFD700; color: black; border-color: #FFD700; box-shadow: 0 0 15px rgba(255,215,0,0.3); }
+        
         .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: black; font-weight: 900; }
         .btn-disabled { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); pointer-events: none; }
+        
         .badge-new { position: absolute; top: 20px; right: 20px; background: #FFD700; color: black; font-size: 8px; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 10; }
     </style>
 </head>
 <body class="p-6 md:p-12">
 
     <script>
-        // --- 1. CONFIGURATION DU CATALOGUE ---
         const ORDRE_CATEGORIES = ["all", "Vitrines", "Smart City", "LED", "Totems", "Ecrans Indoor", "E-Paper"];
 
         const CATALOGUE = [
             {
-                id: "vtx-55", // Doit correspondre au nom du fichier produits/vtx-55.js
+                id: "vtx-55", 
                 titre: "Double Face 55\"",
                 categorie: "Vitrines",
                 image: "images/VITRINE55.jpg",
@@ -50,20 +57,11 @@
                 image: "images/TOTEM65.jpg",
                 desc: "Résistant IP65 - Gestion thermique avancée.",
                 isNew: false
-            },
-            {
-                id: "led-souple",
-                titre: "LED Souple P2.5",
-                categorie: "LED",
-                image: "images/led-souple.jpg",
-                desc: "Technologie flexible pour designs courbes.",
-                isNew: true
             }
-            // Pour ajouter un produit : id: "NOM_DU_JS", puis remplir les infos.
         ];
     </script>
 
-    <header class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
+    <header id="top-header" class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="text-center md:text-left">
             <p id="ui-brand-name" class="text-[#FFD700] font-bold uppercase tracking-[0.5em] text-[10px] mb-3"></p>
             <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-none text-white">
@@ -132,6 +130,10 @@
             categorieActive = cat;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            
+            // 1. AJOUT DU SMOOTH SCROLL AU CLIC
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             filtrerCatalogue();
         }
 
@@ -155,18 +157,15 @@
             container.innerHTML = liste.map(p => `
                 <div class="vertex-card rounded-[2.5rem] p-10 flex flex-col h-full bg-slate-900/40 backdrop-blur-xl">
                     ${p.isNew ? '<div class="badge-new uppercase italic">Nouveau</div>' : ''}
-                    
                     <div class="h-56 mb-8 flex items-center justify-center bg-black/40 rounded-[2rem] p-6 border border-white/5">
                         <img src="${p.image}" class="max-h-full max-w-full object-contain drop-shadow-2xl" 
                              onerror="this.src='https://via.placeholder.com/400x300/020617/FFD700?text=Image+en+attente'">
                     </div>
-
                     <div class="flex-grow">
                         <p class="text-[#FFD700] text-[10px] font-black uppercase tracking-[0.2em] mb-3">${p.categorie}</p>
                         <h3 class="text-3xl font-black uppercase italic mb-4 leading-none text-white">${p.titre}</h3>
                         <p class="text-slate-400 text-xs leading-relaxed mb-10">${p.desc}</p>
                     </div>
-
                     <a href="${p.id ? 'test-template.html?id=' + p.id : '#'}" 
                        class="${p.id ? 'btn-gold' : 'btn-disabled'} text-center py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all">
                         ${p.id ? 'Découvrir la solution' : 'Bientôt disponible'} 
