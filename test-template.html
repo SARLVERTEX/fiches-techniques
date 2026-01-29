@@ -2,106 +2,124 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="images/logo-vertex.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vertex Monaco - Fiche Technique</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        body { background: #020617; color: white; font-family: 'Outfit', sans-serif; }
+        
+        /* Global & Smooth Scroll */
+        html { scroll-behavior: smooth; }
+        body { background: #020617; color: white; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        
         #main-card { display: none; opacity: 0; transition: opacity 0.8s ease-in-out; }
         
-        .scene-3d { perspective: 1200px; display: flex; align-items: center; justify-content: center; min-height: 300px; }
-        .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-20deg) rotateX(5deg); }
-        .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); }
+        /* Perspective 3D Adaptative */
+        .scene-3d { perspective: 1200px; display: flex; align-items: center; justify-content: center; min-height: 250px; width: 100%; }
+        .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-15deg) rotateX(5deg); transition: transform 0.5s ease; }
+        .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
 
-        /* --- STYLE POUR L'IMPRESSION --- */
+        /* Style Print Professionnel */
         @media print {
+            @page { size: A4; margin: 1cm; }
             body { background: white !important; color: black !important; padding: 0 !important; }
-            #main-card { display: block !important; opacity: 1 !important; border: none !important; shadow: none !important; background: white !important; }
-            .glow-band, .bg-white\/\[0\.03\], .bg-black\/30, .bg-black\/50 { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: black !important; }
-            .text-white { color: black !important; }
-            .text-slate-500, .text-slate-400 { color: #64748b !important; }
-            #btn-print, #debug-console { display: none !important; }
-            .scene-3d { transform: scale(0.8); }
-            .face-front { background: #f1f5f9 !important; border-color: #000 !important; }
-            h1, h3, h4 { color: black !important; }
-            #ui-brand, #val-diag, .text-\[\#FFD700\] { color: #856404 !important; } /* Doré plus sombre pour impression */
+            #main-card { display: block !important; opacity: 1 !important; border: 1px solid #eee !important; background: white !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; }
+            .glow-band, .bg-white\/\[0\.03\], .bg-black\/30, .bg-black\/50, .bg-black\/20 { background: #fafafa !important; border: 1px solid #eee !important; color: black !important; box-shadow: none !important; }
+            .text-white, h1, h3, h4, span, p, li { color: black !important; }
+            #btn-print, #btn-back, #debug-console, .badge-new { display: none !important; }
+            .scene-3d { transform: scale(0.65); min-height: 150px; }
+            #ui-brand, #val-diag, .text-\[\#FFD700\], i { color: #856404 !important; }
+            header { padding: 2rem !important; }
+            .flex-row { flex-direction: row !important; } /* Forcer alignement print */
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-2 md:p-8">
 
-    <button id="btn-print" onclick="window.print()" class="fixed bottom-8 right-8 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-xs">
-        <i data-lucide="printer" class="w-5 h-5"></i> Imprimer / PDF
+    <div class="fixed top-4 left-4 md:top-8 md:left-8 z-50 flex gap-2">
+        <a id="btn-back" href="index.html" class="bg-white/10 backdrop-blur-md border border-white/10 text-white p-3 md:px-5 md:py-3 rounded-full flex items-center gap-2 font-bold uppercase text-[10px] hover:bg-[#FFD700] hover:text-black transition-all">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> <span class="hidden md:inline">Retour Showroom</span>
+        </a>
+    </div>
+
+    <button id="btn-print" onclick="window.print()" class="fixed bottom-6 right-6 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
+        <i data-lucide="printer" class="w-4 h-4"></i> <span class="hidden md:inline">Générer PDF / Imprimer</span>
     </button>
 
-    <div id="debug-console" style="display:none;" class="max-w-2xl mx-auto mt-10 bg-red-900/20 border border-red-500/50 rounded-xl p-6 font-mono text-xs">
-        <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur</h1>
+    <div id="debug-console" style="display:none;" class="max-w-2xl mx-auto mt-20 bg-red-900/20 border border-red-500/50 rounded-xl p-6 font-mono text-xs">
+        <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur de chargement</h1>
         <div id="debug-status" class="space-y-1 text-white"></div>
     </div>
 
-    <div id="main-card" class="max-w-6xl mx-auto border border-white/5 rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl">
-        <header class="p-10 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-start gap-8">
-            <div class="flex-1">
-                <p id="ui-brand" class="font-bold uppercase tracking-[0.5em] text-[11px] mb-4 text-[#FFD700]"></p>
-                <h1 id="ui-titre" class="text-4xl md:text-7xl font-black uppercase tracking-tighter italic leading-[0.9] mb-6"></h1>
-                <div id="ui-badges" class="flex flex-wrap gap-3"></div>
+    <div id="main-card" class="max-w-6xl mx-auto border border-white/5 rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl mt-12 md:mt-0 shadow-2xl">
+        
+        <header class="p-8 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-center md:items-start gap-8 text-center md:text-left">
+            <div class="flex-1 w-full">
+                <p id="ui-brand" class="font-bold uppercase tracking-[0.4em] text-[9px] md:text-[11px] mb-4 text-[#FFD700]"></p>
+                <h1 id="ui-titre" class="text-3xl md:text-7xl font-black uppercase tracking-tighter italic leading-tight md:leading-[0.9] mb-6 break-words"></h1>
+                <div id="ui-badges" class="flex flex-wrap justify-center md:justify-start gap-2 md:gap-3"></div>
             </div>
-            <img id="ui-logo" src="" class="h-16 object-contain">
+            <img id="ui-logo" src="" class="h-12 md:h-16 object-contain">
         </header>
 
-        <div class="grid lg:grid-cols-2 gap-8 p-10">
+        <div class="grid lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-10">
             <div class="space-y-6">
-                <div class="bg-black/30 rounded-[3rem] p-10 border border-white/5 flex items-center justify-center min-h-[400px]">
-                    <img id="ui-main-img" src="" class="max-w-full max-h-full object-contain">
+                <div class="bg-black/30 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex items-center justify-center min-h-[300px] md:min-h-[450px]">
+                    <img id="ui-main-img" src="" class="max-w-full max-h-[350px] object-contain drop-shadow-2xl">
                 </div>
-                <div id="ui-galerie" class="grid grid-cols-3 gap-4"></div>
+                <div id="ui-galerie" class="grid grid-cols-3 gap-3 md:gap-4"></div>
             </div>
             
-            <div class="bg-white/[0.03] rounded-[3rem] p-10 border border-white/5 flex flex-col items-center justify-center">
-                <div class="scene-3d w-full">
+            <div class="bg-white/[0.03] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex flex-col items-center justify-center">
+                <div class="scene-3d">
                     <div id="ui-3d" class="screen-3d">
-                        <div class="face-front rounded-sm"><span id="val-diag" class="font-black italic text-[#FFD700]"></span></div>
-                        <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/40 flex justify-center pt-2 text-[#FFD700] text-[10px] font-bold" id="val-w"></div>
-                        <div class="absolute -left-16 top-0 bottom-0 border-l border-dashed border-[#FFD700]/40 flex items-center text-[#FFD700] text-[10px] font-bold"><span id="val-h" class="-rotate-90"></span></div>
+                        <div class="face-front rounded-sm">
+                            <span id="val-diag" class="font-black italic text-[#FFD700] text-xl md:text-3xl"></span>
+                        </div>
+                        <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/40 flex justify-center pt-2 text-[#FFD700] text-[9px] font-bold" id="val-w"></div>
+                        <div class="absolute -left-12 top-0 bottom-0 border-l border-dashed border-[#FFD700]/40 flex items-center text-[#FFD700] text-[9px] font-bold"><span id="val-h" class="-rotate-90 whitespace-nowrap"></span></div>
                     </div>
                 </div>
-                <div class="mt-12 bg-black/50 p-6 rounded-3xl border border-[#FFD700]/20 w-full flex items-center gap-5">
-                    <div class="grid grid-cols-2 gap-2"><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div></div>
-                    <div><p class="text-[9px] uppercase text-slate-500 font-black tracking-widest">Fixation</p><p id="val-vesa" class="text-sm font-black text-[#FFD700] uppercase"></p></div>
+                <div class="mt-8 bg-black/50 p-5 rounded-2xl border border-[#FFD700]/20 w-full flex items-center gap-4">
+                    <div class="grid grid-cols-2 gap-1.5"><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div></div>
+                    <div>
+                        <p class="text-[8px] uppercase text-slate-500 font-black tracking-widest leading-none mb-1">Système de Fixation</p>
+                        <p id="val-vesa" class="text-xs md:text-sm font-black text-[#FFD700] uppercase"></p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <section class="glow-band py-12 px-10 flex flex-col md:flex-row gap-16 border-y border-white/5">
+        <section class="glow-band py-10 px-6 md:px-10 flex flex-col md:flex-row gap-12 md:gap-16 border-y border-white/5">
             <div class="flex-1">
-                <h3 class="text-[#FFD700] font-black text-[11px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"><i data-lucide="package" class="w-5 h-5"></i> Inclus</h3>
-                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-8 text-white"></div>
+                <h3 class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center justify-center md:justify-start gap-3"><i data-lucide="package" class="w-4 h-4"></i> Inclus dans le Pack</h3>
+                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center md:text-left"></div>
             </div>
-            <div class="flex-1">
-                <h3 class="text-[#FFD700] font-black text-[11px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"><i data-lucide="zap" class="w-5 h-5"></i> Options</h3>
-                <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white"></div>
+            <div class="flex-1 border-t border-white/5 md:border-0 pt-10 md:pt-0">
+                <h3 class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center justify-center md:justify-start gap-3"><i data-lucide="zap" class="w-4 h-4"></i> Options de Personnalisation</h3>
+                <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
             </div>
         </section>
 
-        <div class="p-10 grid lg:grid-cols-3 gap-10">
-            <div id="ui-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-8"></div>
-            <div class="flex flex-col gap-8">
-                <div class="bg-white/[0.03] p-8 rounded-[2.5rem] border-l-4 border-[#FFD700]">
-                    <h3 class="font-black uppercase text-[11px] mb-8 tracking-widest text-white">Équipe Vertex</h3>
-                    <div id="ui-team" class="space-y-6"></div>
+        <div class="p-6 md:p-10 grid lg:grid-cols-3 gap-8 md:gap-10">
+            <div id="ui-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-6 md:gap-8"></div>
+            <div class="flex flex-col gap-6 md:gap-8">
+                <div class="bg-white/[0.03] p-8 rounded-[2rem] border-l-4 border-[#FFD700]">
+                    <h3 class="font-black uppercase text-[10px] mb-8 tracking-widest text-center md:text-left">Votre Expert Vertex</h3>
+                    <div id="ui-team" class="space-y-6 text-center md:text-left"></div>
                 </div>
-                <div class="bg-black/20 p-8 rounded-[2.5rem] border border-white/5">
-                    <h3 class="text-[#FFD700] font-black uppercase text-[11px] mb-6 tracking-widest">Maintenance</h3>
-                    <ul id="ui-entret-list" class="space-y-3 text-[10px] text-slate-400 italic"></ul>
+                <div class="bg-black/20 p-8 rounded-[2rem] border border-white/5">
+                    <h3 class="text-[#FFD700] font-black uppercase text-[10px] mb-6 tracking-widest text-center md:text-left">Consignes d'Entretien</h3>
+                    <ul id="ui-entret-list" class="space-y-3 text-[9px] text-slate-400 italic"></ul>
                 </div>
             </div>
         </div>
 
-        <footer class="p-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+        <footer class="p-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] text-slate-500 font-bold uppercase tracking-widest text-center">
             <p id="ui-addr"></p>
-            <div class="flex gap-10 text-white"><p id="ui-ref"></p><p id="ui-sn" class="opacity-30"></p></div>
+            <div class="flex gap-8 text-white"><p id="ui-ref"></p><p id="ui-sn" class="opacity-30"></p></div>
         </footer>
     </div>
 
@@ -111,10 +129,14 @@
         const produitId = params.get('id');
 
         window.onload = () => {
-            if(!produitId) return showError("ID manquant");
+            if(!produitId) return showError("ID du produit manquant dans l'URL.");
+            
+            // Chargement de la config globale
             const cScript = document.createElement('script');
             cScript.src = "config.js?v=" + version;
             document.head.appendChild(cScript);
+            
+            // Chargement de la donnée produit spécifique
             const pScript = document.createElement('script');
             pScript.src = "produits/" + produitId + ".js?v=" + version;
             pScript.onload = () => {
@@ -122,9 +144,10 @@
                     if (window.PRODUCT_DATA && window.GLOBAL_CONFIG) {
                         window.PRODUCT_CONFIG = window.PRODUCT_DATA;
                         initApp();
-                    } else { showError("Données incomplètes."); }
-                }, 100);
+                    } else { showError("Impossible de charger les données du fichier : produits/" + produitId + ".js"); }
+                }, 150);
             };
+            pScript.onerror = () => showError("Fichier introuvable : produits/" + produitId + ".js");
             document.head.appendChild(pScript);
         };
 
@@ -134,13 +157,13 @@
         }
 
         function initApp() {
-            const gc = window.GLOBAL_CONFIG;
-            const pc = window.PRODUCT_CONFIG;
-            const d = document;
-
+            const gc = window.GLOBAL_CONFIG; const pc = window.PRODUCT_CONFIG; const d = document;
+            
+            // Affichage avec transition
             d.getElementById('main-card').style.display = 'block';
             setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
+            // Branding & Textes
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
             d.getElementById('ui-titre').innerText = pc.produit.titre;
@@ -149,24 +172,28 @@
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
 
-            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3.5 h-3.5 ${b.couleur}"></i>${b.label}</div>`).join('');
-            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `<div class="bg-black/40 rounded-2xl p-2 border border-white/5"><img src="${img.url}" class="w-full h-20 object-cover rounded-xl"><p class="text-[7px] mt-1 text-center font-black uppercase opacity-50 text-white">${img.label}</p></div>`).join('');
+            // Badges & Galerie
+            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${b.label}</div>`).join('');
+            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `<div class="bg-black/40 rounded-xl p-1.5 border border-white/5"><img src="${img.url}" class="w-full h-14 md:h-20 object-cover rounded-lg"></div>`).join('');
 
+            // Dimensions 3D
             const isPortrait = pc.dimensions.orientation === "portrait";
             const s3d = d.getElementById('ui-3d');
-            s3d.style.width = isPortrait ? "160px" : "260px";
-            s3d.style.height = isPortrait ? "260px" : "160px";
+            s3d.style.width = isPortrait ? "130px" : "220px";
+            s3d.style.height = isPortrait ? "220px" : "130px";
             d.getElementById('val-diag').innerText = pc.dimensions.diagonale;
             d.getElementById('val-w').innerText = pc.dimensions.largeur;
             d.getElementById('val-h').innerText = pc.dimensions.hauteur;
             d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
 
-            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 text-white last:border-0"><p class="font-black text-[12px] uppercase">${m.nom}</p><p class="text-slate-500 text-[9px] uppercase">${m.poste}</p>${m.tel ? `<p class="text-[#FFD700] font-bold text-[10px] mt-1">${m.tel}</p>` : ''}</div>`).join('');
-            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-8 rounded-[2.5rem] border border-white/5 text-white"><h4 class="text-${s.couleur}-400 font-black text-[11px] mb-6 flex items-center gap-3 uppercase"><i data-lucide="${s.icone}" class="w-5 h-5"></i>${s.titre}</h4><div class="space-y-3">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-2 text-[11px]"><span class="text-slate-500 italic">${l[0]}</span><span class="font-bold uppercase text-white">${l[1]}</span></div>`).join('')}</div></div>`).join('');
-            d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[11px] uppercase">${a.nom}</p><p class="text-[10px] text-slate-500 italic uppercase">${a.detail}</p></div>`).join('');
-            d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-center gap-3 font-bold uppercase text-[10px]"><i data-lucide="${o.icone}" class="w-4 h-4 text-[#FFD700]"></i>${o.nom}</div>`).join('');
+            // Équipe, Specs, Accessoires, Options & Entretien
+            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 last:border-0"><p class="font-black text-[11px] uppercase">${m.nom}</p><p class="text-slate-500 text-[8px] uppercase">${m.poste}</p></div>`).join('');
+            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5"><h4 class="text-${s.couleur}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase"><i data-lucide="${s.icone}" class="w-4 h-4"></i>${s.titre}</h4><div class="space-y-2">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-1 text-[10px]"><span class="text-slate-500 italic">${l[0]}</span><span class="font-bold uppercase text-white">${l[1]}</span></div>`).join('')}</div></div>`).join('');
+            d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[10px] uppercase">${a.nom}</p><p class="text-[9px] text-slate-500 italic uppercase">${a.detail}</p></div>`).join('');
+            d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-center md:justify-start gap-2 font-bold uppercase text-[9px]"><i data-lucide="${o.icone}" class="w-3.5 h-3.5 text-[#FFD700]"></i>${o.nom}</div>`).join('');
             d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${e}</li>`).join('');
 
+            // Activation des icônes
             lucide.createIcons();
         }
     </script>
