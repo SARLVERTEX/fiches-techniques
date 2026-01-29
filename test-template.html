@@ -41,7 +41,7 @@
             @page { size: A4; margin: 0; }
             body { background: #020617 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
             #main-card { display: block !important; opacity: 1 !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; border: none !important; background: #020617 !important; }
-            #btn-print, #btn-back, #lang-switcher, #debug-console, .fixed, .zoomable-container::after { display: none !important; }
+            #btn-print, #btn-back, #lang-switcher, #debug-console, .fixed, .zoomable-container::after, #share-actions { display: none !important; }
             .scene-3d { transform: scale(0.8); min-height: 200px; }
             header { padding: 3rem !important; }
             .text-[#FFD700], #val-diag, #ui-titre { color: #FFD700 !important; }
@@ -62,9 +62,17 @@
         <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">EN</button>
     </div>
 
-    <button id="btn-print" onclick="window.print()" class="fixed bottom-6 right-6 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
-        <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print" class="hidden md:inline"></span>
-    </button>
+    <div id="share-actions" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <a id="share-whatsapp" href="#" target="_blank" class="bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+        </a>
+        <a id="share-email" href="#" class="bg-white/10 backdrop-blur-md border border-white/10 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+        </a>
+        <button id="btn-print" onclick="window.print()" class="bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
+            <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print" class="hidden md:inline"></span>
+        </button>
+    </div>
 
     <div id="debug-console" style="display:none;" class="max-w-2xl mx-auto mt-20 bg-red-900/20 border border-red-500/50 rounded-xl p-6 font-mono text-xs text-center">
         <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur</h1>
@@ -209,13 +217,19 @@
 
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
-            d.getElementById('ui-titre').innerText = t(pc.produit.titre);
+            const finalTitre = t(pc.produit.titre);
+            d.getElementById('ui-titre').innerText = finalTitre;
             d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
             
-            // Zoom Image Principale
             const mainImgCont = d.getElementById('main-img-container');
             mainImgCont.classList.add('zoomable-container');
             mainImgCont.onclick = () => openZoom(pc.media.imagePrincipale);
+
+            // CONFIGURATION PARTAGE
+            const currentUrl = encodeURIComponent(window.location.href);
+            const prodEncoded = encodeURIComponent(finalTitre);
+            d.getElementById('share-whatsapp').href = `https://wa.me/?text=${prodEncoded}%20-%20Vertex%20Monaco%20:%20${currentUrl}`;
+            d.getElementById('share-email').href = `mailto:?subject=${prodEncoded}%20-%20Vertex%20Monaco&body=Bonjour,%20voici%20la%20fiche%20technique%20du%20produit%20Vertex%20:%20${currentUrl}`;
 
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
@@ -223,7 +237,6 @@
 
             d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
             
-            // Galerie avec Zoom
             d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `
                 <div class="zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5" onclick="openZoom('${img.url}')">
                     <img src="${img.url}" class="w-full h-14 md:h-20 object-cover rounded-lg">
