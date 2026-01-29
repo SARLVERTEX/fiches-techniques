@@ -36,16 +36,19 @@
         }
         #zoom-overlay img { max-width: 90%; max-height: 90%; border-radius: 1rem; box-shadow: 0 0 50px rgba(0,0,0,0.5); object-fit: contain; }
 
-        /* --- CONFIGURATION IMPRESSION HAUTE QUALITÉ --- */
+        /* Effet boutons contact */
+        .contact-link { transition: all 0.2s ease; }
+        .contact-link:hover { transform: scale(1.15); filter: brightness(1.2); }
+
+        /* --- CONFIGURATION IMPRESSION --- */
         @media print {
             @page { size: A4; margin: 0; }
             body { background: #020617 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
             #main-card { display: block !important; opacity: 1 !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; border: none !important; background: #020617 !important; }
-            #btn-print, #btn-back, #lang-switcher, #debug-console, .fixed, .zoomable-container::after, #share-actions { display: none !important; }
+            #btn-print, #btn-back, #lang-switcher, #debug-console, .fixed, .zoomable-container::after, .contact-actions { display: none !important; }
             .scene-3d { transform: scale(0.8); min-height: 200px; }
             header { padding: 3rem !important; }
             .text-[#FFD700], #val-diag, #ui-titre { color: #FFD700 !important; }
-            .border-white\/5 { border-color: rgba(255,255,255,0.1) !important; }
         }
     </style>
 </head>
@@ -62,13 +65,7 @@
         <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">EN</button>
     </div>
 
-    <div id="share-actions" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-        <a id="share-whatsapp" href="#" target="_blank" class="bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center">
-            <i data-lucide="message-circle" class="w-5 h-5"></i>
-        </a>
-        <a id="share-email" href="#" class="bg-white/10 backdrop-blur-md border border-white/10 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center">
-            <i data-lucide="mail" class="w-5 h-5"></i>
-        </a>
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
         <button id="btn-print" onclick="window.print()" class="bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
             <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print" class="hidden md:inline"></span>
         </button>
@@ -207,6 +204,7 @@
             d.getElementById('main-card').style.display = 'block';
             setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
+            // Textes UI
             d.getElementById('txt-showroom').innerText = ui.showroom;
             d.getElementById('txt-print').innerText = ui.print;
             d.getElementById('txt-fixation').innerText = ui.fixation;
@@ -215,22 +213,40 @@
             d.getElementById('txt-expert-title').innerText = ui.expert;
             d.getElementById('txt-entretien-title').innerText = ui.entretien;
 
+            // Données de base
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
-            const finalTitre = t(pc.produit.titre);
-            d.getElementById('ui-titre').innerText = finalTitre;
+            d.getElementById('ui-titre').innerText = t(pc.produit.titre);
             d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
             
+            // Zoom Image Principale
             const mainImgCont = d.getElementById('main-img-container');
             mainImgCont.classList.add('zoomable-container');
             mainImgCont.onclick = () => openZoom(pc.media.imagePrincipale);
 
-            // CONFIGURATION PARTAGE
-            const currentUrl = encodeURIComponent(window.location.href);
-            const prodEncoded = encodeURIComponent(finalTitre);
-            d.getElementById('share-whatsapp').href = `https://wa.me/?text=${prodEncoded}%20-%20Vertex%20Monaco%20:%20${currentUrl}`;
-            d.getElementById('share-email').href = `mailto:?subject=${prodEncoded}%20-%20Vertex%20Monaco&body=Bonjour,%20voici%20la%20fiche%20technique%20du%20produit%20Vertex%20:%20${currentUrl}`;
+            // Génération de l'équipe avec logos contact
+            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => {
+                const whatsappHtml = m.tel ? `
+                    <a href="https://wa.me/${m.tel.replace(/\+/g, '').replace(/\s+/g, '')}" target="_blank" class="contact-link bg-[#25D366] text-white p-2 rounded-full shadow-lg">
+                        <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                    </a>` : '';
+                const emailHtml = m.email ? `
+                    <a href="mailto:${m.email}" class="contact-link bg-white/10 border border-white/20 text-white p-2 rounded-full shadow-lg">
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    </a>` : '';
 
+                return `
+                    <div class="border-b border-white/5 pb-5 last:border-0">
+                        <p class="font-black text-[11px] uppercase mb-0.5">${m.nom}</p>
+                        <p class="text-slate-500 text-[8px] uppercase mb-3">${t(m.poste)}</p>
+                        <div class="contact-actions flex gap-2.5 justify-center md:justify-start">
+                            ${whatsappHtml} ${emailHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Autres éléments (Galerie, Badges, Specs...)
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
@@ -252,8 +268,6 @@
             d.getElementById('val-h').innerText = pc.dimensions.hauteur;
             d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
 
-            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 last:border-0"><p class="font-black text-[11px] uppercase">${m.nom}</p><p class="text-slate-500 text-[8px] uppercase">${t(m.poste)}</p></div>`).join('');
-            
             d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `
                 <div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5">
                     <h4 class="text-${s.couleur}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase">
