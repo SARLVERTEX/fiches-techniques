@@ -9,30 +9,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        
-        /* Global & Smooth Scroll */
         html { scroll-behavior: smooth; }
         body { background: #020617; color: white; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-        
         #main-card { display: none; opacity: 0; transition: opacity 0.8s ease-in-out; }
-        
-        /* Perspective 3D Adaptative */
         .scene-3d { perspective: 1200px; display: flex; align-items: center; justify-content: center; min-height: 250px; width: 100%; }
         .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-15deg) rotateX(5deg); transition: transform 0.5s ease; }
         .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
 
-        /* Style Print Professionnel */
         @media print {
             @page { size: A4; margin: 1cm; }
             body { background: white !important; color: black !important; padding: 0 !important; }
             #main-card { display: block !important; opacity: 1 !important; border: 1px solid #eee !important; background: white !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; }
             .glow-band, .bg-white\/\[0\.03\], .bg-black\/30, .bg-black\/50, .bg-black\/20 { background: #fafafa !important; border: 1px solid #eee !important; color: black !important; box-shadow: none !important; }
             .text-white, h1, h3, h4, span, p, li { color: black !important; }
-            #btn-print, #btn-back, #debug-console, .badge-new { display: none !important; }
+            #btn-print, #btn-back, #lang-switcher, #debug-console { display: none !important; }
             .scene-3d { transform: scale(0.65); min-height: 150px; }
             #ui-brand, #val-diag, .text-\[\#FFD700\], i { color: #856404 !important; }
-            header { padding: 2rem !important; }
-            .flex-row { flex-direction: row !important; } /* Forcer alignement print */
         }
     </style>
 </head>
@@ -40,21 +32,25 @@
 
     <div class="fixed top-4 left-4 md:top-8 md:left-8 z-50 flex gap-2">
         <a id="btn-back" href="index.html" class="bg-white/10 backdrop-blur-md border border-white/10 text-white p-3 md:px-5 md:py-3 rounded-full flex items-center gap-2 font-bold uppercase text-[10px] hover:bg-[#FFD700] hover:text-black transition-all">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> <span class="hidden md:inline">Retour Showroom</span>
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> <span id="txt-showroom" class="hidden md:inline"></span>
         </a>
     </div>
 
+    <div id="lang-switcher" class="fixed top-4 right-4 z-50 flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/10">
+        <button onclick="changeLang('fr')" id="lang-fr" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">FR</button>
+        <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">EN</button>
+    </div>
+
     <button id="btn-print" onclick="window.print()" class="fixed bottom-6 right-6 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
-        <i data-lucide="printer" class="w-4 h-4"></i> <span class="hidden md:inline">Générer PDF / Imprimer</span>
+        <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print" class="hidden md:inline"></span>
     </button>
 
     <div id="debug-console" style="display:none;" class="max-w-2xl mx-auto mt-20 bg-red-900/20 border border-red-500/50 rounded-xl p-6 font-mono text-xs">
-        <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur de chargement</h1>
+        <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur</h1>
         <div id="debug-status" class="space-y-1 text-white"></div>
     </div>
 
     <div id="main-card" class="max-w-6xl mx-auto border border-white/5 rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl mt-12 md:mt-0 shadow-2xl">
-        
         <header class="p-8 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-center md:items-start gap-8 text-center md:text-left">
             <div class="flex-1 w-full">
                 <p id="ui-brand" class="font-bold uppercase tracking-[0.4em] text-[9px] md:text-[11px] mb-4 text-[#FFD700]"></p>
@@ -71,34 +67,28 @@
                 </div>
                 <div id="ui-galerie" class="grid grid-cols-3 gap-3 md:gap-4"></div>
             </div>
-            
             <div class="bg-white/[0.03] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex flex-col items-center justify-center">
                 <div class="scene-3d">
                     <div id="ui-3d" class="screen-3d">
-                        <div class="face-front rounded-sm">
-                            <span id="val-diag" class="font-black italic text-[#FFD700] text-xl md:text-3xl"></span>
-                        </div>
+                        <div class="face-front rounded-sm"><span id="val-diag" class="font-black italic text-[#FFD700] text-xl md:text-3xl"></span></div>
                         <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/40 flex justify-center pt-2 text-[#FFD700] text-[9px] font-bold" id="val-w"></div>
                         <div class="absolute -left-12 top-0 bottom-0 border-l border-dashed border-[#FFD700]/40 flex items-center text-[#FFD700] text-[9px] font-bold"><span id="val-h" class="-rotate-90 whitespace-nowrap"></span></div>
                     </div>
                 </div>
                 <div class="mt-8 bg-black/50 p-5 rounded-2xl border border-[#FFD700]/20 w-full flex items-center gap-4">
                     <div class="grid grid-cols-2 gap-1.5"><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div><div class="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div></div>
-                    <div>
-                        <p class="text-[8px] uppercase text-slate-500 font-black tracking-widest leading-none mb-1">Système de Fixation</p>
-                        <p id="val-vesa" class="text-xs md:text-sm font-black text-[#FFD700] uppercase"></p>
-                    </div>
+                    <div><p id="txt-fixation" class="text-[8px] uppercase text-slate-500 font-black tracking-widest leading-none mb-1"></p><p id="val-vesa" class="text-xs md:text-sm font-black text-[#FFD700] uppercase"></p></div>
                 </div>
             </div>
         </div>
 
         <section class="glow-band py-10 px-6 md:px-10 flex flex-col md:flex-row gap-12 md:gap-16 border-y border-white/5">
             <div class="flex-1">
-                <h3 class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center justify-center md:justify-start gap-3"><i data-lucide="package" class="w-4 h-4"></i> Inclus dans le Pack</h3>
+                <h3 id="txt-inclus-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center justify-center md:justify-start gap-3"></h3>
                 <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center md:text-left"></div>
             </div>
             <div class="flex-1 border-t border-white/5 md:border-0 pt-10 md:pt-0">
-                <h3 class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center justify-center md:justify-start gap-3"><i data-lucide="zap" class="w-4 h-4"></i> Options de Personnalisation</h3>
+                <h3 id="txt-options-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center justify-center md:justify-start gap-3"></h3>
                 <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
             </div>
         </section>
@@ -107,11 +97,11 @@
             <div id="ui-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-6 md:gap-8"></div>
             <div class="flex flex-col gap-6 md:gap-8">
                 <div class="bg-white/[0.03] p-8 rounded-[2rem] border-l-4 border-[#FFD700]">
-                    <h3 class="font-black uppercase text-[10px] mb-8 tracking-widest text-center md:text-left">Votre Expert Vertex</h3>
+                    <h3 id="txt-expert-title" class="font-black uppercase text-[10px] mb-8 tracking-widest text-center md:text-left"></h3>
                     <div id="ui-team" class="space-y-6 text-center md:text-left"></div>
                 </div>
                 <div class="bg-black/20 p-8 rounded-[2rem] border border-white/5">
-                    <h3 class="text-[#FFD700] font-black uppercase text-[10px] mb-6 tracking-widest text-center md:text-left">Consignes d'Entretien</h3>
+                    <h3 id="txt-entretien-title" class="text-[#FFD700] font-black uppercase text-[10px] mb-6 tracking-widest text-center md:text-left"></h3>
                     <ul id="ui-entret-list" class="space-y-3 text-[9px] text-slate-400 italic"></ul>
                 </div>
             </div>
@@ -127,16 +117,23 @@
         const version = new Date().getTime();
         const params = new URLSearchParams(window.location.search);
         const produitId = params.get('id');
+        const currentLang = params.get('lang') || 'fr';
+
+        const UI_STRINGS = {
+            fr: { showroom: "Retour Showroom", print: "Générer PDF / Imprimer", fixation: "Système de Fixation", inclus: "Inclus dans le Pack", options: "Options de Personnalisation", expert: "Votre Expert Vertex", entretien: "Consignes d'Entretien" },
+            en: { showroom: "Back to Showroom", print: "Generate PDF / Print", fixation: "Mounting System", inclus: "Included in Pack", options: "Customization Options", expert: "Your Vertex Expert", entretien: "Maintenance Rules" }
+        };
+
+        const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : obj;
 
         window.onload = () => {
             if(!produitId) return showError("ID du produit manquant dans l'URL.");
+            document.getElementById(`lang-${currentLang}`).classList.add('bg-[#FFD700]', 'text-black');
             
-            // Chargement de la config globale
             const cScript = document.createElement('script');
             cScript.src = "config.js?v=" + version;
             document.head.appendChild(cScript);
             
-            // Chargement de la donnée produit spécifique
             const pScript = document.createElement('script');
             pScript.src = "produits/" + produitId + ".js?v=" + version;
             pScript.onload = () => {
@@ -144,12 +141,17 @@
                     if (window.PRODUCT_DATA && window.GLOBAL_CONFIG) {
                         window.PRODUCT_CONFIG = window.PRODUCT_DATA;
                         initApp();
-                    } else { showError("Impossible de charger les données du fichier : produits/" + produitId + ".js"); }
+                    } else { showError("Erreur de chargement des données."); }
                 }, 150);
             };
-            pScript.onerror = () => showError("Fichier introuvable : produits/" + produitId + ".js");
+            pScript.onerror = () => showError("Fichier produit introuvable.");
             document.head.appendChild(pScript);
         };
+
+        function changeLang(l) {
+            params.set('lang', l);
+            window.location.search = params.toString();
+        }
 
         function showError(m) {
             document.getElementById('debug-console').style.display = 'block';
@@ -158,25 +160,30 @@
 
         function initApp() {
             const gc = window.GLOBAL_CONFIG; const pc = window.PRODUCT_CONFIG; const d = document;
+            const ui = UI_STRINGS[currentLang];
             
-            // Affichage avec transition
             d.getElementById('main-card').style.display = 'block';
             setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
-            // Branding & Textes
+            d.getElementById('txt-showroom').innerText = ui.showroom;
+            d.getElementById('txt-print').innerText = ui.print;
+            d.getElementById('txt-fixation').innerText = ui.fixation;
+            d.getElementById('txt-inclus-title').innerHTML = `<i data-lucide="package" class="w-4 h-4"></i> ${ui.inclus}`;
+            d.getElementById('txt-options-title').innerHTML = `<i data-lucide="zap" class="w-4 h-4"></i> ${ui.options}`;
+            d.getElementById('txt-expert-title').innerText = ui.expert;
+            d.getElementById('txt-entretien-title').innerText = ui.entretien;
+
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
-            d.getElementById('ui-titre').innerText = pc.produit.titre;
+            d.getElementById('ui-titre').innerText = t(pc.produit.titre);
             d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + gc.brand.copyright;
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
 
-            // Badges & Galerie
-            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${b.label}</div>`).join('');
+            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
             d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `<div class="bg-black/40 rounded-xl p-1.5 border border-white/5"><img src="${img.url}" class="w-full h-14 md:h-20 object-cover rounded-lg"></div>`).join('');
 
-            // Dimensions 3D
             const isPortrait = pc.dimensions.orientation === "portrait";
             const s3d = d.getElementById('ui-3d');
             s3d.style.width = isPortrait ? "130px" : "220px";
@@ -186,14 +193,12 @@
             d.getElementById('val-h').innerText = pc.dimensions.hauteur;
             d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
 
-            // Équipe, Specs, Accessoires, Options & Entretien
-            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 last:border-0"><p class="font-black text-[11px] uppercase">${m.nom}</p><p class="text-slate-500 text-[8px] uppercase">${m.poste}</p></div>`).join('');
-            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5"><h4 class="text-${s.couleur}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase"><i data-lucide="${s.icone}" class="w-4 h-4"></i>${s.titre}</h4><div class="space-y-2">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-1 text-[10px]"><span class="text-slate-500 italic">${l[0]}</span><span class="font-bold uppercase text-white">${l[1]}</span></div>`).join('')}</div></div>`).join('');
-            d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[10px] uppercase">${a.nom}</p><p class="text-[9px] text-slate-500 italic uppercase">${a.detail}</p></div>`).join('');
-            d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-center md:justify-start gap-2 font-bold uppercase text-[9px]"><i data-lucide="${o.icone}" class="w-3.5 h-3.5 text-[#FFD700]"></i>${o.nom}</div>`).join('');
-            d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${e}</li>`).join('');
+            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 last:border-0"><p class="font-black text-[11px] uppercase">${m.nom}</p><p class="text-slate-500 text-[8px] uppercase">${t(m.poste)}</p></div>`).join('');
+            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `<div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5"><h4 class="text-${s.couleur}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase"><i data-lucide="${s.icone}" class="w-4 h-4"></i>${t(s.titre)}</h4><div class="space-y-2">${s.lignes.map(l => `<div class="flex justify-between border-b border-white/5 pb-1 text-[10px]"><span class="text-slate-500 italic">${t(l[0])}</span><span class="font-bold uppercase text-white">${t(l[1])}</span></div>`).join('')}</div></div>`).join('');
+            d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[10px] uppercase">${t(a.nom)}</p><p class="text-[9px] text-slate-500 italic uppercase">${t(a.detail)}</p></div>`).join('');
+            d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-center md:justify-start gap-2 font-bold uppercase text-[9px]"><i data-lucide="${o.icone}" class="w-3.5 h-3.5 text-[#FFD700]"></i>${t(o.nom)}</div>`).join('');
+            d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${t(e)}</li>`).join('');
 
-            // Activation des icônes
             lucide.createIcons();
         }
     </script>
