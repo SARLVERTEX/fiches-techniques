@@ -1,9 +1,17 @@
-// Données spécifiques au produit VTX-55 - VERSION BILINGUE
+// produits/vtx-55.js
 window.PRODUCT_DATA = {
     produit: {
+        id: "vtx-55", // Important pour le lien
+        categorie: "Vitrines", // Utilisé pour les filtres de l'index
+        isNew: true, // Affiche le badge "Nouveau" sur l'index
         titre: { 
             fr: "ÉCRAN VITRINE 55'' DOUBLE FACE", 
             en: "55'' DOUBLE-SIDED WINDOW DISPLAY" 
+        },
+        // 'description_courte' est utilisé par l'index pour la carte produit
+        description_courte: { 
+            fr: "Haute luminosité 2500 nits pour une visibilité Indoor/Outdoor parfaite.", 
+            en: "High brightness 2500 nits for perfect Indoor/Outdoor visibility." 
         },
         phraseAccroche: { 
             fr: "Haute luminosité pour une visibilité Indoor/Outdoor.", 
@@ -25,7 +33,7 @@ window.PRODUCT_DATA = {
         vesa: "400 x 400"
     },
     media: {
-        imagePrincipale: "images/VITRINE55.jpg",
+        imagePrincipale: "images/VITRINE55.jpg", // Utilisé par l'index pour la photo de la carte
         galerie: [
             { url: "images/zoom1.jpg", label: { fr: "Finition Verre", en: "Glass Finish" } },
             { url: "images/zoom2.jpg", label: { fr: "Épaisseur", en: "Thickness" } },
