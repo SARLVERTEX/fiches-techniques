@@ -18,28 +18,32 @@
         .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-15deg) rotateX(5deg); transition: transform 0.5s ease; }
         .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
 
+        /* Zoom Lightbox System */
+        .zoomable-container { position: relative; cursor: pointer; overflow: hidden; }
+        .zoomable-container::after { 
+            content: '🔍'; position: absolute; bottom: 10px; right: 10px; 
+            background: rgba(255, 215, 0, 0.9); width: 26px; height: 26px; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 50%; font-size: 12px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 10;
+        }
+        .zoomable-container:hover::after { opacity: 1; }
+
+        #zoom-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(2, 6, 23, 0.98); z-index: 9999; 
+            display: none; align-items: center; justify-content: center; 
+            cursor: zoom-out; backdrop-filter: blur(10px);
+        }
+        #zoom-overlay img { max-width: 90%; max-height: 90%; border-radius: 1rem; box-shadow: 0 0 50px rgba(0,0,0,0.5); object-fit: contain; }
+
         /* --- CONFIGURATION IMPRESSION HAUTE QUALITÉ --- */
         @media print {
             @page { size: A4; margin: 0; }
             body { background: #020617 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
-            #main-card { 
-                display: block !important; 
-                opacity: 1 !important; 
-                width: 100% !important; 
-                border-radius: 0 !important; 
-                margin: 0 !important; 
-                border: none !important;
-                background: #020617 !important;
-            }
-            /* Cacher les interfaces de navigation */
-            #btn-print, #btn-back, #lang-switcher, #debug-console, .fixed { display: none !important; }
-            
-            /* Ajustements de mise en page */
+            #main-card { display: block !important; opacity: 1 !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; border: none !important; background: #020617 !important; }
+            #btn-print, #btn-back, #lang-switcher, #debug-console, .fixed, .zoomable-container::after { display: none !important; }
             .scene-3d { transform: scale(0.8); min-height: 200px; }
-            .grid { gap: 1.5rem !important; }
             header { padding: 3rem !important; }
-            
-            /* Forcer les couleurs des textes et bordures dorées */
             .text-[#FFD700], #val-diag, #ui-titre { color: #FFD700 !important; }
             .border-white\/5 { border-color: rgba(255,255,255,0.1) !important; }
         }
@@ -79,7 +83,7 @@
 
         <div class="grid lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-10">
             <div class="space-y-6">
-                <div class="bg-black/30 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex items-center justify-center min-h-[300px] md:min-h-[450px]">
+                <div id="main-img-container" class="bg-black/30 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex items-center justify-center min-h-[300px] md:min-h-[450px]">
                     <img id="ui-main-img" src="" class="max-w-full max-h-[350px] object-contain drop-shadow-2xl">
                 </div>
                 <div id="ui-galerie" class="grid grid-cols-3 gap-3 md:gap-4"></div>
@@ -175,6 +179,19 @@
             document.getElementById('debug-status').innerText = m;
         }
 
+        function openZoom(src) {
+            let overlay = document.getElementById('zoom-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'zoom-overlay';
+                overlay.innerHTML = '<img id="zoom-img" src="">';
+                overlay.onclick = () => overlay.style.display = 'none';
+                document.body.appendChild(overlay);
+            }
+            document.getElementById('zoom-img').src = src;
+            overlay.style.display = 'flex';
+        }
+
         function initApp() {
             const gc = window.GLOBAL_CONFIG; const pc = window.PRODUCT_CONFIG; const d = document;
             const ui = UI_STRINGS[currentLang];
@@ -182,7 +199,6 @@
             d.getElementById('main-card').style.display = 'block';
             setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
-            // Traductions UI Statiques
             d.getElementById('txt-showroom').innerText = ui.showroom;
             d.getElementById('txt-print').innerText = ui.print;
             d.getElementById('txt-fixation').innerText = ui.fixation;
@@ -191,20 +207,29 @@
             d.getElementById('txt-expert-title').innerText = ui.expert;
             d.getElementById('txt-entretien-title').innerText = ui.entretien;
 
-            // Branding & Global
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
             d.getElementById('ui-titre').innerText = t(pc.produit.titre);
             d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
+            
+            // Zoom Image Principale
+            const mainImgCont = d.getElementById('main-img-container');
+            mainImgCont.classList.add('zoomable-container');
+            mainImgCont.onclick = () => openZoom(pc.media.imagePrincipale);
+
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
 
-            // Badges & Galerie
             d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
-            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `<div class="bg-black/40 rounded-xl p-1.5 border border-white/5"><img src="${img.url}" class="w-full h-14 md:h-20 object-cover rounded-lg"></div>`).join('');
+            
+            // Galerie avec Zoom
+            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `
+                <div class="zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5" onclick="openZoom('${img.url}')">
+                    <img src="${img.url}" class="w-full h-14 md:h-20 object-cover rounded-lg">
+                </div>
+            `).join('');
 
-            // 3D Visualizer
             const isPortrait = pc.dimensions.orientation === "portrait";
             const s3d = d.getElementById('ui-3d');
             s3d.style.width = isPortrait ? "130px" : "220px";
@@ -214,10 +239,8 @@
             d.getElementById('val-h').innerText = pc.dimensions.hauteur;
             d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
 
-            // Team (Bilingue)
             d.getElementById('ui-team').innerHTML = gc.equipe.map(m => `<div class="border-b border-white/5 pb-3 last:border-0"><p class="font-black text-[11px] uppercase">${m.nom}</p><p class="text-slate-500 text-[8px] uppercase">${t(m.poste)}</p></div>`).join('');
             
-            // Specifications (Bilingue)
             d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `
                 <div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5">
                     <h4 class="text-${s.couleur}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase">
@@ -234,11 +257,8 @@
                 </div>
             `).join('');
 
-            // Accessoires & Options (Bilingue)
             d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[10px] uppercase">${t(a.nom)}</p><p class="text-[9px] text-slate-500 italic uppercase">${t(a.detail)}</p></div>`).join('');
             d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-center md:justify-start gap-2 font-bold uppercase text-[9px]"><i data-lucide="${o.icone}" class="w-3.5 h-3.5 text-[#FFD700]"></i>${t(o.nom)}</div>`).join('');
-            
-            // Entretien (Bilingue)
             d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${t(e)}</li>`).join('');
 
             lucide.createIcons();
