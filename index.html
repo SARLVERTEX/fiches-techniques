@@ -127,7 +127,13 @@
                 return matchCat && matchSearch;
             });
             document.getElementById('product-count').innerText = filtered.length + " " + UI_STRINGS[currentLang].results;
-            document.getElementById('product-container').innerHTML = filtered.map(p => `
+            
+            document.getElementById('product-container').innerHTML = filtered.map(p => {
+                // LOGIQUE DE LIEN : Externe ou Template interne
+                const targetUrl = p.produit.urlExterne ? p.produit.urlExterne : `test-template.html?id=${p.id}&lang=${currentLang}`;
+                const externalAttr = p.produit.urlExterne ? 'target="_blank"' : '';
+
+                return `
                 <div class="vertex-card rounded-[2.5rem] p-10 bg-slate-900/40 backdrop-blur-xl">
                     ${p.produit.isNew ? `<div class="badge-new uppercase italic">${UI_STRINGS[currentLang].new}</div>` : ''}
                     <div class="h-56 mb-8 flex items-center justify-center bg-black/40 rounded-[2rem] p-6 border border-white/5">
@@ -138,11 +144,12 @@
                         <h3 class="text-3xl font-black uppercase italic mb-4 leading-none text-white">${t(p.produit.titre)}</h3>
                         <p class="text-slate-400 text-xs leading-relaxed mb-10 line-clamp-2">${t(p.produit.description_courte || p.produit.titre)}</p>
                     </div>
-                    <a href="test-template.html?id=${p.id}&lang=${currentLang}" class="btn-gold text-center py-5 rounded-2xl text-[10px] font-black uppercase flex items-center justify-center gap-3">
+                    <a href="${targetUrl}" ${externalAttr} class="btn-gold text-center py-5 rounded-2xl text-[10px] font-black uppercase flex items-center justify-center gap-3">
                         ${UI_STRINGS[currentLang].discover} <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </a>
                 </div>
-            `).join('');
+                `;
+            }).join('');
             lucide.createIcons();
         }
 
