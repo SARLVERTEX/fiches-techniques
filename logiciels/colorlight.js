@@ -6,8 +6,8 @@ window.PRODUCT_DATA = {
         categorie: "Logiciels",
         isNew: false,
         titre: { 
-            fr: "ÉCOSYSTÈME COLORLIGHT PRO", 
-            en: "COLORLIGHT PRO ECOSYSTEM" 
+            fr: "COLORLIGHT LOG.", 
+            en: "COLORLIGHT SOFT." 
         },
         description_courte: { 
             fr: "Solution complète de pilotage : PlayerMaster (PC) et LED Assistant (Mobile) pour une gestion totale LAN & Cloud.", 
