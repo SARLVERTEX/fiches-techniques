@@ -1,84 +1,99 @@
 // produits/vtx-55.js
 window.PRODUCT_DATA = {
     produit: {
-        id: "vtx-55", // Important pour le lien
-        categorie: "Vitrines", // Utilisé pour les filtres de l'index
-        isNew: true, // Affiche le badge "Nouveau" sur l'index
+        id: "vtx-55",
+        categorie: "Vitrines",
+        isNew: true,
         titre: { 
             fr: "ÉCRAN VITRINE 55'' DOUBLE FACE", 
             en: "55'' DOUBLE-SIDED WINDOW DISPLAY" 
         },
-        // 'description_courte' est utilisé par l'index pour la carte produit
         description_courte: { 
-            fr: "Haute luminosité 2500 nits pour une visibilité Indoor/Outdoor parfaite.", 
-            en: "High brightness 2500 nits for perfect Indoor/Outdoor visibility." 
+            fr: "Technologie Dual-Screen Full HD avec bordure en verre transparent et processeur Rockchip RK3568.", 
+            en: "Full HD Dual-Screen technology with transparent glass border and Rockchip RK3568 processor." 
         },
         phraseAccroche: { 
-            fr: "Haute luminosité pour une visibilité Indoor/Outdoor.", 
-            en: "High brightness for Indoor/Outdoor visibility." 
+            fr: "L'élégance du verre combinée à la puissance du double affichage dynamique.", 
+            en: "The elegance of glass combined with the power of dual dynamic display." 
         },
-        ref: "VTX-55-HB",
-        sn: "SN-2024-X1"
+        ref: "VT050406202403002001",
+        sn: "2024250001V (Model: AR06043)"
     },
     badges: [
-        { label: { fr: "2500 nits", en: "2500 nits" }, icone: "sun", couleur: "text-yellow-400" },
-        { label: { fr: "Usage 24/7", en: "24/7 Usage" }, icone: "clock", couleur: "text-green-400" },
-        { label: { fr: "FHD", en: "FHD" }, icone: "monitor", couleur: "text-blue-400" }
+        { label: { fr: "Double Face", en: "Double Sided" }, icone: "layers", couleur: "text-blue-400" },
+        { label: { fr: "Bordure Verre", en: "Glass Border" }, icone: "frame", couleur: "text-slate-300" },
+        { label: { fr: "Android 11", en: "Android 11" }, icone: "smartphone", couleur: "text-green-500" },
+        { label: { fr: "60Hz", en: "60Hz" }, icone: "activity", couleur: "text-yellow-400" }
     ],
     dimensions: {
         largeur: "1240 mm", 
         hauteur: "715 mm", 
         diagonale: "55''", 
         orientation: "portrait", 
-        vesa: "400 x 400"
+        vesa: "Fixation Suspendue (Câbles)"
     },
     media: {
-        imagePrincipale: "images/VITRINE55.jpg", // Utilisé par l'index pour la photo de la carte
+        imagePrincipale: "images/VITRINE55.jpg",
         galerie: [
             { url: "images/zoom1.jpg", label: { fr: "Finition Verre", en: "Glass Finish" } },
-            { url: "images/zoom2.jpg", label: { fr: "Épaisseur", en: "Thickness" } },
-            { url: "images/zoom3.jpg", label: { fr: "Fixation", en: "Mounting" } },
-            { url: "images/zoom4.jpg", label: { fr: "Connectique", en: "Connectivity" } }
+            { url: "images/zoom2.jpg", label: { fr: "Profil Ultra-fin", en: "Ultra-slim Profile" } },
+            { url: "images/zoom3.jpg", label: { fr: "Support Plafond", en: "Ceiling Mount" } },
+            { url: "images/zoom4.jpg", label: { fr: "Connectique USB/RJ45", en: "USB/RJ45 Ports" } }
         ]
     },
     accessoires: [
         { 
-            nom: { fr: "Support Plafond", en: "Ceiling Mount" }, 
-            detail: { fr: "Inclus", en: "Included" } 
+            nom: { fr: "Support Suspendu", en: "Ceiling Suspension Kit" }, 
+            detail: { fr: "Support Métal Noir + Câbles", en: "Black Metal Mount + Cables" } 
         },
         { 
-            nom: { fr: "Player", en: "Media Player" }, 
-            detail: { fr: "Android 11", en: "Android 11" } 
+            nom: { fr: "Périphérique", en: "Peripheral" }, 
+            detail: { fr: "Dongle Sans Fil Cherry Inclus", en: "Cherry Wireless Dongle Included" } 
         }
     ],
     options: [
-        { nom: { fr: "Capteur Auto", en: "Auto Sensor" }, icone: "eye" },
-        { nom: { fr: "Caisson IP65", en: "IP65 Case" }, icone: "shield" }
+        { nom: { fr: "Capteur G-Sensor", en: "G-Sensor" }, icone: "move" },
+        { nom: { fr: "WPA3 Security", en: "WPA3 Security" }, icone: "lock" }
     ],
     specifications: [
         { 
-            titre: { fr: "AFFICHAGE", en: "DISPLAY" }, 
-            icone: "tv", 
+            titre: { fr: "AFFICHAGE DUAL-SCREEN", en: "DUAL-SCREEN DISPLAY" }, 
+            icone: "monitor", 
             couleur: "blue", 
             lignes: [
-                [{ fr: "Techno", en: "Tech" }, "D-LED"], 
-                [{ fr: "Contraste", en: "Contrast" }, "5000:1"]
+                [{ fr: "Résolution", en: "Resolution" }, "1920 x 1080 (FHD)"], 
+                [{ fr: "Rafraîchissement", en: "Refresh Rate" }, "60.0 Hz"],
+                [{ fr: "Densité Pixels", en: "Pixel Density" }, "320 PPI"],
+                [{ fr: "Format", en: "Aspect Ratio" }, "16:9"]
             ] 
         },
         { 
-            titre: { fr: "TECHNIQUE", en: "TECHNICAL" }, 
-            icone: "tool", 
+            titre: { fr: "SYSTÈME & SOC", en: "SYSTEM & SOC" }, 
+            icone: "cpu", 
             couleur: "orange", 
             lignes: [
-                [{ fr: "Poids", en: "Weight" }, "22 kg"], 
-                [{ fr: "Conso", en: "Consumption" }, "150W"]
+                [{ fr: "Processeur", en: "CPU" }, "Rockchip RK3568 (4 Cores)"], 
+                [{ fr: "Graphismes", en: "GPU" }, "Mali-G52 MC1 (OpenGL 3.2)"],
+                [{ fr: "RAM / Stockage", en: "RAM / Storage" }, "2 Go / 24 Go"],
+                [{ fr: "OS", en: "OS" }, "Android 11 (API 30)"]
+            ] 
+        },
+        { 
+            titre: { fr: "RÉSEAU & PORTS", en: "NETWORK & PORTS" }, 
+            icone: "wifi", 
+            couleur: "green", 
+            lignes: [
+                [{ fr: "Wi-Fi", en: "Wi-Fi" }, "802.11n (2.4 GHz)"], 
+                [{ fr: "Bluetooth", en: "Bluetooth" }, "5.0 (BLE Support)"],
+                [{ fr: "Ethernet", en: "Ethernet" }, "Controller YT8512B"],
+                [{ fr: "Périphérique", en: "Peripherals" }, "USB Dongle Support"]
             ] 
         }
     ],
     entretien: [
-        { fr: "Chiffon microfibre sec", en: "Dry microfiber cloth" },
-        { fr: "Nettoyage ventilation", en: "Ventilation cleaning" },
-        { fr: "Utilisation Produits Non Agressifs", en: "Use non-aggressive products" },
-        { fr: "Vérification annuelle", en: "Annual check-up" }
+        { fr: "Nettoyage à l'aide d'un chiffon microfibre sec uniquement", en: "Clean using a dry microfiber cloth only" },
+        { fr: "Dépoussiérage régulier des grilles de ventilation", en: "Regular dusting of ventilation grilles" },
+        { fr: "Éviter tout produit chimique ou abrasif sur le verre", en: "Avoid any chemical or abrasive products on the glass" },
+        { fr: "Vérification annuelle des câbles de maintien", en: "Annual check of suspension cables" }
     ]
 };
