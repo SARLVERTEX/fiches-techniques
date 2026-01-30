@@ -27,14 +27,15 @@
 
     <script>
         /* ============================================================
-           GESTION DU CATALOGUE - AJOUTEZ VOS NOUVEAUX PRODUITS ICI
+           GESTION DU CATALOGUE (Matériel & Logiciels)
            ============================================================ */
         const PRODUITS_LISTE = [
             "design-interactif",
             "vtx-doubleface55",
             "totem-65",
             "led-p2",
-            "epaper-13"
+            "epaper-13",
+            "colorlight" // Exemple de logiciel dans le dossier logiciels/
         ];
         /* ============================================================ */
 
@@ -53,7 +54,8 @@
 
         async function init() {
             await loadExternalScript("config.js");
-            const chargements = PRODUITS_LISTE.map(id => chargerProduit(id));
+            // On charge tout
+            const chargements = PRODUITS_LISTE.map(id => chargerSolution(id));
             const resultats = await Promise.all(chargements);
             CATALOGUE_COMPLET = resultats.filter(r => r !== null);
 
@@ -77,20 +79,30 @@
             });
         }
 
-        function chargerProduit(id) {
-            return new Promise(resolve => {
-                const s = document.createElement('script');
-                s.src = `produits/${id}.js?v=${version}`;
-                s.onload = () => {
-                    const data = JSON.parse(JSON.stringify(window.PRODUCT_DATA));
-                    resolve({ id: id, ...data });
-                };
-                s.onerror = () => {
-                    console.error("Erreur de chargement pour le produit : " + id);
-                    resolve(null);
-                };
-                document.head.appendChild(s);
-            });
+        // Tente de charger dans produits/ puis logiciels/
+        async function chargerSolution(id) {
+            const dossiers = ['produits', 'logiciels'];
+            
+            for (const d of dossiers) {
+                try {
+                    const data = await new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = `${d}/${id}.js?v=${version}`;
+                        s.onload = () => {
+                            const res = JSON.parse(JSON.stringify(window.PRODUCT_DATA));
+                            resolve({ data: res, dossier: d });
+                        };
+                        s.onerror = reject;
+                        document.head.appendChild(s);
+                    });
+                    return { id: id, dossier: data.dossier, ...data.data };
+                } catch (e) {
+                    // Si échec, on passe au dossier suivant
+                    continue;
+                }
+            }
+            console.error(`Solution "${id}" introuvable.`);
+            return null;
         }
 
         function appliquerBranding() {
@@ -129,8 +141,8 @@
             document.getElementById('product-count').innerText = filtered.length + " " + UI_STRINGS[currentLang].results;
             
             document.getElementById('product-container').innerHTML = filtered.map(p => {
-                // LOGIQUE DE LIEN : Externe ou Template interne
-                const targetUrl = p.produit.urlExterne ? p.produit.urlExterne : `test-template.html?id=${p.id}&lang=${currentLang}`;
+                // On passe le paramètre 'dir' pour que le template sache où chercher
+                const targetUrl = p.produit.urlExterne ? p.produit.urlExterne : `test-template.html?id=${p.id}&dir=${p.dossier}&lang=${currentLang}`;
                 const externalAttr = p.produit.urlExterne ? 'target="_blank"' : '';
 
                 return `
