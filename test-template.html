@@ -138,12 +138,8 @@
         const version = new Date().getTime();
         const params = new URLSearchParams(window.location.search);
         const produitId = params.get('id');
+        const dossier = params.get('dir') || 'produits'; // Détecte 'produits' ou 'logiciels'
         const currentLang = params.get('lang') || 'fr';
-
-        // --- 2. SÉCURITÉ REDIRECTION LIEN EXTERNE (DELUXE) ---
-        if (produitId === "design-interactif") {
-            window.location.replace("https://design-interactif.fr");
-        }
 
         const UI_STRINGS = {
             fr: { showroom: "Retour Showroom", print: "Générer PDF / Imprimer", fixation: "Système de Fixation", inclus: "Inclus dans le Pack", options: "Options de Personnalisation", expert: "Votre Expert Vertex", entretien: "Consignes d'Entretien" },
@@ -152,9 +148,9 @@
 
         const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : obj;
 
-        // --- 3. CHARGEMENT DES DONNÉES ---
+        // --- 2. CHARGEMENT DES DONNÉES ---
         window.onload = () => {
-            if(!produitId) return showError("ID du produit manquant dans l'URL.");
+            if(!produitId) return showError("ID du produit manquant.");
             
             // UI Langue
             const langBtn = document.getElementById(`lang-${currentLang}`);
@@ -164,25 +160,25 @@
             const cScript = document.createElement('script');
             cScript.src = "config.js?v=" + version;
             cScript.onload = () => {
-                // Chargement Fichier Produit
+                // Chargement Fichier Produit (Dossier Dynamique !)
                 const pScript = document.createElement('script');
-                pScript.src = "produits/" + produitId + ".js?v=" + version;
+                pScript.src = `${dossier}/${produitId}.js?v=${version}`;
                 pScript.onload = () => {
                     setTimeout(() => {
                         if (window.PRODUCT_DATA && window.GLOBAL_CONFIG) {
                             window.PRODUCT_CONFIG = window.PRODUCT_DATA;
                             initApp();
-                        } else { showError("Erreur : Données non chargées."); }
+                        } else { showError("Données non chargées."); }
                     }, 150);
                 };
-                pScript.onerror = () => showError("Produit introuvable.");
+                pScript.onerror = () => showError(`Fichier "${produitId}.js" introuvable dans /${dossier}`);
                 document.head.appendChild(pScript);
             };
             cScript.onerror = () => showError("config.js introuvable.");
             document.head.appendChild(cScript);
         };
 
-        // --- 4. FONCTIONS SYSTÈME ---
+        // --- 3. FONCTIONS SYSTÈME ---
         function changeLang(l) {
             params.set('lang', l);
             window.location.search = params.toString();
@@ -206,18 +202,16 @@
             overlay.style.display = 'flex';
         }
 
-        // --- 5. RENDERER PRINCIPAL ---
+        // --- 4. RENDERER PRINCIPAL ---
         function initApp() {
             const gc = window.GLOBAL_CONFIG; const pc = window.PRODUCT_CONFIG; const d = document;
             const ui = UI_STRINGS[currentLang];
             
-            // Affichage carte
             d.getElementById('main-card').style.display = 'block';
             setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
-            // Traductions UI & Fix du lien de retour
             d.getElementById('txt-showroom').innerText = ui.showroom;
-            d.getElementById('btn-back').href = `index.html?lang=${currentLang}`; // <-- C'était ça l'oubli !
+            d.getElementById('btn-back').href = `index.html?lang=${currentLang}`;
             
             d.getElementById('txt-print').innerText = ui.print;
             d.getElementById('txt-fixation').innerText = ui.fixation;
@@ -226,12 +220,10 @@
             d.getElementById('txt-expert-title').innerText = ui.expert;
             d.getElementById('txt-entretien-title').innerText = ui.entretien;
 
-            // Branding
             d.getElementById('ui-brand').innerText = gc.brand.nom;
             d.getElementById('ui-logo').src = gc.brand.logo;
             d.getElementById('ui-titre').innerText = t(pc.produit.titre);
             
-            // Images
             d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
             const mainImgCont = d.getElementById('main-img-container');
             mainImgCont.classList.add('zoomable-container');
@@ -243,7 +235,6 @@
                 </div>
             `).join('');
 
-            // Équipe (Génération dynamique)
             d.getElementById('ui-team').innerHTML = gc.equipe.map(m => {
                 let waNumber = m.tel ? m.tel.replace(/\s+/g, '') : '';
                 if(waNumber.startsWith('0')) waNumber = '33' + waNumber.substring(1);
@@ -258,15 +249,12 @@
                     </div>`;
             }).join('');
 
-            // Footer
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
             d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
             d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
 
-            // Badges
             d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
             
-            // 3D
             const isPortrait = pc.dimensions.orientation === "portrait";
             const s3d = d.getElementById('ui-3d');
             s3d.style.width = isPortrait ? "130px" : "220px";
@@ -276,7 +264,6 @@
             d.getElementById('val-h').innerText = pc.dimensions.hauteur;
             d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
 
-            // Specs
             d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `
                 <div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5">
                     <h4 class="text-${s.couleur}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase">
@@ -291,7 +278,6 @@
                     </div>
                 </div>`).join('');
 
-            // Inclus / Options / Entretien
             d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[10px] uppercase">${t(a.nom)}</p><p class="text-[9px] text-slate-500 italic uppercase">${t(a.detail)}</p></div>`).join('');
             d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-center md:justify-start gap-2 font-bold uppercase text-[9px]"><i data-lucide="${o.icone}" class="w-3.5 h-3.5 text-[#FFD700]"></i>${t(o.nom)}</div>`).join('');
             d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${t(e)}</li>`).join('');
