@@ -33,7 +33,7 @@ window.PRODUCT_DATA = {
         vesa: "Structure Autoportante"
     },
     media: {
-        imagePrincipale: "images/vertex-32-main.jpg",
+        imagePrincipale: "images/GM92.jpg",
         galerie: [
             { url: "images/vtx-white-bronze.jpg", label: { fr: "Design Blanc & Bronze", en: "White & Bronze Design" } },
             { url: "images/vtx-camera.jpg", label: { fr: "Caméra 2.1MP Intégrée", en: "Integrated 2.1MP Camera" } },
