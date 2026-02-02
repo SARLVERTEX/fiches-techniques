@@ -5,8 +5,8 @@ window.PRODUCT_DATA = {
         categorie: "Bornes Tactiles",
         isNew: true, // Marqué comme nouveau car specs 2024/2026
         titre: { 
-            fr: "TOTEM INTERACTIF VERTEX 32''", 
-            en: "32'' VERTEX INTERACTIVE KIOSK" 
+            fr: "TOTEM INTERACTIF 32''", 
+            en: "32'' INTERACTIVE KIOSK" 
         },
         description_courte: { 
             fr: "Solution d'affichage dynamique mobile et polyvalente avec écran Full HD de 32 pouces, montée sur un pied bicolore élégant.", 
