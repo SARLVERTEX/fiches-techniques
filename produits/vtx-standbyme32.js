@@ -3,97 +3,97 @@ window.PRODUCT_DATA = {
     produit: {
         id: "ar06104",
         categorie: "Bornes Tactiles",
-        isNew: false,
+        isNew: true, // Marqué comme nouveau car specs 2024/2026
         titre: { 
-            fr: "BORNE INTERACTIVE 32''", 
-            en: "32'' INTERACTIVE KIOSK" 
+            fr: "TOTEM INTERACTIF VERTEX 32''", 
+            en: "32'' VERTEX INTERACTIVE KIOSK" 
         },
         description_courte: { 
-            fr: "Borne tactile capacitive Full HD au design pupitre blanc pur, idéale pour l'orientation et l'interaction client.", 
-            en: "Full HD capacitive touch kiosk with pure white desk design, ideal for guidance and customer interaction." 
+            fr: "Solution d'affichage dynamique mobile et polyvalente avec écran Full HD de 32 pouces, montée sur un pied bicolore élégant.", 
+            en: "Versatile mobile digital signage solution with 32-inch Full HD screen, mounted on an elegant two-tone stand." 
         },
         phraseAccroche: { 
-            fr: "L'interaction intuitive au service de votre image de marque.", 
-            en: "Intuitive interaction at the service of your brand image." 
+            fr: "La puissance d'Android et la mobilité d'une batterie intégrée.", 
+            en: "The power of Android meets the mobility of an integrated battery." 
         },
-        ref: "AR06104-2024",
-        sn: "2024BT32001 (Model: AR06104)"
+        ref: "VTX-32-2024",
+        sn: "2024BT32001 (Model: AR06104 / MT8788)"
     },
     badges: [
-        { label: { fr: "Tactile", en: "Touch" }, icone: "pointer", couleur: "text-blue-400" },
-        { label: { fr: "Design Blanc", en: "White Design" }, icone: "palette", couleur: "text-slate-300" },
-        { label: { fr: "Android 11", en: "Android 11" }, icone: "smartphone", couleur: "text-green-500" },
-        { label: { fr: "Batterie Option", en: "Battery Option" }, icone: "battery-charging", couleur: "text-yellow-400" }
+        { label: { fr: "Tactile ILITEK", en: "ILITEK Touch" }, icone: "pointer", couleur: "text-blue-400" },
+        { label: { fr: "Android 12", en: "Android 12" }, icone: "smartphone", couleur: "text-green-500" },
+        { label: { fr: "Batterie 10Ah", en: "10Ah Battery" }, icone: "battery-charging", couleur: "text-yellow-400" },
+        { label: { fr: "Wi-Fi 5 / WPA3", en: "Wi-Fi 5 / WPA3" }, icone: "wifi", couleur: "text-purple-400" }
     ],
     dimensions: {
         largeur: "Vérifier mm", 
-        hauteur: "1150 mm", 
+        hauteur: "Hauteur d'homme", 
         diagonale: "32''", 
-        orientation: "paysage/incliné", 
+        orientation: "Portrait/Ajustable", 
         vesa: "Structure Autoportante"
     },
     media: {
-        imagePrincipale: "images/GM92.jpg",
+        imagePrincipale: "images/vertex-32-main.jpg",
         galerie: [
-            { url: "images/            .jpg", label: { fr: "Finition Laquée", en: "Glossy Finish" } },
-            { url: "images/            .jpg", label: { fr: "Angle d'inclinaison", en: "Tilt Angle" } },
-            { url: "images/            .jpg", label: { fr: "Base Stable", en: "Stable Base" } },
-            { url: "images/            .jpg", label: { fr: "Ports Accessibles", en: "Accessible Ports" } }
+            { url: "images/vtx-white-bronze.jpg", label: { fr: "Design Blanc & Bronze", en: "White & Bronze Design" } },
+            { url: "images/vtx-camera.jpg", label: { fr: "Caméra 2.1MP Intégrée", en: "Integrated 2.1MP Camera" } },
+            { url: "images/vtx-base.jpg", label: { fr: "Base Circulaire Stable", en: "Stable Circular Base" } },
+            { url: "images/vtx-ports.jpg", label: { fr: "Connectique USB-C & HDMI", en: "USB-C & HDMI Ports" } }
         ]
     },
     accessoires: [
         { 
-            nom: { fr: "Batterie Externe", en: "External Battery" }, 
-            detail: { fr: "10 000 mAh pour ~6h30 d'autonomie", en: "10 000 mAh for ~6h30 autonomy" } 
+            nom: { fr: "Batterie Li-ion", en: "Li-ion Battery" }, 
+            detail: { fr: "10 000 mAh intégrée (4200 mV)", en: "Integrated 10,000 mAh (4200 mV)" } 
         },
         { 
-            nom: { fr: "Transport", en: "Transport" }, 
-            detail: { fr: "Flight case sur mesure en option", en: "Optional custom flight case" } 
+            nom: { fr: "Caméra", en: "Camera" }, 
+            detail: { fr: "Capteur 2.1 MP (1080p @30fps)", en: "2.1 MP Sensor (1080p @30fps)" } 
         }
     ],
     options: [
-        { nom: { fr: "Personnalisation Logo", en: "Logo Branding" }, icone: "tag" },
-        { nom: { fr: "Roulettes", en: "Casters" }, icone: "move" }
+        { nom: { fr: "Analyse d'audience", en: "Audience Analytics" }, icone: "users" },
+        { nom: { fr: "Visioconférence", en: "Video Conferencing" }, icone: "video" }
     ],
     specifications: [
         { 
-            titre: { fr: "AFFICHAGE TACTILE", en: "TOUCH DISPLAY" }, 
+            titre: { fr: "AFFICHAGE & IMAGE", en: "DISPLAY & IMAGE" }, 
             icone: "monitor", 
             couleur: "blue", 
             lignes: [
-                [{ fr: "Technologie", en: "Technology" }, "Capacitif"], 
-                [{ fr: "Résolution", en: "Resolution" }, "1920 x 1080 (FHD)"],
-                [{ fr: "Luminosité", en: "Brightness" }, "300 cd/m²"],
-                [{ fr: "Format", en: "Aspect Ratio" }, "16:9"]
+                [{ fr: "Technologie", en: "Technology" }, "Tactile Capacitif (ILITEK)"], 
+                [{ fr: "Résolution", en: "Resolution" }, "1920 x 1080 (FHD) @ 60Hz"],
+                [{ fr: "Caméra", en: "Camera" }, "2.1 MP / 1080p"],
+                [{ fr: "Capteurs", en: "Sensors" }, "Luminosité & Accéléromètre"]
             ] 
         },
         { 
-            titre: { fr: "SYSTÈME & SOC", en: "SYSTEM & SOC" }, 
+            titre: { fr: "ARCHITECTURE INTERNE", en: "INTERNAL ARCHITECTURE" }, 
             icone: "cpu", 
             couleur: "orange", 
             lignes: [
-                [{ fr: "OS", en: "OS" }, "Android 11 (API 30)"], 
-                [{ fr: "RAM", en: "RAM" }, "2 Go"],
-                [{ fr: "Stockage", en: "Storage" }, "16 Go"],
-                [{ fr: "Stabilité", en: "Stability" }, "Firmware Stable"]
+                [{ fr: "Processeur", en: "CPU" }, "MediaTek MT8788 (8 cœurs)"], 
+                [{ fr: "GPU", en: "GPU" }, "ARM Mali-G72 MP3"],
+                [{ fr: "RAM", en: "RAM" }, "4 Go (LPDDR4)"],
+                [{ fr: "Stockage", en: "Storage" }, "64 Go UFS (43 Go disp.)"]
             ] 
         },
         { 
-            titre: { fr: "CONNECTIVITÉ", en: "CONNECTIVITY" }, 
-            icone: "wifi", 
+            titre: { fr: "SYSTÈME & RÉSEAU", en: "SYSTEM & NETWORK" }, 
+            icone: "settings", 
             couleur: "green", 
             lignes: [
-                [{ fr: "Wi-Fi", en: "Wi-Fi" }, "802.11 b/g/n"], 
-                [{ fr: "Bluetooth", en: "Bluetooth" }, "4.2"],
-                [{ fr: "Ports", en: "Ports" }, "USB 2.0 / HDMI"],
-                [{ fr: "Poids", en: "Weight" }, "24 kg"]
+                [{ fr: "OS", en: "OS" }, "Android 12 (API 31)"], 
+                [{ fr: "Wi-Fi", en: "Wi-Fi" }, "Wi-Fi 5 (802.11ac) 5GHz"],
+                [{ fr: "Sécurité", en: "Security" }, "WPA3 Support"],
+                [{ fr: "Ports", en: "Ports" }, "USB-A, USB-C, HDMI, DC-in"]
             ] 
         }
     ],
     entretien: [
-        { fr: "Nettoyage de l'écran avec un produit spécial vitres non abrasif", en: "Clean screen with non-abrasive special glass cleaner" },
-        { fr: "Désinfection régulière de la surface tactile", en: "Regular disinfection of the touch surface" },
-        { fr: "Vérification de la stabilité de la base", en: "Check base stability" },
-        { fr: "Nettoyage des ports USB pour éviter l'encrassement", en: "Clean USB ports to prevent clogging" }
+        { fr: "Nettoyage de la dalle 32'' avec un chiffon microfibre", en: "Clean the 32'' panel with a microfiber cloth" },
+        { fr: "Vérification du port de charge à la base du pied", en: "Check the charging port at the base of the stand" },
+        { fr: "Mise à jour des applications via Android 12", en: "Update applications via Android 12" },
+        { fr: "Dépoussiérage des perforations thermiques arrières", en: "Dust off the rear thermal perforations" }
     ]
 };
