@@ -1,4 +1,4 @@
-// produits/borne-32.js
+// produits/vtx-standbyme32.js
 window.PRODUCT_DATA = {
     produit: {
         id: "ar06104",
