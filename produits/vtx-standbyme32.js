@@ -33,12 +33,12 @@ window.PRODUCT_DATA = {
         vesa: "Structure Autoportante"
     },
     media: {
-        imagePrincipale: "images/AR06104.jpg",
+        imagePrincipale: "images/GM92.jpg",
         galerie: [
-            { url: "images/borne_zoom1.jpg", label: { fr: "Finition Laquée", en: "Glossy Finish" } },
-            { url: "images/borne_zoom2.jpg", label: { fr: "Angle d'inclinaison", en: "Tilt Angle" } },
-            { url: "images/borne_zoom3.jpg", label: { fr: "Base Stable", en: "Stable Base" } },
-            { url: "images/borne_zoom4.jpg", label: { fr: "Ports Accessibles", en: "Accessible Ports" } }
+            { url: "images/            .jpg", label: { fr: "Finition Laquée", en: "Glossy Finish" } },
+            { url: "images/            .jpg", label: { fr: "Angle d'inclinaison", en: "Tilt Angle" } },
+            { url: "images/            .jpg", label: { fr: "Base Stable", en: "Stable Base" } },
+            { url: "images/            .jpg", label: { fr: "Ports Accessibles", en: "Accessible Ports" } }
         ]
     },
     accessoires: [
