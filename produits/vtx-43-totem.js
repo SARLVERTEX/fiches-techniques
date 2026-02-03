@@ -1,7 +1,7 @@
 // produits/vtx-43-totem.js
 window.PRODUCT_DATA = {
     produit: {
-        id: "vtx-t1-43",
+        id: "vtx-43-totem",
         categorie: "Totems",
         isNew: true,
         titre: { 
