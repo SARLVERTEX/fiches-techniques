@@ -5,8 +5,8 @@ window.PRODUCT_DATA = {
         categorie: "Totems",
         isNew: true,
         titre: { 
-            fr: "TOTEM DIGITAL MOBILE VERTEX 43''", 
-            en: "43'' VERTEX MOBILE DIGITAL TOTEM" 
+            fr: "TOTEM DIGITAL MOBILE 43''", 
+            en: "43'' MOBILE DIGITAL TOTEM" 
         },
         description_courte: { 
             fr: "Solution d'affichage dynamique mobile sous Android 11 avec batterie intégrée et processeur RK3568.", 
@@ -35,10 +35,10 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "images/TOTEM_MOBILE_43.jpg",
         galerie: [
-            { url: "images/totem-front.jpg", label: { fr: "Barre Lumineuse LED", en: "LED Light Bar" } },
-            { url: "images/totem-back.jpg", label: { fr: "Indicateur Batterie LCD", en: "LCD Battery Indicator" } },
-            { url: "images/totem-wheels.jpg", label: { fr: "Roulettes Robustes", en: "Heavy-duty Castors" } },
-            { url: "images/totem-ports.jpg", label: { fr: "Connectique USB/HDMI", en: "USB/HDMI Ports" } }
+            { url: "images/vtx-43-totem-back.jpg", label: { fr: "Roulettes Robustes", en: "Heavy-duty Castors" } },
+            { url: "images/vtx-43-totem-digital.jpg", label: { fr: "Indicateur Batterie LCD", en: "LCD Battery Indicator" } },
+            { url: "images/vtx-43-totem-wifi.jpg", label: { fr: "Module WI-FI", en: "WI-FI Modul" } },
+            { url: "images/vtx-43-totem-alim.jpg", label: { fr: "Alimentation", en: "Power Supply" } }
         ]
     },
     accessoires: [
@@ -72,6 +72,7 @@ window.PRODUCT_DATA = {
             icone: "cpu", 
             couleur: "orange", 
             lignes: [
+                [{ fr: "IP67", en: "IP67" }, "PROTECTION"], 
                 [{ fr: "Processeur", en: "CPU" }, "Rockchip RK3568 Quad-core"], 
                 [{ fr: "Graphismes", en: "GPU" }, "Mali-G52 MC1 (Vulkan 1.1)"],
                 [{ fr: "RAM / Stockage", en: "RAM / Storage" }, "2 Go / 10 Go disponibles"],
