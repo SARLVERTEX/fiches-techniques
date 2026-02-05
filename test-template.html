@@ -42,7 +42,7 @@
             body { background: #020617 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
             #main-card { display: block !important; opacity: 1 !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; border: none !important; background: #020617 !important; }
             #btn-print, #btn-back, #lang-switcher, #debug-console, .fixed, .zoomable-container::after, .contact-actions { display: none !important; }
-            .scene-3d { transform: scale(0.8); min-height: 200px; }
+            .scene-3d { transform: scale(0.8) rotateY(0deg); min-height: 200px; }
             header { padding: 3rem !important; }
             .text-[#FFD700], #val-diag, #ui-titre { color: #FFD700 !important; }
         }
@@ -66,27 +66,29 @@
     </button>
 
     <div id="debug-console" style="display:none;" class="max-w-2xl mx-auto mt-20 bg-red-900/20 border border-red-500/50 rounded-xl p-6 font-mono text-xs text-center">
-        <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur</h1>
+        <h1 class="text-red-500 font-bold mb-2 uppercase tracking-widest">Erreur de Chargement</h1>
         <div id="debug-status" class="text-white"></div>
     </div>
 
     <div id="main-card" class="max-w-6xl mx-auto border border-white/5 rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl mt-12 md:mt-0 shadow-2xl">
+        
         <header class="p-8 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-center md:items-start gap-8 text-center md:text-left">
             <div class="flex-1 w-full">
                 <p id="ui-brand" class="font-bold uppercase tracking-[0.4em] text-[9px] md:text-[11px] mb-4 text-[#FFD700]"></p>
                 <h1 id="ui-titre" class="text-3xl md:text-7xl font-black uppercase tracking-tighter italic leading-tight md:leading-[0.9] mb-6 break-words"></h1>
                 <div id="ui-badges" class="flex flex-wrap justify-center md:justify-start gap-2 md:gap-3"></div>
             </div>
-            <img id="ui-logo" src="" class="h-12 md:h-16 object-contain">
+            <img id="ui-logo" src="" class="h-12 md:h-16 object-contain" onerror="this.style.display='none'">
         </header>
 
         <div class="grid lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-10">
             <div class="space-y-6">
                 <div id="main-img-container" class="bg-black/30 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex items-center justify-center min-h-[300px] md:min-h-[450px]">
-                    <img id="ui-main-img" src="" class="max-w-full max-h-[350px] object-contain drop-shadow-2xl">
+                    <img id="ui-main-img" src="" class="max-w-full max-h-[350px] object-contain drop-shadow-2xl" onerror="this.src='https://placehold.co/600x400/1e293b/white?text=Image+Non+Disponible'">
                 </div>
                 <div id="ui-galerie" class="grid grid-cols-3 gap-3 md:gap-4"></div>
             </div>
+
             <div class="bg-white/[0.03] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex flex-col items-center justify-center">
                 <div class="scene-3d">
                     <div id="ui-3d" class="screen-3d">
@@ -138,7 +140,7 @@
         const version = new Date().getTime();
         const params = new URLSearchParams(window.location.search);
         const produitId = params.get('id');
-        const dossier = params.get('dir') || 'produits'; // Détecte 'produits' ou 'logiciels'
+        const dossier = params.get('dir') || 'produits';
         const currentLang = params.get('lang') || 'fr';
 
         const UI_STRINGS = {
@@ -146,42 +148,34 @@
             en: { showroom: "Back to Showroom", print: "Generate PDF / Print", fixation: "Mounting System", inclus: "Included in Pack", options: "Customization Options", expert: "Your Vertex Expert", entretien: "Maintenance Rules" }
         };
 
-        const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : obj;
+        const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : (obj || "");
 
-        // --- 2. CHARGEMENT DES DONNÉES ---
+        // --- 2. CHARGEMENT SÉCURISÉ ---
         window.onload = () => {
-            if(!produitId) return showError("ID du produit manquant.");
+            if(!produitId) return showError("ID du produit manquant dans l'URL.");
             
             // UI Langue
             const langBtn = document.getElementById(`lang-${currentLang}`);
             if(langBtn) langBtn.classList.add('bg-[#FFD700]', 'text-black');
             
-            // Chargement Config Globale
-            const cScript = document.createElement('script');
-            cScript.src = "config.js?v=" + version;
-            cScript.onload = () => {
-                // Chargement Fichier Produit (Dossier Dynamique !)
-                const pScript = document.createElement('script');
-                pScript.src = `${dossier}/${produitId}.js?v=${version}`;
-                pScript.onload = () => {
+            loadScript("config.js", () => {
+                loadScript(`${dossier}/${produitId}.js`, () => {
                     setTimeout(() => {
                         if (window.PRODUCT_DATA && window.GLOBAL_CONFIG) {
                             window.PRODUCT_CONFIG = window.PRODUCT_DATA;
                             initApp();
-                        } else { showError("Données non chargées."); }
-                    }, 150);
-                };
-                pScript.onerror = () => showError(`Fichier "${produitId}.js" introuvable dans /${dossier}`);
-                document.head.appendChild(pScript);
-            };
-            cScript.onerror = () => showError("config.js introuvable.");
-            document.head.appendChild(cScript);
+                        } else { showError("Les objets de données sont introuvables."); }
+                    }, 100);
+                }, () => showError(`Fichier "${produitId}.js" introuvable dans le dossier /${dossier}`));
+            }, () => showError("Fichier de configuration globale (config.js) introuvable."));
         };
 
-        // --- 3. FONCTIONS SYSTÈME ---
-        function changeLang(l) {
-            params.set('lang', l);
-            window.location.search = params.toString();
+        function loadScript(src, callback, errorCallback) {
+            const s = document.createElement('script');
+            s.src = src + "?v=" + version;
+            s.onload = callback;
+            s.onerror = errorCallback;
+            document.head.appendChild(s);
         }
 
         function showError(m) {
@@ -202,87 +196,107 @@
             overlay.style.display = 'flex';
         }
 
-        // --- 4. RENDERER PRINCIPAL ---
+        // --- 3. RENDU DES DONNÉES ---
         function initApp() {
-            const gc = window.GLOBAL_CONFIG; const pc = window.PRODUCT_CONFIG; const d = document;
-            const ui = UI_STRINGS[currentLang];
-            
-            d.getElementById('main-card').style.display = 'block';
-            setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
+            try {
+                const gc = window.GLOBAL_CONFIG; const pc = window.PRODUCT_CONFIG; const d = document;
+                const ui = UI_STRINGS[currentLang];
+                
+                d.getElementById('main-card').style.display = 'block';
+                setTimeout(() => d.getElementById('main-card').style.opacity = "1", 50);
 
-            d.getElementById('txt-showroom').innerText = ui.showroom;
-            d.getElementById('btn-back').href = `index.html?lang=${currentLang}`;
-            
-            d.getElementById('txt-print').innerText = ui.print;
-            d.getElementById('txt-fixation').innerText = ui.fixation;
-            d.getElementById('txt-inclus-title').innerHTML = `<i data-lucide="package" class="w-4 h-4"></i> ${ui.inclus}`;
-            d.getElementById('txt-options-title').innerHTML = `<i data-lucide="zap" class="w-4 h-4"></i> ${ui.options}`;
-            d.getElementById('txt-expert-title').innerText = ui.expert;
-            d.getElementById('txt-entretien-title').innerText = ui.entretien;
+                // Textes Interface
+                d.getElementById('txt-showroom').innerText = ui.showroom;
+                d.getElementById('btn-back').href = `index.html?lang=${currentLang}`;
+                d.getElementById('txt-print').innerText = ui.print;
+                d.getElementById('txt-fixation').innerText = ui.fixation;
+                d.getElementById('txt-inclus-title').innerHTML = `<i data-lucide="package" class="w-4 h-4"></i> ${ui.inclus}`;
+                d.getElementById('txt-options-title').innerHTML = `<i data-lucide="zap" class="w-4 h-4"></i> ${ui.options}`;
+                d.getElementById('txt-expert-title').innerText = ui.expert;
+                d.getElementById('txt-entretien-title').innerText = ui.entretien;
 
-            d.getElementById('ui-brand').innerText = gc.brand.nom;
-            d.getElementById('ui-logo').src = gc.brand.logo;
-            d.getElementById('ui-titre').innerText = t(pc.produit.titre);
-            
-            d.getElementById('ui-main-img').src = pc.media.imagePrincipale;
-            const mainImgCont = d.getElementById('main-img-container');
-            mainImgCont.classList.add('zoomable-container');
-            mainImgCont.onclick = () => openZoom(pc.media.imagePrincipale);
+                // Branding & Header
+                d.getElementById('ui-brand').innerText = gc.brand.nom;
+                d.getElementById('ui-logo').src = gc.brand.logo;
+                d.getElementById('ui-titre').innerText = t(pc.produit.titre);
+                
+                // Visuel Principal
+                const mainImg = d.getElementById('ui-main-img');
+                mainImg.src = pc.media.imagePrincipale;
+                const mainImgCont = d.getElementById('main-img-container');
+                mainImgCont.classList.add('zoomable-container');
+                mainImgCont.onclick = () => openZoom(pc.media.imagePrincipale);
 
-            d.getElementById('ui-galerie').innerHTML = pc.media.galerie.map(img => `
-                <div class="zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5" onclick="openZoom('${img.url}')">
-                    <img src="${img.url}" class="w-full h-14 md:h-20 object-cover rounded-lg">
-                </div>
-            `).join('');
-
-            d.getElementById('ui-team').innerHTML = gc.equipe.map(m => {
-                let waNumber = m.tel ? m.tel.replace(/\s+/g, '') : '';
-                if(waNumber.startsWith('0')) waNumber = '33' + waNumber.substring(1);
-                return `
-                    <div class="border-b border-white/5 pb-5 last:border-0">
-                        <p class="font-black text-[11px] uppercase mb-0.5">${m.nom}</p>
-                        <p class="text-slate-500 text-[8px] uppercase mb-3">${t(m.poste)}</p>
-                        <div class="contact-actions flex gap-2.5 justify-center md:justify-start">
-                            ${m.tel ? `<a href="https://wa.me/${waNumber}" target="_blank" class="contact-link bg-[#25D366] text-white p-2 rounded-full shadow-lg"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i></a>` : ''}
-                            ${m.mail ? `<a href="mailto:${m.mail}" class="contact-link bg-white/10 border border-white/20 text-white p-2 rounded-full shadow-lg"><i data-lucide="mail" class="w-3.5 h-3.5"></i></a>` : ''}
-                        </div>
-                    </div>`;
-            }).join('');
-
-            d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
-            d.getElementById('ui-ref').innerText = "REF: " + pc.produit.ref;
-            d.getElementById('ui-sn').innerText = "S/N: " + pc.produit.sn;
-
-            d.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
-            
-            const isPortrait = pc.dimensions.orientation === "portrait";
-            const s3d = d.getElementById('ui-3d');
-            s3d.style.width = isPortrait ? "130px" : "220px";
-            s3d.style.height = isPortrait ? "220px" : "130px";
-            d.getElementById('val-diag').innerText = pc.dimensions.diagonale;
-            d.getElementById('val-w').innerText = pc.dimensions.largeur;
-            d.getElementById('val-h').innerText = pc.dimensions.hauteur;
-            d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
-
-            d.getElementById('ui-specs').innerHTML = pc.specifications.map(s => `
-                <div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5">
-                    <h4 class="text-${s.couleur}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase">
-                        <i data-lucide="${s.icone}" class="w-4 h-4"></i>${t(s.titre)}
-                    </h4>
-                    <div class="space-y-2">
-                        ${s.lignes.map(l => `
-                            <div class="flex justify-between border-b border-white/5 pb-1 text-[10px]">
-                                <span class="text-slate-500 italic">${t(l[0])}</span>
-                                <span class="font-bold uppercase text-white">${t(l[1])}</span>
-                            </div>`).join('')}
+                // Galerie
+                d.getElementById('ui-galerie').innerHTML = (pc.media.galerie || []).map(img => `
+                    <div class="zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5" onclick="openZoom('${img.url}')">
+                        <img src="${img.url}" class="w-full h-14 md:h-20 object-cover rounded-lg" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=Img'">
                     </div>
-                </div>`).join('');
+                `).join('');
 
-            d.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `<div><p class="font-black text-[10px] uppercase">${t(a.nom)}</p><p class="text-[9px] text-slate-500 italic uppercase">${t(a.detail)}</p></div>`).join('');
-            d.getElementById('ui-opt').innerHTML = pc.options.map(o => `<div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-center md:justify-start gap-2 font-bold uppercase text-[9px]"><i data-lucide="${o.icone}" class="w-3.5 h-3.5 text-[#FFD700]"></i>${t(o.nom)}</div>`).join('');
-            d.getElementById('ui-entret-list').innerHTML = pc.entretien.map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${t(e)}</li>`).join('');
+                // Équipe / Contacts
+                d.getElementById('ui-team').innerHTML = (gc.equipe || []).map(m => {
+                    let waNumber = m.tel ? m.tel.replace(/\s+/g, '') : '';
+                    if(waNumber.startsWith('0')) waNumber = '33' + waNumber.substring(1);
+                    return `
+                        <div class="border-b border-white/5 pb-5 last:border-0">
+                            <p class="font-black text-[11px] uppercase mb-0.5">${m.nom}</p>
+                            <p class="text-slate-500 text-[8px] uppercase mb-3">${t(m.poste)}</p>
+                            <div class="contact-actions flex gap-2.5 justify-center md:justify-start">
+                                ${m.tel ? `<a href="https://wa.me/${waNumber}" target="_blank" class="contact-link bg-[#25D366] text-white p-2 rounded-full shadow-lg"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i></a>` : ''}
+                                ${m.mail ? `<a href="mailto:${m.mail}" class="contact-link bg-white/10 border border-white/20 text-white p-2 rounded-full shadow-lg"><i data-lucide="mail" class="w-3.5 h-3.5"></i></a>` : ''}
+                            </div>
+                        </div>`;
+                }).join('');
 
-            lucide.createIcons();
+                // Footer Info
+                d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
+                d.getElementById('ui-ref').innerText = "REF: " + (pc.produit.ref || "N/A");
+                d.getElementById('ui-sn').innerText = "S/N: " + (pc.produit.sn || "PROTOTYPE");
+
+                // Badges
+                d.getElementById('ui-badges').innerHTML = (pc.badges || []).map(b => `
+                    <div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2">
+                        <i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}
+                    </div>`).join('');
+                
+                // 3D et Dimensions
+                const isPortrait = pc.dimensions.orientation === "portrait";
+                const s3d = d.getElementById('ui-3d');
+                s3d.style.width = isPortrait ? "130px" : "220px";
+                s3d.style.height = isPortrait ? "220px" : "130px";
+                d.getElementById('val-diag').innerText = pc.dimensions.diagonale;
+                d.getElementById('val-w').innerText = pc.dimensions.largeur;
+                d.getElementById('val-h').innerText = pc.dimensions.hauteur;
+                d.getElementById('val-vesa').innerText = pc.dimensions.vesa;
+
+                // Spécifications Techniques
+                d.getElementById('ui-specs').innerHTML = (pc.specifications || []).map(s => `
+                    <div class="bg-black/30 p-6 md:p-8 rounded-[2rem] border border-white/5">
+                        <h4 class="text-${s.couleur || 'slate'}-400 font-black text-[10px] mb-5 flex items-center justify-center md:justify-start gap-3 uppercase">
+                            <i data-lucide="${s.icone}" class="w-4 h-4"></i>${t(s.titre)}
+                        </h4>
+                        <div class="space-y-2">
+                            ${(s.lignes || []).map(l => `
+                                <div class="flex justify-between border-b border-white/5 pb-1 text-[10px]">
+                                    <span class="text-slate-500 italic">${t(l[0])}</span>
+                                    <span class="font-bold uppercase text-white">${t(l[1])}</span>
+                                </div>`).join('')}
+                        </div>
+                    </div>`).join('');
+
+                // Accessoires, Options et Entretien
+                d.getElementById('ui-acc').innerHTML = (pc.accessoires || []).map(a => `<div><p class="font-black text-[10px] uppercase">${t(a.nom)}</p><p class="text-[9px] text-slate-500 italic uppercase">${t(a.detail)}</p></div>`).join('');
+                d.getElementById('ui-opt').innerHTML = (pc.options || []).map(o => `<div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-center md:justify-start gap-2 font-bold uppercase text-[9px]"><i data-lucide="${o.icone}" class="w-3.5 h-3.5 text-[#FFD700]"></i>${t(o.nom)}</div>`).join('');
+                d.getElementById('ui-entret-list').innerHTML = (pc.entretien || []).map(e => `<li class="flex items-start gap-2 text-white"><span class="text-[#FFD700]">▹</span>${t(e)}</li>`).join('');
+
+                // Activation des icônes
+                lucide.createIcons();
+
+            } catch (e) {
+                console.error(e);
+                showError("Erreur lors du rendu de la fiche : " + e.message);
+            }
         }
     </script>
 </body>
