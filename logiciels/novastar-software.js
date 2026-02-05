@@ -1,7 +1,7 @@
-// produits/novastar-software-suite.js
+// produits/novastar-software.js
 window.PRODUCT_DATA = {
     produit: {
-        id: "novastar-software-suite",
+        id: "novastar-software",
         categorie: "Logiciels",
         isNew: false,
         titre: { 
