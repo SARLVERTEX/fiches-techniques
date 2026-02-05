@@ -36,8 +36,7 @@ window.PRODUCT_DATA = {
         galerie: [
             { url: "images/aibox-front.jpg", label: { fr: "Façade Connectique USB/Audio", en: "Front USB/Audio Ports" } },
             { url: "images/aibox-rear.jpg", label: { fr: "Double LAN et Sorties Vidéo", en: "Dual LAN and Video Outputs" } },
-            { url: "images/aibox-thermal.jpg", label: { fr: "Ailettes de Dissipation", en: "Heat Dissipation Fins" } },
-            { url: "images/aibox-bottom.jpg", label: { fr: "Pieds Antidérapants & Fixations", en: "Rubber Feet & Mounting" } }
+            { url: "images/aibox-4g.jpg", label: { fr: "Option 4G", en: "4G Option" } },
         ]
     },
     accessoires: [
