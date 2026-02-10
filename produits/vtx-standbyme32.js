@@ -1,9 +1,9 @@
 // produits/vtx-standbyme32.js
 window.PRODUCT_DATA = {
     produit: {
-        id: "ar06104",
+        id: "vtx-standbyme32", // Assurez-vous que l'ID correspond au nom du fichier JS
         categorie: "Bornes Tactiles",
-        isNew: true, // Marqué comme nouveau car specs 2024/2026
+        isNew: true,
         titre: { 
             fr: "TOTEM INTERACTIF 32''", 
             en: "32'' INTERACTIVE KIOSK" 
@@ -33,12 +33,13 @@ window.PRODUCT_DATA = {
         vesa: "Structure Autoportante"
     },
     media: {
-        imagePrincipale: "images/GM92.jpg",
+        // --- NOMS DE FICHIERS STANDARDISÉS POUR L'AUTO-UPLOAD ---
+        imagePrincipale: "produits/images/vtx-standbyme32-main.jpg",
         galerie: [
-            { url: "images/vtx-white-bronze.jpg", label: { fr: "Design Blanc & Bronze", en: "White & Bronze Design" } },
-            { url: "images/vtx-camera.jpg", label: { fr: "Caméra 2.1MP Intégrée", en: "Integrated 2.1MP Camera" } },
-            { url: "images/vtx-base.jpg", label: { fr: "Base Circulaire Stable", en: "Stable Circular Base" } },
-            { url: "images/vtx-ports.jpg", label: { fr: "Connectique USB-C & HDMI", en: "USB-C & HDMI Ports" } }
+            { url: "produits/images/vtx-standbyme32-gal0.jpg", label: { fr: "Design Blanc & Bronze", en: "White & Bronze Design" } },
+            { url: "produits/images/vtx-standbyme32-gal1.jpg", label: { fr: "Caméra 2.1MP Intégrée", en: "Integrated 2.1MP Camera" } },
+            { url: "produits/images/vtx-standbyme32-gal2.jpg", label: { fr: "Base Circulaire Stable", en: "Stable Circular Base" } },
+            { url: "produits/images/vtx-standbyme32-gal3.jpg", label: { fr: "Connectique USB-C & HDMI", en: "USB-C & HDMI Ports" } }
         ]
     },
     accessoires: [
