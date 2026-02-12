@@ -28,8 +28,8 @@
 
         @media print {
             @page { 
-                size: A4; 
-                margin: 15mm; 
+                size: A4 portrait; 
+                margin: 12mm 10mm;
             }
             
             * {
@@ -38,23 +38,26 @@
                 color-adjust: exact !important;
             }
             
-            body { 
+            html, body { 
                 background: white !important; 
                 color: #1a1a1a !important;
                 padding: 0 !important; 
                 margin: 0 !important;
+                font-size: 10pt !important;
+                line-height: 1.3 !important;
             }
             
             #main-card { 
                 display: block !important; 
                 opacity: 1 !important; 
                 width: 100% !important; 
+                max-width: 100% !important;
                 border-radius: 0 !important; 
                 margin: 0 !important; 
+                padding: 0 !important;
                 border: none !important; 
                 background: white !important;
                 box-shadow: none !important;
-                page-break-after: avoid;
             }
             
             /* Masquer les éléments non-imprimables */
@@ -63,124 +66,304 @@
                 display: none !important; 
             }
             
-            /* Header */
+            /* ========== HEADER OPTIMISÉ ========== */
             header {
                 background: white !important;
-                border-bottom: 2px solid #FFD700 !important;
+                border-bottom: 3px solid #FFD700 !important;
+                padding: 8mm 0 6mm 0 !important;
                 page-break-after: avoid;
+                margin-bottom: 4mm !important;
             }
             
             #ui-brand {
                 color: #FFD700 !important;
+                font-size: 8pt !important;
+                margin-bottom: 2mm !important;
             }
             
             #ui-titre {
                 color: #1a1a1a !important;
+                font-size: 24pt !important;
+                line-height: 1.1 !important;
+                margin-bottom: 4mm !important;
             }
             
-            /* Badges */
+            #ui-logo {
+                height: 18mm !important;
+                max-height: 18mm !important;
+            }
+            
+            /* Badges compacts */
+            #ui-badges {
+                gap: 2mm !important;
+            }
+            
             .ui-badge-print {
                 background: #f8f8f8 !important;
                 border: 1px solid #FFD700 !important;
                 color: #1a1a1a !important;
+                padding: 1.5mm 3mm !important;
+                font-size: 7pt !important;
             }
             
-            /* Images et galerie */
+            .ui-badge-print i {
+                width: 3mm !important;
+                height: 3mm !important;
+            }
+            
+            /* ========== SECTION IMAGES + 3D (2 colonnes) ========== */
+            .print-grid-2cols {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 4mm !important;
+                margin-bottom: 4mm !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Colonne gauche : Image principale */
+            .print-col-left {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 3mm !important;
+            }
+            
             #main-img-container {
-                background: #f5f5f5 !important;
-                border: 1px solid #e0e0e0 !important;
-                min-height: 300px !important;
+                background: #fafafa !important;
+                border: 1.5px solid #e0e0e0 !important;
+                border-radius: 3mm !important;
+                padding: 4mm !important;
+                min-height: 55mm !important;
+                max-height: 55mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 page-break-inside: avoid;
             }
             
             #ui-main-img {
-                max-height: 300px !important;
+                max-width: 100% !important;
+                max-height: 50mm !important;
+                object-fit: contain !important;
             }
             
-            /* Galerie - toutes les images visibles */
+            /* Galerie optimisée - 3 colonnes */
             #ui-galerie {
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
-                gap: 8px !important;
+                gap: 2mm !important;
                 page-break-inside: avoid;
             }
             
             #ui-galerie .zoomable-container {
-                background: #f5f5f5 !important;
+                background: #fafafa !important;
                 border: 1px solid #e0e0e0 !important;
-                padding: 4px !important;
-                height: auto !important;
-                min-height: 80px !important;
-                page-break-inside: avoid;
+                border-radius: 2mm !important;
+                padding: 1.5mm !important;
+                height: 20mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
             
             #ui-galerie img {
                 width: 100% !important;
-                height: 80px !important;
+                height: 100% !important;
                 object-fit: contain !important;
                 display: block !important;
             }
             
-            /* Section 3D */
+            /* Colonne droite : Section 3D */
+            .print-col-right {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                background: #fafafa !important;
+                border: 1.5px solid #e0e0e0 !important;
+                border-radius: 3mm !important;
+                padding: 4mm !important;
+            }
+            
             .scene-3d { 
-                transform: none !important;
-                min-height: 180px !important;
-                page-break-inside: avoid;
+                perspective: none !important;
+                min-height: 45mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
             
             .screen-3d {
                 transform: none !important;
+                position: relative !important;
             }
             
             .face-front {
-                background: #f8f8f8 !important;
+                background: white !important;
                 border: 2px solid #FFD700 !important;
-                box-shadow: none !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+                border-radius: 2mm !important;
+                transform: none !important;
             }
             
             #val-diag {
                 color: #FFD700 !important;
+                font-size: 18pt !important;
             }
             
             .border-dashed {
                 border-color: #FFD700 !important;
+                opacity: 0.6 !important;
             }
             
             #val-w, #val-h {
-                color: #1a1a1a !important;
+                color: #333 !important;
+                font-size: 7pt !important;
+                font-weight: 700 !important;
             }
             
             /* VESA Box */
             .bg-black\/50 {
-                background: #f8f8f8 !important;
-                border: 1px solid #FFD700 !important;
+                background: white !important;
+                border: 1.5px solid #FFD700 !important;
+                border-radius: 2mm !important;
+                padding: 3mm !important;
+                margin-top: 3mm !important;
             }
             
             .bg-\[#FFD700\] {
                 background: #FFD700 !important;
             }
             
-            /* Sections */
+            #txt-fixation {
+                font-size: 6pt !important;
+                color: #666 !important;
+            }
+            
+            #val-vesa {
+                font-size: 9pt !important;
+                color: #FFD700 !important;
+            }
+            
+            /* ========== SECTION INCLUS + OPTIONS ========== */
             section {
                 background: white !important;
                 border-top: 1px solid #e0e0e0 !important;
                 border-bottom: 1px solid #e0e0e0 !important;
+                padding: 4mm 0 !important;
+                margin: 4mm 0 !important;
                 page-break-inside: avoid;
             }
             
-            h3 {
+            .print-section-flex {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 6mm !important;
+            }
+            
+            section h3 {
+                color: #FFD700 !important;
+                font-size: 8pt !important;
+                margin-bottom: 3mm !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 2mm !important;
+            }
+            
+            section h3 i {
+                width: 3.5mm !important;
+                height: 3.5mm !important;
+            }
+            
+            /* Accessoires */
+            #ui-acc {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 2.5mm !important;
+            }
+            
+            #ui-acc > div {
+                page-break-inside: avoid;
+            }
+            
+            #ui-acc p:first-child {
+                font-size: 8pt !important;
+                color: #1a1a1a !important;
+                margin-bottom: 1mm !important;
+            }
+            
+            #ui-acc p:last-child {
+                font-size: 7pt !important;
+                color: #666 !important;
+            }
+            
+            /* Options */
+            #ui-opt {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 2mm !important;
+            }
+            
+            #ui-opt > div {
+                background: #f8f8f8 !important;
+                border: 1px solid #e0e0e0 !important;
+                border-radius: 2mm !important;
+                padding: 2mm 3mm !important;
+                color: #1a1a1a !important;
+                font-size: 7pt !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 2mm !important;
+            }
+            
+            #ui-opt i {
+                width: 3mm !important;
+                height: 3mm !important;
                 color: #FFD700 !important;
             }
             
-            /* Specs */
+            /* ========== SPECS + SIDEBAR ========== */
+            .print-grid-specs {
+                display: grid !important;
+                grid-template-columns: 2fr 1fr !important;
+                gap: 4mm !important;
+                padding: 0 !important;
+            }
+            
+            /* Specs - 2 colonnes */
+            #ui-specs {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 3mm !important;
+            }
+            
             #ui-specs > div {
-                background: #f8f8f8 !important;
+                background: #fafafa !important;
                 border: 1px solid #e0e0e0 !important;
+                border-radius: 2mm !important;
+                padding: 3mm !important;
                 page-break-inside: avoid;
             }
             
             #ui-specs h4 {
                 color: #1a1a1a !important;
+                font-size: 8pt !important;
+                margin-bottom: 2.5mm !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 2mm !important;
+            }
+            
+            #ui-specs h4 i {
+                width: 3.5mm !important;
+                height: 3.5mm !important;
+            }
+            
+            #ui-specs .space-y-2 > div {
+                display: flex !important;
+                justify-content: space-between !important;
+                border-bottom: 0.5px solid #e0e0e0 !important;
+                padding-bottom: 1mm !important;
+                margin-bottom: 1mm !important;
+                font-size: 7pt !important;
             }
             
             #ui-specs .text-slate-500 {
@@ -189,75 +372,146 @@
             
             #ui-specs .text-white {
                 color: #1a1a1a !important;
+                font-weight: 700 !important;
             }
             
-            /* Accessoires et Options */
-            #ui-acc > div, #ui-opt > div {
-                page-break-inside: avoid;
-            }
-            
-            #ui-acc .text-slate-500 {
-                color: #666 !important;
-            }
-            
-            #ui-opt > div {
-                background: #f8f8f8 !important;
-                border: 1px solid #e0e0e0 !important;
-                color: #1a1a1a !important;
+            /* Sidebar */
+            .print-sidebar {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 3mm !important;
             }
             
             /* Team */
             .bg-white\/\[0\.03\] {
-                background: #f8f8f8 !important;
-                border-left: 4px solid #FFD700 !important;
+                background: #fafafa !important;
+                border-left: 3px solid #FFD700 !important;
+                border-radius: 2mm !important;
+                padding: 3mm !important;
             }
             
-            #ui-team .text-slate-500 {
+            #txt-expert-title {
+                font-size: 8pt !important;
+                color: #1a1a1a !important;
+                margin-bottom: 3mm !important;
+            }
+            
+            #ui-team > div {
+                border-bottom: 0.5px solid #e0e0e0 !important;
+                padding-bottom: 2.5mm !important;
+                margin-bottom: 2.5mm !important;
+            }
+            
+            #ui-team > div:last-child {
+                border-bottom: none !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            
+            #ui-team p:first-child {
+                font-size: 8pt !important;
+                color: #1a1a1a !important;
+                margin-bottom: 0.5mm !important;
+            }
+            
+            #ui-team p:last-child {
+                font-size: 6pt !important;
                 color: #666 !important;
             }
             
             /* Entretien */
             .bg-black\/20 {
-                background: #f8f8f8 !important;
+                background: #fafafa !important;
                 border: 1px solid #e0e0e0 !important;
+                border-radius: 2mm !important;
+                padding: 3mm !important;
+            }
+            
+            #txt-entretien-title {
+                color: #FFD700 !important;
+                font-size: 8pt !important;
+                margin-bottom: 2.5mm !important;
             }
             
             #ui-entret-list {
+                margin: 0 !important;
+                padding: 0 !important;
+                list-style: none !important;
+            }
+            
+            #ui-entret-list li {
+                display: flex !important;
+                align-items: flex-start !important;
+                gap: 2mm !important;
+                margin-bottom: 1.5mm !important;
+                font-size: 7pt !important;
                 color: #1a1a1a !important;
+                line-height: 1.3 !important;
             }
             
             #ui-entret-list .text-\[\#FFD700\] {
                 color: #FFD700 !important;
+                flex-shrink: 0 !important;
             }
             
-            /* Footer */
+            /* ========== FOOTER ========== */
             footer {
                 background: white !important;
                 border-top: 1px solid #e0e0e0 !important;
+                padding: 4mm 0 2mm 0 !important;
+                margin-top: 4mm !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                font-size: 7pt !important;
                 color: #666 !important;
             }
             
             footer .text-white {
                 color: #1a1a1a !important;
+                font-weight: 700 !important;
             }
             
-            /* Optimisations générales pour l'impression */
+            #ui-sn {
+                opacity: 0.5 !important;
+            }
+            
+            /* ========== OPTIMISATIONS GLOBALES ========== */
             .border-white\/5, .border-white\/10 {
                 border-color: #e0e0e0 !important;
             }
             
-            .text-slate-400, .text-slate-500 {
-                color: #666 !important;
+            /* Icônes Lucide */
+            svg {
+                stroke-width: 2 !important;
             }
             
-            /* Force tous les textes importants en noir */
-            p, span, div {
-                color: inherit;
+            /* Éviter les coupures */
+            h1, h2, h3, h4 {
+                page-break-after: avoid !important;
             }
             
-            /* Éviter les coupures de page */
-            .grid > div {
-                page-break-inside: avoid;
+            img {
+                page-break-inside: avoid !important;
+            }
+            
+            /* Espacement global optimisé */
+            .p-8, .p-10, .p-14 {
+                padding: 0 !important;
+            }
+            
+            .py-10 {
+                padding-top: 4mm !important;
+                padding-bottom: 4mm !important;
+            }
+            
+            .px-6, .px-10 {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .gap-6, .gap-8 {
+                gap: 3mm !important;
             }
         }
     </style>
@@ -289,8 +543,8 @@
             <img id="ui-logo" src="" class="h-12 md:h-16 object-contain">
         </header>
 
-        <div class="grid lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-10">
-            <div class="space-y-6">
+        <div class="print-grid-2cols grid lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-10">
+            <div class="print-col-left space-y-6">
                 <div id="main-img-container" class="zoomable-container bg-black/30 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex items-center justify-center min-h-[300px] md:min-h-[450px]">
                     <div id="admin-main-photo" class="admin-overlay"></div>
                     <img id="ui-main-img" src="" class="max-w-full max-h-[350px] object-contain drop-shadow-2xl">
@@ -298,7 +552,7 @@
                 <div id="ui-galerie" class="grid grid-cols-3 gap-3 md:gap-4"></div>
             </div>
 
-            <div class="bg-white/[0.03] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex flex-col items-center justify-center">
+            <div class="print-col-right bg-white/[0.03] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex flex-col items-center justify-center">
                 <div class="scene-3d">
                     <div id="ui-3d" class="screen-3d">
                         <div class="face-front rounded-sm"><span id="val-diag" class="font-black italic text-[#FFD700] text-xl md:text-3xl"></span></div>
@@ -313,20 +567,22 @@
             </div>
         </div>
 
-        <section class="py-10 px-6 md:px-10 flex flex-col md:flex-row gap-12 md:gap-16 border-y border-white/5 bg-white/[0.01]">
-            <div class="flex-1">
-                <h3 id="txt-inclus-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
-                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
-            </div>
-            <div class="flex-1 border-t border-white/5 md:border-0 pt-10 md:pt-0">
-                <h3 id="txt-options-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
-                <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        <section class="py-10 px-6 md:px-10 border-y border-white/5 bg-white/[0.01]">
+            <div class="print-section-flex flex flex-col md:flex-row gap-12 md:gap-16">
+                <div class="flex-1">
+                    <h3 id="txt-inclus-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
+                    <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+                </div>
+                <div class="flex-1 border-t border-white/5 md:border-0 pt-10 md:pt-0">
+                    <h3 id="txt-options-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
+                    <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
             </div>
         </section>
 
-        <div class="p-6 md:p-10 grid lg:grid-cols-3 gap-8">
+        <div class="print-grid-specs p-6 md:p-10 grid lg:grid-cols-3 gap-8">
             <div id="ui-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-8"></div>
-            <div class="space-y-6">
+            <div class="print-sidebar space-y-6">
                 <div class="bg-white/[0.03] p-8 rounded-[2rem] border-l-4 border-[#FFD700]">
                     <h3 id="txt-expert-title" class="font-black uppercase text-[10px] mb-8 tracking-widest"></h3>
                     <div id="ui-team" class="space-y-6"></div>
