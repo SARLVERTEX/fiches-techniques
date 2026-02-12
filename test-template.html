@@ -27,11 +27,238 @@
         #zoom-overlay img { max-width: 90%; max-height: 90%; border-radius: 1rem; box-shadow: 0 0 50px rgba(0,0,0,0.5); object-fit: contain; }
 
         @media print {
-            @page { size: A4; margin: 0; }
-            body { background: #020617 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
-            #main-card { display: block !important; opacity: 1 !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; border: none !important; background: #020617 !important; }
-            #btn-print, #btn-back, #lang-switcher, #admin-ui, .contact-actions { display: none !important; }
-            .scene-3d { transform: scale(0.8) rotateY(0deg); min-height: 200px; }
+            @page { 
+                size: A4; 
+                margin: 15mm; 
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            body { 
+                background: white !important; 
+                color: #1a1a1a !important;
+                padding: 0 !important; 
+                margin: 0 !important;
+            }
+            
+            #main-card { 
+                display: block !important; 
+                opacity: 1 !important; 
+                width: 100% !important; 
+                border-radius: 0 !important; 
+                margin: 0 !important; 
+                border: none !important; 
+                background: white !important;
+                box-shadow: none !important;
+                page-break-after: avoid;
+            }
+            
+            /* Masquer les éléments non-imprimables */
+            #btn-print, #btn-back, #lang-switcher, #admin-ui, .contact-actions, 
+            .admin-overlay, #zoom-overlay { 
+                display: none !important; 
+            }
+            
+            /* Header */
+            header {
+                background: white !important;
+                border-bottom: 2px solid #FFD700 !important;
+                page-break-after: avoid;
+            }
+            
+            #ui-brand {
+                color: #FFD700 !important;
+            }
+            
+            #ui-titre {
+                color: #1a1a1a !important;
+            }
+            
+            /* Badges */
+            .ui-badge-print {
+                background: #f8f8f8 !important;
+                border: 1px solid #FFD700 !important;
+                color: #1a1a1a !important;
+            }
+            
+            /* Images et galerie */
+            #main-img-container {
+                background: #f5f5f5 !important;
+                border: 1px solid #e0e0e0 !important;
+                min-height: 300px !important;
+                page-break-inside: avoid;
+            }
+            
+            #ui-main-img {
+                max-height: 300px !important;
+            }
+            
+            /* Galerie - toutes les images visibles */
+            #ui-galerie {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 8px !important;
+                page-break-inside: avoid;
+            }
+            
+            #ui-galerie .zoomable-container {
+                background: #f5f5f5 !important;
+                border: 1px solid #e0e0e0 !important;
+                padding: 4px !important;
+                height: auto !important;
+                min-height: 80px !important;
+                page-break-inside: avoid;
+            }
+            
+            #ui-galerie img {
+                width: 100% !important;
+                height: 80px !important;
+                object-fit: contain !important;
+                display: block !important;
+            }
+            
+            /* Section 3D */
+            .scene-3d { 
+                transform: none !important;
+                min-height: 180px !important;
+                page-break-inside: avoid;
+            }
+            
+            .screen-3d {
+                transform: none !important;
+            }
+            
+            .face-front {
+                background: #f8f8f8 !important;
+                border: 2px solid #FFD700 !important;
+                box-shadow: none !important;
+            }
+            
+            #val-diag {
+                color: #FFD700 !important;
+            }
+            
+            .border-dashed {
+                border-color: #FFD700 !important;
+            }
+            
+            #val-w, #val-h {
+                color: #1a1a1a !important;
+            }
+            
+            /* VESA Box */
+            .bg-black\/50 {
+                background: #f8f8f8 !important;
+                border: 1px solid #FFD700 !important;
+            }
+            
+            .bg-\[#FFD700\] {
+                background: #FFD700 !important;
+            }
+            
+            /* Sections */
+            section {
+                background: white !important;
+                border-top: 1px solid #e0e0e0 !important;
+                border-bottom: 1px solid #e0e0e0 !important;
+                page-break-inside: avoid;
+            }
+            
+            h3 {
+                color: #FFD700 !important;
+            }
+            
+            /* Specs */
+            #ui-specs > div {
+                background: #f8f8f8 !important;
+                border: 1px solid #e0e0e0 !important;
+                page-break-inside: avoid;
+            }
+            
+            #ui-specs h4 {
+                color: #1a1a1a !important;
+            }
+            
+            #ui-specs .text-slate-500 {
+                color: #666 !important;
+            }
+            
+            #ui-specs .text-white {
+                color: #1a1a1a !important;
+            }
+            
+            /* Accessoires et Options */
+            #ui-acc > div, #ui-opt > div {
+                page-break-inside: avoid;
+            }
+            
+            #ui-acc .text-slate-500 {
+                color: #666 !important;
+            }
+            
+            #ui-opt > div {
+                background: #f8f8f8 !important;
+                border: 1px solid #e0e0e0 !important;
+                color: #1a1a1a !important;
+            }
+            
+            /* Team */
+            .bg-white\/\[0\.03\] {
+                background: #f8f8f8 !important;
+                border-left: 4px solid #FFD700 !important;
+            }
+            
+            #ui-team .text-slate-500 {
+                color: #666 !important;
+            }
+            
+            /* Entretien */
+            .bg-black\/20 {
+                background: #f8f8f8 !important;
+                border: 1px solid #e0e0e0 !important;
+            }
+            
+            #ui-entret-list {
+                color: #1a1a1a !important;
+            }
+            
+            #ui-entret-list .text-\[\#FFD700\] {
+                color: #FFD700 !important;
+            }
+            
+            /* Footer */
+            footer {
+                background: white !important;
+                border-top: 1px solid #e0e0e0 !important;
+                color: #666 !important;
+            }
+            
+            footer .text-white {
+                color: #1a1a1a !important;
+            }
+            
+            /* Optimisations générales pour l'impression */
+            .border-white\/5, .border-white\/10 {
+                border-color: #e0e0e0 !important;
+            }
+            
+            .text-slate-400, .text-slate-500 {
+                color: #666 !important;
+            }
+            
+            /* Force tous les textes importants en noir */
+            p, span, div {
+                color: inherit;
+            }
+            
+            /* Éviter les coupures de page */
+            .grid > div {
+                page-break-inside: avoid;
+            }
         }
     </style>
 </head>
@@ -235,7 +462,7 @@
             d.getElementById('ui-ref').innerText = "REF: " + (pc.produit.ref || "N/A");
             d.getElementById('ui-sn').innerText = "S/N: " + (pc.produit.sn || "PROTOTYPE");
             
-            d.getElementById('ui-badges').innerHTML = (pc.badges || []).map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
+            d.getElementById('ui-badges').innerHTML = (pc.badges || []).map(b => `<div class="ui-badge-print bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
             
             const isPortrait = pc.dimensions.orientation === "portrait";
             d.getElementById('ui-3d').style.width = isPortrait ? "130px" : "220px";
