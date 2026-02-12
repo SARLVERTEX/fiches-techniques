@@ -4,243 +4,350 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="images/logo-vertex.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco - Fiche Technique</title>
+    <title>Vertex Monaco | Technical Management System</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
-        html { scroll-behavior: smooth; }
-        body { background: #020617; color: white; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-        #main-card { display: none; opacity: 0; transition: opacity 0.8s ease-in-out; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;600;900&display=swap');
         
-        /* Menu de sélection d'impression (Interface) */
-        #print-options-panel {
-            position: fixed;
-            bottom: 90px;
-            right: 24px;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 1.5rem;
-            border-radius: 1.5rem;
-            z-index: 100;
-            display: none;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            width: 250px;
+        :root { --gold: #FFD700; --dark: #020617; }
+        
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--dark); color: white; font-family: 'Outfit', sans-serif; overflow-x: hidden; }
+
+        /* --- EFFETS DE GLASSE & UI --- */
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gold-gradient { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); }
+        
+        /* --- ADMIN OVERLAY (Le gros morceau) --- */
+        #admin-overlay {
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98);
+            z-index: 9999; display: none; overflow-y: auto;
+            padding: 2rem; border-left: 1px solid var(--gold);
+        }
+        
+        input, textarea, select {
+            background: rgba(255,255,255,0.05) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            color: white !important;
+            padding: 0.75rem !important;
+            border-radius: 0.5rem !important;
+            width: 100%;
         }
 
-        /* 3D Effects */
-        .scene-3d { perspective: 1200px; display: flex; align-items: center; justify-content: center; min-height: 250px; width: 100%; }
-        .screen-3d { position: relative; transform-style: preserve-3d; transform: rotateY(-15deg) rotateX(5deg); transition: transform 0.5s ease; }
-        .face-front { width: 100%; height: 100%; transform: translateZ(10px); background: linear-gradient(135deg, #1e293b 0%, #020617 100%); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,215,0,0.3); }
+        /* --- ANIMATIONS 3D --- */
+        .scene-3d { perspective: 1500px; }
+        .screen-3d {
+            transform-style: preserve-3d;
+            transform: rotateY(-20deg) rotateX(10deg);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .screen-3d:hover { transform: rotateY(-5deg) rotateX(2deg); }
 
+        /* --- PRINT ENGINE --- */
         @media print {
-            @page { size: A4 portrait; margin: 15mm 15mm; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            
-            /* Masquage des éléments inutiles */
-            #btn-print, #btn-back, #lang-switcher, #admin-ui, #print-options-panel, .btn-settings, .admin-overlay { 
-                display: none !important; 
-            }
-
-            body { background: white !important; color: #1a1a1a !important; padding: 0 !important; }
-            #main-card { display: block !important; opacity: 1 !important; border: none !important; background: white !important; box-shadow: none !important; width: 100% !important; max-width: 100% !important; }
-            
-            header { border-bottom: 3px solid #FFD700 !important; margin-bottom: 10mm !important; padding-bottom: 5mm !important; page-break-after: avoid; }
-            
-            /* Layout vertical non-compact */
-            .print-grid-2cols, .print-grid-specs, .print-section-flex { 
-                display: flex !important; 
-                flex-direction: column !important; 
-                gap: 15mm !important; 
-            }
-
-            .print-col-left, .print-col-right, .print-sidebar, #ui-specs { 
-                width: 100% !important; 
-            }
-
-            /* Espacement des blocs */
-            section, .print-col-right, .print-sidebar { 
-                page-break-inside: avoid !important; 
-                margin-top: 10mm !important;
-                background: #fdfdfd !important;
-                border: 1px solid #eee !important;
-                padding: 8mm !important;
-                border-radius: 5mm !important;
-            }
-
-            /* Masquage dynamique des sections */
+            @page { size: A4; margin: 0; }
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            #btn-print, #btn-back, #lang-switcher, .admin-ui, #admin-overlay, .no-print { display: none !important; }
+            #main-card { border: none !important; box-shadow: none !important; width: 100% !important; max-width: 100% !important; display: block !important; margin: 0 !important; }
+            .print-section { page-break-inside: avoid; margin-bottom: 2rem; border: 1px solid #eee !important; padding: 1.5rem !important; border-radius: 1rem !important; }
+            .screen-3d { transform: none !important; border: 2px solid #000 !important; }
+            .text-[#FFD700] { color: #886600 !important; } /* Or plus sombre pour lisibilité */
             .hide-section { display: none !important; }
         }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
-<body class="p-2 md:p-8">
+<body class="p-4 md:p-12">
 
-    <div class="fixed top-4 left-4 md:top-8 md:left-8 z-50 flex gap-2">
-        <a id="btn-back" href="#" class="bg-white/10 backdrop-blur-md border border-white/10 text-white p-3 md:px-5 md:py-3 rounded-full flex items-center gap-2 font-bold uppercase text-[10px] hover:bg-[#FFD700] hover:text-black transition-all">
+    <div id="admin-overlay" class="font-light">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-black uppercase tracking-tighter italic"><span class="text-white">EDITION</span> <span class="text-[#FFD700]">PRODUIT</span></h2>
+                <button onclick="toggleAdmin()" class="bg-white/10 p-4 rounded-full hover:bg-red-500 transition-colors"><i data-lucide="x"></i></button>
+            </div>
+            
+            <form id="edit-form" class="space-y-12 pb-24">
+                <div id="form-content" class="grid md:grid-cols-2 gap-8"></div>
+                
+                <div class="fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-4">
+                    <button type="button" onclick="saveToGithub()" class="bg-[#FFD700] text-black px-12 py-4 rounded-full font-black uppercase shadow-2xl hover:scale-105 transition-transform flex items-center gap-3">
+                        <i data-lucide="save"></i> Pousser sur GitHub
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="fixed top-6 left-6 z-50 flex gap-3 no-print">
+        <a id="btn-back" href="#" class="glass px-6 py-3 rounded-full flex items-center gap-3 font-bold uppercase text-[10px] hover:bg-[#FFD700] hover:text-black transition-all">
             <i data-lucide="arrow-left" class="w-4 h-4"></i> <span id="txt-showroom"></span>
         </a>
     </div>
 
-    <div id="lang-switcher" class="fixed top-4 right-4 z-50 flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/10">
-        <button onclick="changeLang('fr')" id="lang-fr" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">FR</button>
-        <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">EN</button>
+    <div id="lang-switcher" class="fixed top-6 right-6 z-50 flex glass rounded-full p-1 no-print">
+        <button onclick="changeLang('fr')" id="lang-fr" class="px-4 py-2 rounded-full text-[10px] font-black transition-all">FR</button>
+        <button onclick="changeLang('en')" id="lang-en" class="px-4 py-2 rounded-full text-[10px] font-black transition-all">EN</button>
     </div>
 
-    <div id="print-options-panel">
-        <h4 class="text-[#FFD700] font-black text-[11px] uppercase tracking-widest mb-4 flex items-center gap-2">
-            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Impression
-        </h4>
-        <div class="space-y-3 text-white/80 text-[11px] font-medium">
-            <label class="flex items-center gap-3 cursor-pointer hover:text-white"><input type="checkbox" checked onchange="toggleSection('print-media', this)" class="accent-[#FFD700]"> Galerie Photos</label>
-            <label class="flex items-center gap-3 cursor-pointer hover:text-white"><input type="checkbox" checked onchange="toggleSection('print-3d', this)" class="accent-[#FFD700]"> Dimensions & VESA</label>
-            <label class="flex items-center gap-3 cursor-pointer hover:text-white"><input type="checkbox" checked onchange="toggleSection('print-inclus', this)" class="accent-[#FFD700]"> Inclus & Options</label>
-            <label class="flex items-center gap-3 cursor-pointer hover:text-white"><input type="checkbox" checked onchange="toggleSection('print-specs', this)" class="accent-[#FFD700]"> Fiche Technique</label>
-            <label class="flex items-center gap-3 cursor-pointer hover:text-white"><input type="checkbox" checked onchange="toggleSection('print-sidebar', this)" class="accent-[#FFD700]"> Expert & Entretien</label>
-        </div>
+    <div id="print-config" class="fixed bottom-24 right-8 z-50 glass p-6 rounded-[2rem] w-64 shadow-2xl border-[#FFD700]/20 no-print hidden">
+        <h4 class="text-[#FFD700] font-black text-[10px] uppercase mb-4 tracking-widest">Configuration Impression</h4>
+        <div class="space-y-3" id="print-toggles">
+            </div>
     </div>
 
-    <button onclick="togglePanel()" class="btn-settings fixed bottom-24 right-6 z-50 bg-slate-800 text-white p-4 rounded-full shadow-2xl border border-white/20 hover:bg-slate-700 transition-all">
-        <i data-lucide="settings-2" class="w-5 h-5"></i>
-    </button>
+    <div class="fixed bottom-8 right-8 z-50 flex flex-col gap-4 no-print">
+        <button onclick="toggleAdmin()" class="bg-white text-black p-5 rounded-full shadow-2xl hover:rotate-90 transition-transform">
+            <i data-lucide="settings"></i>
+        </button>
+        <button onclick="document.getElementById('print-config').classList.toggle('hidden')" class="bg-slate-800 text-white p-5 rounded-full shadow-2xl">
+            <i data-lucide="layers"></i>
+        </button>
+        <button onclick="window.print()" class="bg-[#FFD700] text-black p-5 rounded-full shadow-2xl hover:scale-110 transition-transform">
+            <i data-lucide="printer"></i>
+        </button>
+    </div>
 
-    <button id="btn-print" onclick="window.print()" class="fixed bottom-6 right-6 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
-        <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print"></span>
-    </button>
-
-    <div id="main-card" class="max-w-6xl mx-auto border border-white/5 rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl shadow-2xl">
+    <div id="main-card" class="max-w-7xl mx-auto glass rounded-[4rem] shadow-2xl overflow-hidden opacity-0 translate-y-10 transition-all duration-1000">
         
-        <header class="p-8 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+        <header class="p-10 md:p-20 border-b border-white/5 flex flex-col md:flex-row justify-between items-end gap-10">
             <div class="flex-1">
-                <p id="ui-brand" class="font-bold uppercase tracking-[0.4em] text-[11px] mb-4 text-[#FFD700]"></p>
-                <h1 id="ui-titre" class="text-3xl md:text-7xl font-black uppercase tracking-tighter italic leading-tight mb-6"></h1>
+                <div class="flex items-center gap-4 mb-6">
+                    <span id="ui-brand" class="text-[#FFD700] font-black uppercase tracking-[0.5em] text-[12px]"></span>
+                    <div class="h-px w-20 bg-[#FFD700]/30"></div>
+                </div>
+                <h1 id="ui-titre" class="text-4xl md:text-8xl font-black uppercase italic tracking-tighter leading-none mb-8"></h1>
                 <div id="ui-badges" class="flex flex-wrap gap-3"></div>
             </div>
-            <img id="ui-logo" src="" class="h-12 md:h-16 object-contain">
+            <img id="ui-logo" src="" class="h-16 md:h-24 object-contain filter grayscale invert brightness-200">
         </header>
 
-        <div class="print-grid-2cols grid lg:grid-cols-2 gap-8 p-6 md:p-10">
-            <div id="print-media" class="print-col-left space-y-6">
-                <div class="bg-black/30 rounded-[2rem] p-6 border border-white/5 flex items-center justify-center min-h-[300px] md:min-h-[450px]">
-                    <img id="ui-main-img" src="" class="max-w-full max-h-[350px] object-contain drop-shadow-2xl">
+        <div class="grid lg:grid-cols-12 gap-0">
+            
+            <div id="print-media" class="lg:col-span-7 p-8 md:p-16 border-r border-white/5 print-section">
+                <div class="relative group">
+                    <div class="absolute -inset-4 bg-[#FFD700]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <img id="ui-main-img" src="" class="relative w-full h-[500px] object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.6)]">
                 </div>
-                <div id="ui-galerie" class="grid grid-cols-3 gap-4"></div>
+                <div id="ui-galerie" class="grid grid-cols-4 gap-4 mt-12"></div>
             </div>
 
-            <div id="print-3d" class="print-col-right bg-white/[0.03] rounded-[2rem] p-6 border border-white/5 flex flex-col items-center justify-center">
-                <div class="scene-3d">
-                    <div id="ui-3d" class="screen-3d">
-                        <div class="face-front rounded-sm"><span id="val-diag" class="font-black italic text-[#FFD700] text-xl md:text-3xl"></span></div>
-                        <div class="absolute -top-10 left-0 right-0 border-t border-dashed border-[#FFD700]/40 flex justify-center pt-2 text-[#FFD700] text-[9px] font-bold" id="val-w"></div>
-                        <div class="absolute -left-12 top-0 bottom-0 border-l border-dashed border-[#FFD700]/40 flex items-center text-[#FFD700] text-[9px] font-bold"><span id="val-h" class="-rotate-90 whitespace-nowrap"></span></div>
+            <div class="lg:col-span-5 flex flex-col">
+                <div id="print-3d" class="p-12 flex-1 flex flex-col items-center justify-center bg-white/[0.01] print-section">
+                    <div class="scene-3d w-full">
+                        <div id="ui-3d" class="screen-3d mx-auto relative border-4 border-slate-800 rounded-xl bg-slate-900 overflow-hidden shadow-2xl" style="width: 300px; aspect-ratio: 16/9;">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span id="val-diag" class="text-5xl font-black italic text-[#FFD700]/20"></span>
+                            </div>
+                            <div class="absolute -top-8 left-0 right-0 flex justify-between text-[10px] font-bold text-[#FFD700]">
+                                <i data-lucide="arrow-left-right" class="w-3"></i>
+                                <span id="val-w"></span>
+                                <i data-lucide="arrow-left-right" class="w-3"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-8 bg-black/50 p-5 rounded-2xl border border-[#FFD700]/20 w-full">
-                    <p id="txt-fixation" class="text-[8px] uppercase text-slate-500 font-black mb-1"></p>
-                    <p id="val-vesa" class="text-xs md:text-sm font-black text-[#FFD700] uppercase"></p>
+                    <div class="mt-16 w-full glass p-6 rounded-3xl border-[#FFD700]/10">
+                        <p id="txt-fixation" class="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-2"></p>
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-[#FFD700] text-black rounded-lg"><i data-lucide="layout-grid" class="w-4"></i></div>
+                            <span id="val-vesa" class="text-xl font-black italic uppercase"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <section id="print-inclus" class="py-10 px-6 md:px-10 border-y border-white/5 bg-white/[0.01]">
-            <div class="print-section-flex flex flex-col md:flex-row gap-16">
-                <div class="flex-1">
-                    <h3 id="txt-inclus-title" class="text-[#FFD700] font-black text-[10px] uppercase mb-8 flex items-center gap-3"></h3>
-                    <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
-                </div>
-                <div class="flex-1">
-                    <h3 id="txt-options-title" class="text-[#FFD700] font-black text-[10px] uppercase mb-8 flex items-center gap-3"></h3>
-                    <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-                </div>
+        <section id="print-inclus" class="grid md:grid-cols-2 gap-0 border-y border-white/5 print-section">
+            <div class="p-12 md:p-16 border-r border-white/5">
+                <h3 id="txt-inclus-title" class="text-[#FFD700] font-black text-xs uppercase mb-12 tracking-[0.3em]"></h3>
+                <div id="ui-acc" class="grid gap-6"></div>
+            </div>
+            <div class="p-12 md:p-16 bg-white/[0.01]">
+                <h3 id="txt-options-title" class="text-[#FFD700] font-black text-xs uppercase mb-12 tracking-[0.3em]"></h3>
+                <div id="ui-opt" class="grid gap-4"></div>
             </div>
         </section>
 
-        <div class="print-grid-specs p-6 md:p-10 grid lg:grid-cols-3 gap-8">
-            <div id="print-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-8">
-                <div id="ui-specs" class="contents"></div>
-            </div>
-            <div id="print-sidebar" class="print-sidebar space-y-6">
-                <div class="bg-white/[0.03] p-8 rounded-[2rem] border-l-4 border-[#FFD700]">
-                    <h3 id="txt-expert-title" class="font-black uppercase text-[10px] mb-8 text-[#FFD700]"></h3>
-                    <div id="ui-team" class="space-y-6"></div>
-                </div>
-                <div class="bg-black/20 p-8 rounded-[2rem] border border-white/5">
-                    <h3 id="txt-entretien-title" class="text-[#FFD700] font-black uppercase text-[10px] mb-6"></h3>
-                    <ul id="ui-entret-list" class="space-y-3 text-[9px] text-slate-400 italic"></ul>
-                </div>
-            </div>
+        <div id="print-specs" class="p-12 md:p-20 print-section">
+            <div id="ui-specs" class="grid md:grid-cols-2 lg:grid-cols-3 gap-16"></div>
         </div>
 
-        <footer class="p-10 border-t border-white/5 flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase">
-            <p id="ui-addr"></p>
-            <div class="flex gap-8 text-white"><p id="ui-ref"></p><p id="ui-sn" class="opacity-30"></p></div>
+        <footer class="border-t border-white/5">
+            <div class="grid md:grid-cols-3 gap-0">
+                <div id="print-sidebar" class="md:col-span-2 p-12 md:p-16 border-r border-white/5 print-section">
+                    <h3 id="txt-expert-title" class="text-[#FFD700] font-black text-xs uppercase mb-8"></h3>
+                    <div id="ui-team" class="flex flex-wrap gap-12"></div>
+                </div>
+                <div class="p-12 md:p-16 bg-[#FFD700] text-black">
+                    <h3 id="txt-entretien-title" class="font-black text-xs uppercase mb-6"></h3>
+                    <ul id="ui-entret-list" class="space-y-4 text-sm font-bold italic"></ul>
+                </div>
+            </div>
+            <div class="p-8 text-center text-[10px] text-slate-500 font-bold uppercase tracking-[0.5em]">
+                <span id="ui-addr"></span> | <span id="ui-ref" class="text-white"></span>
+            </div>
         </footer>
     </div>
 
     <script>
-        const REPO_OWNER = "sarlvertex", REPO_NAME = "fiches-techniques";
+        // CONFIGURATION & ETAT
         const params = new URLSearchParams(window.location.search);
         const produitId = params.get('id'), dossier = params.get('dir') || 'produits', currentLang = params.get('lang') || 'fr';
+        let FULL_DATA = {};
 
-        const UI_STRINGS = {
-            fr: { showroom: "Retour Showroom", print: "Imprimer la Fiche", fixation: "Système de Fixation", inclus: "Inclus dans le Pack", options: "Options Disponibles", expert: "Votre Expert", entretien: "Entretien" },
-            en: { showroom: "Back to Showroom", print: "Print Datasheet", fixation: "Mounting System", inclus: "Included", options: "Available Options", expert: "Your Expert", entretien: "Maintenance" }
+        const UI_LABELS = {
+            fr: { showroom: "Catalogue Vertex", print: "Imprimer", fixation: "Interface VESA", inclus: "Inclus en standard", options: "Personnalisation", expert: "Votre interlocuteur dédié", entretien: "Maintenance & Soins" },
+            en: { showroom: "Vertex Catalog", print: "Print", fixation: "VESA Interface", inclus: "Standard Features", options: "Customization", expert: "Your Dedicated Expert", entretien: "Maintenance & Care" }
         };
 
-        function togglePanel() {
-            const panel = document.getElementById('print-options-panel');
-            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+        // --- MOTEUR DE RENDU ---
+        window.onload = () => {
+            if(!produitId) return alert("ID manquant");
+            loadAllScripts();
+        };
+
+        function loadAllScripts() {
+            const scripts = ["config.js", `${dossier}/${produitId}.js`];
+            let loaded = 0;
+            scripts.forEach(src => {
+                const s = document.createElement('script');
+                s.src = src + "?v=" + Date.now();
+                s.onload = () => { if(++loaded === scripts.length) renderEverything(); };
+                document.head.appendChild(s);
+            });
         }
 
-        function toggleSection(id, cb) {
-            document.getElementById(id).classList.toggle('hide-section', !cb.checked);
+        function renderEverything() {
+            const pc = window.PRODUCT_DATA;
+            const gc = window.GLOBAL_CONFIG;
+            const ui = UI_LABELS[currentLang];
+
+            // Mapping Textes de base
+            document.getElementById('txt-showroom').innerText = ui.showroom;
+            document.getElementById('ui-brand').innerText = gc.brand.nom;
+            document.getElementById('ui-titre').innerText = pc.nom[currentLang];
+            document.getElementById('ui-logo').src = gc.brand.logo;
+            document.getElementById('ui-ref').innerText = "UNIT REF: " + pc.reference;
+            document.getElementById('ui-addr').innerText = gc.brand.adresse;
+            
+            // Render Badges
+            document.getElementById('ui-badges').innerHTML = pc.badges.map(b => `<span class="px-6 py-2 border border-[#FFD700]/30 text-[#FFD700] text-[10px] font-black rounded-full uppercase italic bg-[#FFD700]/5">${b}</span>`).join('');
+
+            // Render Galerie
+            document.getElementById('ui-main-img').src = `${dossier}/images/${pc.image_principale}`;
+            document.getElementById('ui-galerie').innerHTML = pc.galerie.map(img => `<img src="${dossier}/images/${img}" class="rounded-xl border border-white/5 hover:border-[#FFD700]/50 transition-all cursor-pointer">`).join('');
+
+            // Render 3D & Specs
+            document.getElementById('val-diag').innerText = pc.diagonale + '"';
+            document.getElementById('val-w').innerText = pc.dimensions.largeur + " mm";
+            document.getElementById('val-vesa').innerText = pc.vesa || "VERTEX MOUNT";
+            document.getElementById('txt-fixation').innerText = ui.fixation;
+
+            // Render Accessoires
+            document.getElementById('txt-inclus-title').innerText = ui.inclus;
+            document.getElementById('ui-acc').innerHTML = pc.accessoires.map(a => `
+                <div class="flex items-center gap-6 group">
+                    <div class="w-16 h-16 glass rounded-2xl flex items-center justify-center text-[#FFD700] group-hover:bg-[#FFD700] group-hover:text-black transition-all">
+                        <i data-lucide="${a.icon}"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-black uppercase text-sm">${a.nom[currentLang]}</h4>
+                        <p class="text-[10px] text-slate-500 uppercase font-bold">${a.desc[currentLang]}</p>
+                    </div>
+                </div>`).join('');
+
+            // Render Spécifications (Le gros bloc)
+            document.getElementById('ui-specs').innerHTML = Object.entries(pc.specifications).map(([cat, fields]) => `
+                <div class="space-y-6">
+                    <h4 class="text-[11px] font-black text-[#FFD700] uppercase tracking-[0.4em] border-b border-white/10 pb-4">${cat}</h4>
+                    <div class="space-y-4">
+                        ${Object.entries(fields).map(([k, v]) => `
+                            <div class="flex justify-between items-baseline gap-4">
+                                <span class="text-[10px] text-slate-500 uppercase font-black whitespace-nowrap">${k}</span>
+                                <div class="flex-1 border-b border-white/5 border-dotted mb-1"></div>
+                                <span class="text-xs text-white font-medium text-right">${v}</span>
+                            </div>`).join('')}
+                    </div>
+                </div>`).join('');
+
+            // Expert Team
+            document.getElementById('txt-expert-title').innerText = ui.expert;
+            document.getElementById('ui-team').innerHTML = gc.experts.map(e => `
+                <div class="flex items-center gap-5">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-[#FFD700] rounded-full blur-lg opacity-20"></div>
+                        <img src="images/${e.photo}" class="w-16 h-16 rounded-full border-2 border-[#FFD700] object-cover relative z-10">
+                    </div>
+                    <div>
+                        <p class="font-black uppercase text-sm">${e.nom}</p>
+                        <p class="text-[10px] text-[#FFD700] font-bold italic uppercase">${e.role[currentLang]}</p>
+                    </div>
+                </div>`).join('');
+
+            // Maintenance
+            document.getElementById('txt-entretien-title').innerText = ui.entretien;
+            document.getElementById('ui-entret-list').innerHTML = gc.maintenance[currentLang].map(m => `<li>• ${m}</li>`).join('');
+
+            // Initialisation des Toggles d'impression
+            initPrintToggles();
+
+            // Reveal Animation
+            const card = document.getElementById('main-card');
+            card.classList.remove('opacity-0', 'translate-y-10');
+            lucide.createIcons();
+        }
+
+        // --- GESTION ADMIN & PRINT ---
+        function initPrintToggles() {
+            const sections = [
+                {id: 'print-media', n: 'Galerie Photos'},
+                {id: 'print-3d', n: 'Dimensions & VESA'},
+                {id: 'print-inclus', n: 'Accessoires & Options'},
+                {id: 'print-specs', n: 'Spécifications Techniques'},
+                {id: 'print-sidebar', n: 'Experts & Contact'}
+            ];
+            document.getElementById('print-toggles').innerHTML = sections.map(s => `
+                <label class="flex items-center justify-between cursor-pointer group">
+                    <span class="text-[10px] font-bold uppercase text-slate-400 group-hover:text-white">${s.n}</span>
+                    <input type="checkbox" checked onchange="document.getElementById('${s.id}').classList.toggle('hide-section', !this.checked)" class="w-4 h-4 accent-[#FFD700]">
+                </label>
+            `).join('');
+        }
+
+        function toggleAdmin() {
+            const over = document.getElementById('admin-overlay');
+            const isVisible = over.style.display === 'block';
+            over.style.display = isVisible ? 'none' : 'block';
+            if(!isVisible) prepareAdminForm();
+        }
+
+        function prepareAdminForm() {
+            const pc = window.PRODUCT_DATA;
+            let html = `
+                <div class="space-y-6 glass p-8 rounded-3xl">
+                    <h3 class="text-[#FFD700] font-black uppercase italic">Infos Générales</h3>
+                    <label>Nom (FR)<input type="text" value="${pc.nom.fr}"></label>
+                    <label>Nom (EN)<input type="text" value="${pc.nom.en}"></label>
+                    <label>Référence<input type="text" value="${pc.reference}"></label>
+                </div>
+                <div class="space-y-6 glass p-8 rounded-3xl">
+                    <h3 class="text-[#FFD700] font-black uppercase italic">Dimensions</h3>
+                    <label>Diagonale<input type="number" value="${pc.diagonale}"></label>
+                    <label>Largeur (mm)<input type="number" value="${pc.dimensions.largeur}"></label>
+                    <label>Hauteur (mm)<input type="number" value="${pc.dimensions.hauteur}"></label>
+                </div>
+            `;
+            document.getElementById('form-content').innerHTML = html;
         }
 
         function changeLang(l) {
             params.set('lang', l);
             window.location.search = params.toString();
-        }
-
-        window.onload = () => {
-            if(!produitId) return;
-            loadScript("config.js", () => {
-                loadScript(`${dossier}/${produitId}.js`, () => {
-                    if (window.PRODUCT_DATA && window.GLOBAL_CONFIG) renderPage(window.PRODUCT_DATA, window.GLOBAL_CONFIG);
-                });
-            });
-        };
-
-        function loadScript(src, cb) {
-            const s = document.createElement('script');
-            s.src = src + "?v=" + new Date().getTime();
-            s.onload = cb;
-            document.head.appendChild(s);
-        }
-
-        function renderPage(pc, gc) {
-            const ui = UI_STRINGS[currentLang];
-            document.getElementById('txt-showroom').innerText = ui.showroom;
-            document.getElementById('txt-print').innerText = ui.print;
-            document.getElementById('ui-titre').innerText = pc.nom[currentLang];
-            document.getElementById('ui-brand').innerText = gc.brand.nom;
-            document.getElementById('ui-logo').src = gc.brand.logo;
-            document.getElementById('ui-main-img').src = `${dossier}/images/${pc.image_principale}`;
-            document.getElementById('txt-fixation').innerText = ui.fixation;
-            document.getElementById('val-vesa').innerText = pc.vesa || "N/A";
-            document.getElementById('val-diag').innerText = pc.diagonale + '"';
-            
-            // Affichage de la carte
-            const card = document.getElementById('main-card');
-            card.style.display = 'block';
-            setTimeout(() => card.style.opacity = "1", 50);
-
-            // Injection des textes spécifiques (Inclus, Expert, etc.)
-            document.getElementById('txt-inclus-title').innerText = ui.inclus;
-            document.getElementById('txt-options-title').innerText = ui.options;
-            document.getElementById('txt-expert-title').innerText = ui.expert;
-            document.getElementById('txt-entretien-title').innerText = ui.entretien;
-
-            lucide.createIcons(); // Toujours à la fin
         }
     </script>
 </body>
