@@ -5,6 +5,10 @@
     <link rel="icon" type="image/png" href="images/logo-vertex.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vertex Monaco - Fiche Technique</title>
+    <style type="text/css" media="print">
+        @page { size: auto; margin: 20mm; }
+        body { margin: 0; }
+    </style>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -89,10 +93,45 @@
                 margin: 20mm;
             }
             
+            /* MASQUER LES EN-TÊTES ET PIEDS DE PAGE DU NAVIGATEUR */
+            @page {
+                margin-top: 20mm;
+                margin-bottom: 20mm;
+            }
+            
+            @page :first {
+                margin-top: 20mm;
+            }
+            
+            @page :last {
+                margin-bottom: 20mm;
+            }
+            
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
+            }
+            
+            /* DÉSACTIVER LES URLS AUTOMATIQUES DU NAVIGATEUR */
+            a[href]:after {
+                content: none !important;
+            }
+            
+            abbr[title]:after {
+                content: none !important;
+            }
+            
+            /* Forcer la suppression de tout lien */
+            a {
+                text-decoration: none !important;
+                color: inherit !important;
+            }
+            
+            a[href^="http"]:after,
+            a[href^="https://"]:after {
+                content: "" !important;
+                display: none !important;
             }
             
             html, body { 
@@ -397,66 +436,77 @@
                 gap: 6mm !important;
             }
             
-            /* Team - GRID 2x3 AESTHETIC */
+            /* Team - SINGLE HORIZONTAL LINE WITH SEPARATORS */
             .bg-white\/\[0\.03\] {
                 background: white !important;
                 border-left: 4px solid #FFD700 !important;
                 border-radius: 5mm !important;
-                padding: 6mm !important;
+                padding: 4mm 6mm !important;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
             }
             
             #txt-expert-title {
-                font-size: 9pt !important;
+                font-size: 8pt !important;
                 color: #1a1a1a !important;
-                margin-bottom: 4mm !important;
+                margin-bottom: 3mm !important;
                 font-weight: 900 !important;
                 letter-spacing: 0.05em !important;
             }
             
             #ui-team {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 3mm 4mm !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                gap: 0 !important;
             }
             
             #ui-team > div {
                 border-bottom: none !important;
-                padding: 3mm 4mm !important;
+                padding: 0 4mm !important;
                 margin-bottom: 0 !important;
-                background: #fafafa !important;
-                border-radius: 3mm !important;
+                background: transparent !important;
+                border-radius: 0 !important;
                 text-align: left !important;
-                border-left: 2px solid #FFD700 !important;
+                border-left: none !important;
+                border-right: 1px solid #e0e0e0 !important;
+                flex: 1 !important;
+            }
+            
+            #ui-team > div:last-child {
+                border-right: none !important;
+            }
+            
+            #ui-team > div:first-child {
+                padding-left: 0 !important;
             }
             
             #ui-team p:first-child {
                 font-size: 7pt !important;
                 color: #1a1a1a !important;
-                margin-bottom: 1mm !important;
+                margin-bottom: 0.5mm !important;
                 font-weight: 700 !important;
-                line-height: 1.2 !important;
+                line-height: 1.1 !important;
             }
             
             #ui-team p:last-child {
                 font-size: 6pt !important;
                 color: #666 !important;
-                line-height: 1.2 !important;
+                line-height: 1.1 !important;
             }
             
-            /* Maintenance - 2 COLUMNS READABLE */
+            /* Maintenance - 2 COLUMNS ULTRA COMPACT */
             .bg-black\/20 {
                 background: white !important;
                 border: 1.5px solid #e8e8e8 !important;
                 border-radius: 5mm !important;
-                padding: 6mm !important;
+                padding: 4mm 6mm !important;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
             }
             
             #txt-entretien-title {
                 color: #FFD700 !important;
-                font-size: 9pt !important;
-                margin-bottom: 4mm !important;
+                font-size: 8pt !important;
+                margin-bottom: 3mm !important;
                 font-weight: 900 !important;
                 letter-spacing: 0.05em !important;
             }
@@ -467,7 +517,7 @@
                 list-style: none !important;
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 3mm 6mm !important;
+                gap: 2mm 8mm !important;
             }
             
             #ui-entret-list li {
@@ -477,15 +527,13 @@
                 margin-bottom: 0 !important;
                 font-size: 6.5pt !important;
                 color: #1a1a1a !important;
-                line-height: 1.4 !important;
-                word-break: break-word !important;
+                line-height: 1.3 !important;
             }
             
             #ui-entret-list li .text-\[\#FFD700\] {
                 flex-shrink: 0 !important;
-                font-size: 8pt !important;
-                line-height: 1 !important;
-                margin-top: -1px !important;
+                font-size: 7pt !important;
+                line-height: 1.1 !important;
             }
             
             #ui-entret-list li:last-child {
