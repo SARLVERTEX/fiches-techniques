@@ -26,31 +26,721 @@
         #zoom-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.98); z-index: 9999; display: none; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(10px); }
         #zoom-overlay img { max-width: 90%; max-height: 90%; border-radius: 1rem; box-shadow: 0 0 50px rgba(0,0,0,0.5); object-fit: contain; }
 
+        /* Print Options Panel */
+        #print-options-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 100;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        #print-options-panel.open {
+            right: 0;
+        }
+        
+        .print-option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .print-option-item:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .print-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FFD700;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .print-checkbox.checked {
+            background: #FFD700;
+        }
+        
+        .print-checkbox.checked::after {
+            content: '✓';
+            color: #020617;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
         @media print {
-            @page { size: A4; margin: 0; }
-            body { background: #020617 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; padding: 0 !important; }
-            #main-card { display: block !important; opacity: 1 !important; width: 100% !important; border-radius: 0 !important; margin: 0 !important; border: none !important; background: #020617 !important; }
-            #btn-print, #btn-back, #lang-switcher, #admin-ui, .contact-actions { display: none !important; }
-            .scene-3d { transform: scale(0.8) rotateY(0deg); min-height: 200px; }
+            @page { 
+                size: A4 portrait; 
+                margin: 15mm;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            html, body { 
+                background: white !important; 
+                color: #1a1a1a !important;
+                padding: 0 !important; 
+                margin: 0 !important;
+                font-size: 10pt !important;
+                line-height: 1.4 !important;
+            }
+            
+            #main-card { 
+                display: block !important; 
+                opacity: 1 !important; 
+                width: 100% !important; 
+                max-width: 100% !important;
+                border-radius: 0 !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                border: none !important; 
+                background: white !important;
+                box-shadow: none !important;
+            }
+            
+            /* Hide non-printable elements */
+            #btn-print, #btn-back, #lang-switcher, #admin-ui, .contact-actions, 
+            .admin-overlay, #zoom-overlay, #print-options-panel, #btn-print-options { 
+                display: none !important; 
+            }
+            
+            /* Hide external links */
+            a[href^="http"]::after,
+            a[href^="https://"]::after {
+                content: "" !important;
+                display: none !important;
+            }
+            
+            /* ========== HEADER ========== */
+            header {
+                background: white !important;
+                border-bottom: 3px solid #FFD700 !important;
+                padding: 0 0 10mm 0 !important;
+                margin-bottom: 10mm !important;
+                page-break-after: avoid;
+            }
+            
+            #ui-brand {
+                color: #FFD700 !important;
+                font-size: 9pt !important;
+                margin-bottom: 5mm !important;
+                letter-spacing: 0.3em !important;
+            }
+            
+            #ui-titre {
+                color: #1a1a1a !important;
+                font-size: 26pt !important;
+                line-height: 1.2 !important;
+                margin-bottom: 8mm !important;
+            }
+            
+            #ui-logo {
+                height: 22mm !important;
+                max-height: 22mm !important;
+            }
+            
+            #ui-badges {
+                gap: 3mm !important;
+            }
+            
+            .ui-badge-print {
+                background: #f9f9f9 !important;
+                border: 1.5px solid #FFD700 !important;
+                color: #1a1a1a !important;
+                padding: 2.5mm 5mm !important;
+                font-size: 8pt !important;
+                border-radius: 3mm !important;
+            }
+            
+            .ui-badge-print i {
+                width: 4mm !important;
+                height: 4mm !important;
+            }
+            
+            /* ========== SECTION IMAGES + 3D ========== */
+            .print-grid-2cols {
+                display: grid !important;
+                grid-template-columns: 1.2fr 0.8fr !important;
+                gap: 10mm !important;
+                margin-bottom: 12mm !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Left column: Images */
+            .print-col-left {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6mm !important;
+            }
+            
+            #main-img-container {
+                background: white !important;
+                border: 2px solid #e8e8e8 !important;
+                border-radius: 5mm !important;
+                padding: 10mm !important;
+                min-height: 85mm !important;
+                max-height: 85mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                page-break-inside: avoid;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
+            }
+            
+            #ui-main-img {
+                max-width: 100% !important;
+                max-height: 75mm !important;
+                object-fit: contain !important;
+            }
+            
+            /* Gallery - 3 columns */
+            #ui-galerie {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 5mm !important;
+                page-break-inside: avoid;
+            }
+            
+            #ui-galerie .zoomable-container {
+                background: white !important;
+                border: 1.5px solid #e8e8e8 !important;
+                border-radius: 3mm !important;
+                padding: 4mm !important;
+                height: 32mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+            }
+            
+            #ui-galerie img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+                display: block !important;
+            }
+            
+            /* Right column: 3D Section */
+            .print-col-right {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                background: white !important;
+                border: 2px solid #e8e8e8 !important;
+                border-radius: 5mm !important;
+                padding: 10mm !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
+            }
+            
+            .scene-3d { 
+                perspective: none !important;
+                min-height: 65mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                margin-bottom: 8mm !important;
+            }
+            
+            .screen-3d {
+                transform: none !important;
+                position: relative !important;
+            }
+            
+            .face-front {
+                background: #fafafa !important;
+                border: 3px solid #FFD700 !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+                border-radius: 2mm !important;
+                transform: none !important;
+                padding: 8mm !important;
+            }
+            
+            #val-diag {
+                color: #FFD700 !important;
+                font-size: 24pt !important;
+                font-weight: 900 !important;
+            }
+            
+            .border-dashed {
+                border-color: #FFD700 !important;
+                opacity: 0.7 !important;
+            }
+            
+            #val-w, #val-h {
+                color: #1a1a1a !important;
+                font-size: 8pt !important;
+                font-weight: 700 !important;
+            }
+            
+            /* VESA Box */
+            .bg-black\/50 {
+                background: #fafafa !important;
+                border: 2px solid #FFD700 !important;
+                border-radius: 4mm !important;
+                padding: 5mm !important;
+                margin-top: 0 !important;
+            }
+            
+            .bg-\[#FFD700\] {
+                background: #FFD700 !important;
+            }
+            
+            #txt-fixation {
+                font-size: 7pt !important;
+                color: #666 !important;
+            }
+            
+            #val-vesa {
+                font-size: 11pt !important;
+                color: #FFD700 !important;
+                font-weight: 900 !important;
+            }
+            
+            /* ========== INCLUDED + OPTIONS SECTION ========== */
+            .print-section-inclus-options {
+                background: #fafafa !important;
+                border: none !important;
+                border-radius: 5mm !important;
+                padding: 10mm !important;
+                margin: 12mm 0 !important;
+                page-break-inside: avoid;
+            }
+            
+            .print-section-flex {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12mm !important;
+            }
+            
+            .print-section-inclus-options h3 {
+                color: #FFD700 !important;
+                font-size: 10pt !important;
+                margin-bottom: 6mm !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 3mm !important;
+                letter-spacing: 0.08em !important;
+                font-weight: 900 !important;
+            }
+            
+            .print-section-inclus-options h3 i {
+                width: 4.5mm !important;
+                height: 4.5mm !important;
+            }
+            
+            /* Accessories */
+            #ui-acc {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 5mm !important;
+            }
+            
+            #ui-acc > div {
+                page-break-inside: avoid;
+                padding-bottom: 4mm !important;
+                border-bottom: 1px solid #e0e0e0 !important;
+            }
+            
+            #ui-acc > div:last-child {
+                border-bottom: none !important;
+                padding-bottom: 0 !important;
+            }
+            
+            #ui-acc p:first-child {
+                font-size: 9pt !important;
+                color: #1a1a1a !important;
+                margin-bottom: 2mm !important;
+                font-weight: 700 !important;
+            }
+            
+            #ui-acc p:last-child {
+                font-size: 8pt !important;
+                color: #666 !important;
+                line-height: 1.5 !important;
+            }
+            
+            /* Options */
+            #ui-opt {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 4mm !important;
+            }
+            
+            #ui-opt > div {
+                background: white !important;
+                border: 1.5px solid #e8e8e8 !important;
+                border-radius: 3mm !important;
+                padding: 4mm 5mm !important;
+                color: #1a1a1a !important;
+                font-size: 8pt !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 3mm !important;
+                font-weight: 600 !important;
+            }
+            
+            #ui-opt i {
+                width: 4mm !important;
+                height: 4mm !important;
+                color: #FFD700 !important;
+            }
+            
+            /* ========== SPECS + SIDEBAR ========== */
+            .print-grid-specs {
+                display: grid !important;
+                grid-template-columns: 1.8fr 1fr !important;
+                gap: 10mm !important;
+                padding: 0 !important;
+                margin-bottom: 10mm !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Specs - 2 columns */
+            #ui-specs {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 6mm !important;
+            }
+            
+            #ui-specs > div {
+                background: white !important;
+                border: 1.5px solid #e8e8e8 !important;
+                border-radius: 4mm !important;
+                padding: 6mm !important;
+                page-break-inside: avoid;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+            }
+            
+            #ui-specs h4 {
+                color: #1a1a1a !important;
+                font-size: 9pt !important;
+                margin-bottom: 5mm !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 2.5mm !important;
+                font-weight: 900 !important;
+                letter-spacing: 0.02em !important;
+            }
+            
+            #ui-specs h4 i {
+                width: 4.5mm !important;
+                height: 4.5mm !important;
+            }
+            
+            #ui-specs .space-y-2 > div {
+                display: flex !important;
+                justify-content: space-between !important;
+                border-bottom: 1px solid #f0f0f0 !important;
+                padding-bottom: 2.5mm !important;
+                margin-bottom: 2.5mm !important;
+                font-size: 8pt !important;
+            }
+            
+            #ui-specs .space-y-2 > div:last-child {
+                border-bottom: none !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            
+            #ui-specs .text-slate-500 {
+                color: #666 !important;
+            }
+            
+            #ui-specs .text-white {
+                color: #1a1a1a !important;
+                font-weight: 700 !important;
+            }
+            
+            /* Sidebar */
+            .print-sidebar {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6mm !important;
+            }
+            
+            /* Team */
+            .bg-white\/\[0\.03\] {
+                background: white !important;
+                border-left: 4px solid #FFD700 !important;
+                border-radius: 4mm !important;
+                padding: 6mm !important;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+            }
+            
+            #txt-expert-title {
+                font-size: 9pt !important;
+                color: #1a1a1a !important;
+                margin-bottom: 5mm !important;
+                font-weight: 900 !important;
+                letter-spacing: 0.05em !important;
+            }
+            
+            #ui-team > div {
+                border-bottom: 1px solid #f0f0f0 !important;
+                padding-bottom: 4mm !important;
+                margin-bottom: 4mm !important;
+            }
+            
+            #ui-team > div:last-child {
+                border-bottom: none !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            
+            #ui-team p:first-child {
+                font-size: 9pt !important;
+                color: #1a1a1a !important;
+                margin-bottom: 1.5mm !important;
+                font-weight: 700 !important;
+            }
+            
+            #ui-team p:last-child {
+                font-size: 7pt !important;
+                color: #666 !important;
+            }
+            
+            /* Maintenance */
+            .bg-black\/20 {
+                background: white !important;
+                border: 1.5px solid #e8e8e8 !important;
+                border-radius: 4mm !important;
+                padding: 6mm !important;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+            }
+            
+            #txt-entretien-title {
+                color: #FFD700 !important;
+                font-size: 9pt !important;
+                margin-bottom: 5mm !important;
+                font-weight: 900 !important;
+                letter-spacing: 0.05em !important;
+            }
+            
+            #ui-entret-list {
+                margin: 0 !important;
+                padding: 0 !important;
+                list-style: none !important;
+            }
+            
+            #ui-entret-list li {
+                display: flex !important;
+                align-items: flex-start !important;
+                gap: 2.5mm !important;
+                margin-bottom: 3.5mm !important;
+                font-size: 8pt !important;
+                color: #1a1a1a !important;
+                line-height: 1.5 !important;
+            }
+            
+            #ui-entret-list li:last-child {
+                margin-bottom: 0 !important;
+            }
+            
+            #ui-entret-list .text-\[\#FFD700\] {
+                color: #FFD700 !important;
+                flex-shrink: 0 !important;
+                font-weight: 700 !important;
+            }
+            
+            /* ========== FOOTER ========== */
+            footer {
+                background: white !important;
+                border-top: 2px solid #e8e8e8 !important;
+                padding: 7mm 0 0 0 !important;
+                margin-top: 10mm !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                font-size: 8pt !important;
+                color: #666 !important;
+            }
+            
+            footer .text-white {
+                color: #1a1a1a !important;
+                font-weight: 700 !important;
+            }
+            
+            #ui-sn {
+                opacity: 0.4 !important;
+            }
+            
+            /* Hide external addresses/links */
+            footer a,
+            footer a[href],
+            #ui-addr a {
+                color: inherit !important;
+                text-decoration: none !important;
+            }
+            
+            footer a::after,
+            footer a[href]::after {
+                content: "" !important;
+                display: none !important;
+            }
+            
+            /* ========== CONDITIONAL SECTIONS (based on user selection) ========== */
+            .print-hide-header header {
+                display: none !important;
+            }
+            
+            .print-hide-images .print-grid-2cols {
+                display: none !important;
+            }
+            
+            .print-hide-inclus-options .print-section-inclus-options {
+                display: none !important;
+            }
+            
+            .print-hide-specs .print-grid-specs {
+                display: none !important;
+            }
+            
+            .print-hide-footer footer {
+                display: none !important;
+            }
+            
+            /* ========== GLOBAL OPTIMIZATIONS ========== */
+            .border-white\/5, .border-white\/10 {
+                border-color: #e8e8e8 !important;
+            }
+            
+            /* Prevent breaks */
+            h1, h2, h3, h4 {
+                page-break-after: avoid !important;
+            }
+            
+            img {
+                page-break-inside: avoid !important;
+            }
+            
+            /* Optimized spacing */
+            .p-6, .p-8, .p-10, .p-14 {
+                padding: 0 !important;
+            }
+            
+            .gap-6, .gap-8 {
+                gap: 6mm !important;
+            }
         }
     </style>
 </head>
 <body class="p-2 md:p-8">
 
+    <!-- Back Button -->
     <div class="fixed top-4 left-4 md:top-8 md:left-8 z-50 flex gap-2">
         <a id="btn-back" href="index.html" class="bg-white/10 backdrop-blur-md border border-white/10 text-white p-3 md:px-5 md:py-3 rounded-full flex items-center gap-2 font-bold uppercase text-[10px] hover:bg-[#FFD700] hover:text-black transition-all">
             <i data-lucide="arrow-left" class="w-4 h-4"></i> <span id="txt-showroom" class="hidden md:inline"></span>
         </a>
     </div>
 
+    <!-- Language Switcher -->
     <div id="lang-switcher" class="fixed top-4 right-4 z-50 flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/10">
         <button onclick="changeLang('fr')" id="lang-fr" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">FR</button>
         <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all">EN</button>
     </div>
 
+    <!-- Print Options Button -->
+    <button id="btn-print-options" onclick="togglePrintOptions()" class="fixed bottom-6 right-24 z-50 bg-white/10 backdrop-blur-md border border-[#FFD700]/50 text-[#FFD700] p-4 rounded-full shadow-2xl hover:bg-[#FFD700] hover:text-black transition-all flex items-center gap-2 font-bold uppercase text-[10px]">
+        <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden md:inline">Options</span>
+    </button>
+
+    <!-- Print Button -->
     <button id="btn-print" onclick="window.print()" class="fixed bottom-6 right-6 z-50 bg-[#FFD700] text-black p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 font-bold uppercase text-[10px]">
         <i data-lucide="printer" class="w-4 h-4"></i> <span id="txt-print" class="hidden md:inline"></span>
     </button>
+
+    <!-- Print Options Panel -->
+    <div id="print-options-panel">
+        <div class="p-6 border-b border-white/10 sticky top-0 bg-slate-900/95 backdrop-blur-xl z-10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[#FFD700] font-black text-sm uppercase tracking-wider">Options d'impression</h3>
+                <button onclick="togglePrintOptions()" class="text-white hover:text-[#FFD700] transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="selectAllSections()" class="flex-1 bg-[#FFD700]/20 text-[#FFD700] px-3 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-[#FFD700]/30 transition">
+                    Tout sélectionner
+                </button>
+                <button onclick="deselectAllSections()" class="flex-1 bg-white/5 text-white px-3 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-white/10 transition">
+                    Tout désélectionner
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-4">
+            <div class="print-option-item" onclick="toggleSection('header')">
+                <div class="print-checkbox checked" data-section="header"></div>
+                <div class="flex-1">
+                    <div class="text-white font-bold text-xs uppercase">En-tête</div>
+                    <div class="text-slate-400 text-[10px] mt-1">Logo, titre, badges</div>
+                </div>
+                <i data-lucide="file-text" class="w-4 h-4 text-[#FFD700]"></i>
+            </div>
+            
+            <div class="print-option-item" onclick="toggleSection('images')">
+                <div class="print-checkbox checked" data-section="images"></div>
+                <div class="flex-1">
+                    <div class="text-white font-bold text-xs uppercase">Images & Dimensions</div>
+                    <div class="text-slate-400 text-[10px] mt-1">Photo principale, galerie, schéma 3D</div>
+                </div>
+                <i data-lucide="image" class="w-4 h-4 text-[#FFD700]"></i>
+            </div>
+            
+            <div class="print-option-item" onclick="toggleSection('inclus-options')">
+                <div class="print-checkbox checked" data-section="inclus-options"></div>
+                <div class="flex-1">
+                    <div class="text-white font-bold text-xs uppercase">Inclus & Options</div>
+                    <div class="text-slate-400 text-[10px] mt-1">Accessoires, options de personnalisation</div>
+                </div>
+                <i data-lucide="package" class="w-4 h-4 text-[#FFD700]"></i>
+            </div>
+            
+            <div class="print-option-item" onclick="toggleSection('specs')">
+                <div class="print-checkbox checked" data-section="specs"></div>
+                <div class="flex-1">
+                    <div class="text-white font-bold text-xs uppercase">Spécifications & Équipe</div>
+                    <div class="text-slate-400 text-[10px] mt-1">Caractéristiques techniques, experts, entretien</div>
+                </div>
+                <i data-lucide="clipboard-list" class="w-4 h-4 text-[#FFD700]"></i>
+            </div>
+            
+            <div class="print-option-item" onclick="toggleSection('footer')">
+                <div class="print-checkbox checked" data-section="footer"></div>
+                <div class="flex-1">
+                    <div class="text-white font-bold text-xs uppercase">Pied de page</div>
+                    <div class="text-slate-400 text-[10px] mt-1">Adresse, référence, numéro de série</div>
+                </div>
+                <i data-lucide="map-pin" class="w-4 h-4 text-[#FFD700]"></i>
+            </div>
+        </div>
+        
+        <div class="p-6 border-t border-white/10">
+            <button onclick="window.print(); togglePrintOptions();" class="w-full bg-[#FFD700] text-black py-3 rounded-lg font-black uppercase text-xs hover:bg-[#FFD700]/90 transition flex items-center justify-center gap-2">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                Imprimer la sélection
+            </button>
+        </div>
+    </div>
 
     <div id="main-card" class="max-w-6xl mx-auto border border-white/5 rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-slate-900/50 backdrop-blur-xl mt-12 md:mt-0 shadow-2xl">
         <header class="p-8 md:p-14 border-b border-white/5 flex flex-col md:flex-row justify-between items-center md:items-start gap-8 text-center md:text-left">
@@ -62,8 +752,8 @@
             <img id="ui-logo" src="" class="h-12 md:h-16 object-contain">
         </header>
 
-        <div class="grid lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-10">
-            <div class="space-y-6">
+        <div class="print-grid-2cols grid lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-10">
+            <div class="print-col-left space-y-6">
                 <div id="main-img-container" class="zoomable-container bg-black/30 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex items-center justify-center min-h-[300px] md:min-h-[450px]">
                     <div id="admin-main-photo" class="admin-overlay"></div>
                     <img id="ui-main-img" src="" class="max-w-full max-h-[350px] object-contain drop-shadow-2xl">
@@ -71,7 +761,7 @@
                 <div id="ui-galerie" class="grid grid-cols-3 gap-3 md:gap-4"></div>
             </div>
 
-            <div class="bg-white/[0.03] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex flex-col items-center justify-center">
+            <div class="print-col-right bg-white/[0.03] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border border-white/5 flex flex-col items-center justify-center">
                 <div class="scene-3d">
                     <div id="ui-3d" class="screen-3d">
                         <div class="face-front rounded-sm"><span id="val-diag" class="font-black italic text-[#FFD700] text-xl md:text-3xl"></span></div>
@@ -86,20 +776,22 @@
             </div>
         </div>
 
-        <section class="py-10 px-6 md:px-10 flex flex-col md:flex-row gap-12 md:gap-16 border-y border-white/5 bg-white/[0.01]">
-            <div class="flex-1">
-                <h3 id="txt-inclus-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
-                <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
-            </div>
-            <div class="flex-1 border-t border-white/5 md:border-0 pt-10 md:pt-0">
-                <h3 id="txt-options-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
-                <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        <section class="print-section-inclus-options py-10 px-6 md:px-10 border-y border-white/5 bg-white/[0.01]">
+            <div class="print-section-flex flex flex-col md:flex-row gap-12 md:gap-16">
+                <div class="flex-1">
+                    <h3 id="txt-inclus-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
+                    <div id="ui-acc" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+                </div>
+                <div class="flex-1 border-t border-white/5 md:border-0 pt-10 md:pt-0">
+                    <h3 id="txt-options-title" class="text-[#FFD700] font-black text-[10px] tracking-[0.2em] uppercase mb-8 flex items-center gap-3"></h3>
+                    <div id="ui-opt" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
             </div>
         </section>
 
-        <div class="p-6 md:p-10 grid lg:grid-cols-3 gap-8">
+        <div class="print-grid-specs p-6 md:p-10 grid lg:grid-cols-3 gap-8">
             <div id="ui-specs" class="lg:col-span-2 grid md:grid-cols-2 gap-8"></div>
-            <div class="space-y-6">
+            <div class="print-sidebar space-y-6">
                 <div class="bg-white/[0.03] p-8 rounded-[2rem] border-l-4 border-[#FFD700]">
                     <h3 id="txt-expert-title" class="font-black uppercase text-[10px] mb-8 tracking-widest"></h3>
                     <div id="ui-team" class="space-y-6"></div>
@@ -116,6 +808,8 @@
             <div class="flex gap-8 text-white"><p id="ui-ref"></p><p id="ui-sn" class="opacity-30"></p></div>
         </footer>
     </div>
+
+    <div id="zoom-overlay"></div>
 
     <script>
         /* ============================================================
@@ -137,6 +831,38 @@
         };
 
         const t = (obj) => (obj && typeof obj === 'object') ? (obj[currentLang] || obj['fr']) : (obj || "");
+
+        // Print options management
+        function togglePrintOptions() {
+            const panel = document.getElementById('print-options-panel');
+            panel.classList.toggle('open');
+        }
+
+        function toggleSection(section) {
+            const checkbox = document.querySelector(`[data-section="${section}"]`);
+            checkbox.classList.toggle('checked');
+            
+            // Update body class for print
+            document.body.classList.toggle(`print-hide-${section}`);
+        }
+
+        function selectAllSections() {
+            const checkboxes = document.querySelectorAll('.print-checkbox');
+            checkboxes.forEach(cb => {
+                cb.classList.add('checked');
+                const section = cb.getAttribute('data-section');
+                document.body.classList.remove(`print-hide-${section}`);
+            });
+        }
+
+        function deselectAllSections() {
+            const checkboxes = document.querySelectorAll('.print-checkbox');
+            checkboxes.forEach(cb => {
+                cb.classList.remove('checked');
+                const section = cb.getAttribute('data-section');
+                document.body.classList.add(`print-hide-${section}`);
+            });
+        }
 
         // --- CAMERA ENGINE ---
         const cameraInput = document.createElement('input');
@@ -235,7 +961,7 @@
             d.getElementById('ui-ref').innerText = "REF: " + (pc.produit.ref || "N/A");
             d.getElementById('ui-sn').innerText = "S/N: " + (pc.produit.sn || "PROTOTYPE");
             
-            d.getElementById('ui-badges').innerHTML = (pc.badges || []).map(b => `<div class="bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
+            d.getElementById('ui-badges').innerHTML = (pc.badges || []).map(b => `<div class="ui-badge-print bg-white/5 px-3 py-2 rounded-full border border-white/10 text-[8px] font-black uppercase flex items-center gap-2"><i data-lucide="${b.icone}" class="w-3 h-3 ${b.couleur}"></i>${t(b.label)}</div>`).join('');
             
             const isPortrait = pc.dimensions.orientation === "portrait";
             d.getElementById('ui-3d').style.width = isPortrait ? "130px" : "220px";
@@ -266,6 +992,18 @@
         }
 
         function changeLang(l) { params.set('lang', l); window.location.search = params.toString(); }
+        
+        // Close print options when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('print-options-panel');
+            const btnOptions = document.getElementById('btn-print-options');
+            
+            if (panel.classList.contains('open') && 
+                !panel.contains(event.target) && 
+                !btnOptions.contains(event.target)) {
+                panel.classList.remove('open');
+            }
+        });
     </script>
 </body>
 </html>
