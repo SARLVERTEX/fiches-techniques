@@ -33,7 +33,7 @@ window.PRODUCT_DATA = {
         vesa: "Fixation Suspendue (Câbles)"
     },
     media: {
-        imagePrincipale: "images/VITRINE55.jpg",
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-doubleface55-main.jpg",
         galerie: [
             { url: "images/zoom1.jpg", label: { fr: "Finition Verre", en: "Glass Finish" } },
             { url: "images/zoom2.jpg", label: { fr: "Profil Ultra-fin", en: "Ultra-slim Profile" } },
