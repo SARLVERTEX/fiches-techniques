@@ -34,7 +34,7 @@ window.PRODUCT_DATA = {
     },
     media: {
         // --- NOMS DE FICHIERS STANDARDISÉS POUR L'AUTO-UPLOAD ---
-        imagePrincipale: "produits/images/vtx-standbyme32-main.jpg",
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-standbyme32-main.jpg",
         galerie: [
             { url: "produits/images/vtx-standbyme32-gal0.jpg", label: { fr: "Design Blanc & Bronze", en: "White & Bronze Design" } },
             { url: "produits/images/vtx-standbyme32-gal1.jpg", label: { fr: "Caméra 2.1MP Intégrée", en: "Integrated 2.1MP Camera" } },
