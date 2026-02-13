@@ -1187,6 +1187,12 @@
             currentProductId = productId;
             currentUploadPath = `${dossier}/images/${productId}-main.jpg`;
             
+            console.log('Starting upload for:', {
+                productId,
+                dossier,
+                path: currentUploadPath
+            });
+            
             // Vérifier le token
             let token = localStorage.getItem('gh_token');
             
@@ -1210,6 +1216,12 @@
             // Réinitialiser l'input pour permettre de sélectionner le même fichier
             e.target.value = '';
             
+            console.log('File selected:', {
+                name: file.name,
+                size: file.size,
+                type: file.type
+            });
+            
             // Vérifier la taille du fichier
             if (file.size > MAX_FILE_SIZE) {
                 showToast(UI_STRINGS[currentLang].fileTooLarge, 'error');
@@ -1222,11 +1234,12 @@
                 return;
             }
             
-            showToast(UI_STRINGS[currentLang].uploadInProgress, 'info');
+            showToast(`${UI_STRINGS[currentLang].uploadInProgress} (${(file.size / 1024).toFixed(0)} KB)`, 'info');
             
             try {
                 // Lire le fichier
                 const base64Content = await readFileAsBase64(file);
+                console.log('File converted to base64, length:', base64Content.length);
                 
                 const token = localStorage.getItem('gh_token');
                 if (!token) {
@@ -1234,6 +1247,7 @@
                     return;
                 }
                 
+                console.log('Fetching existing file SHA...');
                 // Récupérer le SHA du fichier existant (si il existe)
                 let sha = "";
                 try {
@@ -1250,15 +1264,18 @@
                     if (getResponse.ok) { 
                         const data = await getResponse.json(); 
                         sha = data.sha;
-                        console.log('Fichier existant trouvé, SHA:', sha);
+                        console.log('Existing file found, SHA:', sha);
                     } else if (getResponse.status === 404) {
-                        console.log('Nouveau fichier à créer');
+                        console.log('New file will be created');
                     } else {
-                        console.warn('Réponse inattendue:', getResponse.status);
+                        console.warn('Unexpected response:', getResponse.status);
                     }
                 } catch (err) {
-                    console.warn('Erreur lors de la récupération du SHA:', err);
+                    console.warn('Error fetching SHA:', err);
                 }
+                
+                console.log('Uploading to GitHub...');
+                showToast('Upload vers GitHub...', 'info');
                 
                 // Upload du fichier
                 const putResponse = await fetch(
@@ -1271,7 +1288,7 @@
                             'Accept': 'application/vnd.github.v3+json'
                         },
                         body: JSON.stringify({ 
-                            message: `Update image for ${currentProductId}`, 
+                            message: `Update image for ${currentProductId} - ${new Date().toISOString()}`, 
                             content: base64Content, 
                             sha: sha || undefined,
                             branch: 'main'
@@ -1279,31 +1296,43 @@
                     }
                 );
                 
+                console.log('GitHub response status:', putResponse.status);
+                
                 if (putResponse.ok) { 
-                    showToast(UI_STRINGS[currentLang].uploadSuccess, 'success');
+                    const data = await putResponse.json();
+                    console.log('Upload successful:', data);
+                    console.log('New image URL:', data.content?.download_url);
+                    
+                    showToast(UI_STRINGS[currentLang].uploadSuccess + ' - Rechargement...', 'success');
                     
                     // Invalider le cache
                     localStorage.removeItem(CACHE_KEY);
                     localStorage.removeItem(CACHE_TIMESTAMP_KEY);
                     
-                    // Recharger après un délai
+                    // Forcer le rechargement avec nouveau timestamp pour bypass cache
                     setTimeout(() => {
-                        location.reload();
-                    }, 1500);
+                        console.log('Reloading page...');
+                        window.location.href = window.location.href.split('?')[0] + 
+                            `?lang=${currentLang}&admin=1&_t=${Date.now()}`;
+                    }, 2000);
                 } else {
                     const errorData = await putResponse.json().catch(() => ({}));
-                    console.error('Erreur GitHub API:', errorData);
+                    console.error('GitHub API error:', {
+                        status: putResponse.status,
+                        statusText: putResponse.statusText,
+                        error: errorData
+                    });
                     
                     if (putResponse.status === 401 || putResponse.status === 403) {
                         showToast(UI_STRINGS[currentLang].invalidToken, 'error');
                         localStorage.removeItem('gh_token');
                     } else {
-                        showToast(`${UI_STRINGS[currentLang].uploadError} (${putResponse.status})`, 'error');
+                        showToast(`${UI_STRINGS[currentLang].uploadError} (${putResponse.status}: ${errorData.message || putResponse.statusText})`, 'error');
                     }
                 }
             } catch (err) {
-                console.error('Erreur upload:', err);
-                showToast(UI_STRINGS[currentLang].uploadError, 'error');
+                console.error('Upload error:', err);
+                showToast(`${UI_STRINGS[currentLang].uploadError}: ${err.message}`, 'error');
             }
         };
         
@@ -1711,7 +1740,7 @@
                         </div>
                         
                         <img 
-                            data-src="${p.media.imagePrincipale}?v=${version}" 
+                            data-src="${p.media.imagePrincipale}?v=${version}&_cb=${Date.now()}" 
                             class="lazy-image"
                             alt="${t(p.produit.titre)}"
                         >
@@ -1772,6 +1801,36 @@
         <button onclick="changeLang('fr')" id="lang-fr" class="lang-btn">FR</button>
         <button onclick="changeLang('en')" id="lang-en" class="lang-btn">EN</button>
     </div>
+    
+    <!-- Admin badge -->
+    <script>
+        if (isAdmin) {
+            const adminBadge = document.createElement('div');
+            adminBadge.style.cssText = `
+                position: fixed;
+                bottom: 5rem;
+                right: 2rem;
+                background: #ef4444;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                font-size: 0.75rem;
+                font-weight: 900;
+                text-transform: uppercase;
+                z-index: 50;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+            `;
+            adminBadge.innerHTML = '🔧 ADMIN MODE<br><small style="font-weight: 400; font-size: 0.6rem;">Cliquer pour vider le cache</small>';
+            adminBadge.onclick = () => {
+                localStorage.removeItem(CACHE_KEY);
+                localStorage.removeItem(CACHE_TIMESTAMP_KEY);
+                showToast('Cache vidé !', 'success');
+                setTimeout(() => location.reload(), 500);
+            };
+            document.body.appendChild(adminBadge);
+        }
+    </script>
 
     <!-- Header -->
     <header class="container mb-16 flex flex-col items-center gap-8 header" style="margin-bottom: 4rem;">
