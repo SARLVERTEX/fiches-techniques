@@ -1599,7 +1599,18 @@
                         document.head.appendChild(s);
                     });
                     if (success && window.PRODUCT_DATA) {
-                        return { id: id, dossier: d, ...JSON.parse(JSON.stringify(window.PRODUCT_DATA)) };
+                        const productData = { id: id, dossier: d, ...JSON.parse(JSON.stringify(window.PRODUCT_DATA)) };
+                        
+                        // Log l'URL de l'image pour debug
+                        if (isAdmin) {
+                            console.log(`Product ${id}:`, {
+                                folder: d,
+                                imageUrl: productData.media?.imagePrincipale,
+                                fullData: productData
+                            });
+                        }
+                        
+                        return productData;
                     }
                 } catch (e) {
                     console.warn(`Failed to load ${id} from ${d}:`, e);
@@ -1821,14 +1832,199 @@
                 cursor: pointer;
                 box-shadow: 0 4px 12px rgba(239,68,68,0.3);
             `;
-            adminBadge.innerHTML = '🔧 ADMIN MODE<br><small style="font-weight: 400; font-size: 0.6rem;">Cliquer pour vider le cache</small>';
+            adminBadge.innerHTML = '🔧 ADMIN MODE<br><small style="font-weight: 400; font-size: 0.6rem;">Cliquer pour diagnostic</small>';
             adminBadge.onclick = () => {
-                localStorage.removeItem(CACHE_KEY);
-                localStorage.removeItem(CACHE_TIMESTAMP_KEY);
-                showToast('Cache vidé !', 'success');
-                setTimeout(() => location.reload(), 500);
+                showAdminDiagnostic();
             };
             document.body.appendChild(adminBadge);
+        }
+        
+        function showAdminDiagnostic() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay show';
+            
+            const products = CATALOGUE_COMPLET.map(p => {
+                const imageUrl = p.media?.imagePrincipale || 'NON DÉFINIE';
+                const expectedUrl = `https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/${p.dossier}/images/${p.id}-main.jpg`;
+                const isCorrect = imageUrl === expectedUrl;
+                
+                return `
+                    <div style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 0.5rem; border-left: 3px solid ${isCorrect ? '#10b981' : '#ef4444'};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="font-weight: 900; color: #FFD700;">${p.id}</div>
+                            ${isCorrect ? '<span style="color: #10b981; font-size: 0.7rem;">✅ OK</span>' : '<span style="color: #ef4444; font-size: 0.7rem;">⚠️ À CORRIGER</span>'}
+                        </div>
+                        <div style="font-size: 0.75rem; color: #94a3b8; word-break: break-all;">
+                            <strong>Dossier:</strong> ${p.dossier}<br>
+                            <strong>Fichier:</strong> <code>${p.dossier}/${p.id}.js</code><br>
+                            <strong>URL actuelle:</strong><br>
+                            <code style="font-size: 0.65rem; color: ${isCorrect ? '#10b981' : '#ef4444'};">${imageUrl}</code><br>
+                            ${!isCorrect ? `
+                            <strong style="color: #f59e0b; margin-top: 0.5rem; display: block;">URL attendue:</strong>
+                            <code style="font-size: 0.65rem; color: #10b981;">${expectedUrl}</code><br>
+                            ` : ''}
+                            <a href="${imageUrl === 'NON DÉFINIE' ? expectedUrl : imageUrl}" target="_blank" style="color: #60a5fa; font-size: 0.7rem; margin-top: 0.5rem; display: inline-block;">Ouvrir l'image</a>
+                        </div>
+                        <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button onclick="testImageUrl('${imageUrl === 'NON DÉFINIE' ? expectedUrl : imageUrl}', '${p.id}')" 
+                                style="padding: 0.35rem 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.7rem; font-weight: 700;">
+                                🧪 Tester
+                            </button>
+                            ${!isCorrect ? `
+                            <button onclick="copyCorrectImageUrl('${expectedUrl}', '${p.id}')" 
+                                style="padding: 0.35rem 0.75rem; background: #10b981; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.7rem; font-weight: 700;">
+                                📋 Copier URL
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const incorrectCount = CATALOGUE_COMPLET.filter(p => {
+                const imageUrl = p.media?.imagePrincipale || '';
+                const expectedUrl = `https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/${p.dossier}/images/${p.id}-main.jpg`;
+                return imageUrl !== expectedUrl;
+            }).length;
+            
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 800px; max-height: 85vh; overflow-y: auto;">
+                    <h2 class="modal-title">🔧 Diagnostic Admin</h2>
+                    
+                    ${incorrectCount > 0 ? `
+                    <div style="background: rgba(239,68,68,0.2); border: 1px solid #ef4444; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="font-size: 1.5rem;">⚠️</span>
+                            <strong style="color: #ef4444;">${incorrectCount} produit(s) avec URL incorrecte</strong>
+                        </div>
+                        <small style="color: #fca5a5;">Les images ne s'afficheront pas tant que les URLs ne seront pas corrigées dans les fichiers .js correspondants</small>
+                    </div>
+                    ` : `
+                    <div style="background: rgba(16,185,129,0.2); border: 1px solid #10b981; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="font-size: 1.5rem;">✅</span>
+                            <strong style="color: #10b981;">Toutes les URLs sont correctes !</strong>
+                        </div>
+                        <small style="color: #6ee7b7;">Si les images ne s'affichent pas, videz le cache et rechargez la page</small>
+                    </div>
+                    `}
+                    
+                    <div style="margin: 1rem 0;">
+                        <button onclick="localStorage.removeItem('${CACHE_KEY}'); localStorage.removeItem('${CACHE_TIMESTAMP_KEY}'); showToast('Cache vidé !', 'success'); setTimeout(() => location.reload(), 500);" 
+                            class="modal-btn modal-btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                            🗑️ Vider le cache et recharger
+                        </button>
+                        
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.75rem; margin-bottom: 1rem;">
+                            <div><strong>Repository:</strong> ${REPO_OWNER}/${REPO_NAME}</div>
+                            <div><strong>Token GitHub:</strong> ${localStorage.getItem('gh_token') ? '✅ Configuré' : '❌ Manquant'}</div>
+                            <div><strong>Cache:</strong> ${localStorage.getItem(CACHE_KEY) ? '✅ Présent (' + (new Date(parseInt(localStorage.getItem(CACHE_TIMESTAMP_KEY)))).toLocaleTimeString() + ')' : '❌ Vide'}</div>
+                            <div><strong>Produits chargés:</strong> ${CATALOGUE_COMPLET.length}</div>
+                            <div style="color: ${incorrectCount > 0 ? '#ef4444' : '#10b981'};"><strong>URLs correctes:</strong> ${CATALOGUE_COMPLET.length - incorrectCount}/${CATALOGUE_COMPLET.length}</div>
+                        </div>
+                        
+                        ${incorrectCount > 0 ? `
+                        <details open style="margin: 1rem 0;">
+                            <summary style="cursor: pointer; color: #FFD700; font-weight: 900; padding: 0.75rem; background: rgba(255,215,0,0.1); border-radius: 0.5rem; margin-bottom: 1rem;">
+                                📖 Comment corriger les URLs incorrectes
+                            </summary>
+                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; font-size: 0.75rem; line-height: 1.7;">
+                                <p style="margin-bottom: 0.75rem;"><strong>Pour chaque produit marqué "⚠️ À CORRIGER" :</strong></p>
+                                <ol style="margin-left: 1.5rem; color: #cbd5e1;">
+                                    <li style="margin-bottom: 0.5rem;">Ouvrez GitHub et naviguez vers le fichier indiqué</li>
+                                    <li style="margin-bottom: 0.5rem;">Cliquez sur "Modifier" (icône crayon)</li>
+                                    <li style="margin-bottom: 0.5rem;">Trouvez la ligne <code style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 0.25rem;">imagePrincipale:</code></li>
+                                    <li style="margin-bottom: 0.5rem;">Cliquez sur "📋 Copier URL" ci-dessus pour copier l'URL correcte</li>
+                                    <li style="margin-bottom: 0.5rem;">Remplacez l'URL incorrecte par celle que vous venez de copier</li>
+                                    <li style="margin-bottom: 0.5rem;">Commitez les changements (bouton vert "Commit changes")</li>
+                                    <li style="margin-bottom: 0.5rem;">Attendez 30 secondes pour la synchro GitHub</li>
+                                    <li>Revenez ici et cliquez sur "Vider le cache et recharger"</li>
+                                </ol>
+                                <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(245,158,11,0.2); border-left: 3px solid #f59e0b; border-radius: 0.25rem;">
+                                    <strong style="color: #f59e0b;">⚡ Important:</strong><br>
+                                    <span style="color: #fbbf24; font-size: 0.7rem;">
+                                    L'URL doit TOUJOURS commencer par:<br>
+                                    <code style="background: rgba(0,0,0,0.3); padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.65rem;">https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/</code>
+                                    </span>
+                                </div>
+                            </div>
+                        </details>
+                        ` : ''}
+                        
+                        <h3 style="color: #FFD700; font-size: 1rem; margin: 1.5rem 0 1rem;">
+                            📋 Liste des produits (${CATALOGUE_COMPLET.length})
+                        </h3>
+                        <div style="max-height: 450px; overflow-y: auto; padding-right: 0.5rem;">
+                            ${products}
+                        </div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="modal-btn modal-btn-secondary" onclick="this.closest('.modal-overlay').remove()">
+                            Fermer
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        async function testImageUrl(url, productId) {
+            if (!url || url === 'NON DÉFINIE') {
+                showToast(`${productId}: Aucune URL définie`, 'error');
+                return;
+            }
+            
+            showToast(`Test de ${productId}...`, 'info');
+            
+            try {
+                const response = await fetch(url + '?t=' + Date.now(), { 
+                    method: 'HEAD',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    const sizeKB = size ? Math.round(size / 1024) : '?';
+                    showToast(`${productId}: ✅ Image accessible (${sizeKB} KB)`, 'success');
+                    console.log(`Image test for ${productId}:`, {
+                        url,
+                        status: response.status,
+                        contentType: response.headers.get('content-type'),
+                        size: size,
+                        lastModified: response.headers.get('last-modified')
+                    });
+                } else {
+                    showToast(`${productId}: ❌ Erreur ${response.status}`, 'error');
+                    console.error(`Image test failed for ${productId}:`, response.status);
+                }
+            } catch (err) {
+                showToast(`${productId}: ❌ ${err.message}`, 'error');
+                console.error(`Image test error for ${productId}:`, err);
+            }
+        }
+        
+        function copyCorrectImageUrl(url, productId) {
+            navigator.clipboard.writeText(url).then(() => {
+                showToast(`✅ URL copiée pour ${productId}`, 'success');
+                console.log('Copied URL:', url);
+            }).catch(err => {
+                // Fallback pour navigateurs plus anciens
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(`✅ URL copiée pour ${productId}`, 'success');
+                } catch (e) {
+                    showToast('❌ Erreur de copie', 'error');
+                    console.error('Copy error:', err);
+                }
+                document.body.removeChild(textArea);
+            });
         }
     </script>
 
