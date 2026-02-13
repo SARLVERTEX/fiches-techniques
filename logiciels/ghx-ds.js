@@ -34,7 +34,7 @@ window.PRODUCT_DATA = {
         vesa: "HD / 4K Support"
     },
     media: {
-        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/ghx-ds-main.jpg", 
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/logiciels/images/ghx-ds-main.jpg", 
         galerie: [
             { url: "images/ghx-calendar.jpg", label: { fr: "Pilotage Calendrier", en: "Calendar Control" } },
             { url: "images/ghx-multiplatform.jpg", label: { fr: "Écosystème Ouvert", en: "Open Ecosystem" } },
