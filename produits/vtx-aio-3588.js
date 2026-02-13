@@ -33,7 +33,7 @@ window.PRODUCT_DATA = {
         vesa: "Montage rail-DIN/Mural possible"
     },
     media: {
-        imagePrincipale: "images/firefly-ec-a3588l-main.jpg",
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-aio-3588-main.jpg",
         galerie: [
             { url: "images/firefly-front.jpg", label: { fr: "Face Avant USB/HDMI", en: "Front Panel USB/HDMI" } },
             { url: "images/firefly-back.jpg", label: { fr: "Antennes et MicroSD", en: "Antennas and MicroSD" } },
