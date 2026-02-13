@@ -836,6 +836,103 @@
             height: 2.5rem;
             color: #FFD700;
         }
+        
+        /* Modal pour configuration GitHub */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #FFD700;
+        }
+        
+        .modal-desc {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .modal-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            color: white;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .modal-btn-primary {
+            background: #FFD700;
+            color: black;
+        }
+        
+        .modal-btn-primary:hover {
+            transform: scale(1.05);
+        }
+        
+        .modal-btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .modal-btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+        }
     </style>
 </head>
 <body>
@@ -851,6 +948,7 @@
         const CACHE_DURATION = 1000 * 60 * 30; // 30 minutes
         const CACHE_KEY = 'vertex_catalog_cache';
         const CACHE_TIMESTAMP_KEY = 'vertex_catalog_timestamp';
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
         const version = new Date().getTime();
         const params = new URLSearchParams(window.location.search);
@@ -885,7 +983,14 @@
                 removedFromFavorites: "Retiré des favoris",
                 favorites: "Favoris",
                 clearFilters: "Effacer les filtres",
-                imageError: "Image non disponible"
+                imageError: "Image non disponible",
+                uploadInProgress: "Upload en cours...",
+                uploadSuccess: "Image mise à jour avec succès",
+                uploadError: "Erreur lors de l'upload",
+                fileTooLarge: "Fichier trop volumineux (max 5MB)",
+                invalidToken: "Token GitHub invalide",
+                githubTokenRequired: "Configuration GitHub requise",
+                enterToken: "Entrez votre token GitHub (avec permissions repo)"
             },
             en: { 
                 all: "All Solutions", 
@@ -907,7 +1012,14 @@
                 removedFromFavorites: "Removed from favorites",
                 favorites: "Favorites",
                 clearFilters: "Clear filters",
-                imageError: "Image unavailable"
+                imageError: "Image unavailable",
+                uploadInProgress: "Upload in progress...",
+                uploadSuccess: "Image updated successfully",
+                uploadError: "Upload error",
+                fileTooLarge: "File too large (max 5MB)",
+                invalidToken: "Invalid GitHub token",
+                githubTokenRequired: "GitHub configuration required",
+                enterToken: "Enter your GitHub token (with repo permissions)"
             }
         };
 
@@ -1007,78 +1119,205 @@
         }
 
         /* ============================================================
-           MOTEUR D'UPLOAD (MODULE ADMIN)
+           GITHUB TOKEN MODAL
+        ============================================================ */
+        function showGitHubModal() {
+            return new Promise((resolve, reject) => {
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal">
+                        <h2 class="modal-title">${UI_STRINGS[currentLang].githubTokenRequired}</h2>
+                        <p class="modal-desc">${UI_STRINGS[currentLang].enterToken}</p>
+                        <input type="password" class="modal-input" id="github-token-input" placeholder="ghp_xxxxxxxxxxxxx">
+                        <div class="modal-buttons">
+                            <button class="modal-btn modal-btn-secondary" onclick="this.closest('.modal-overlay').remove()">Annuler</button>
+                            <button class="modal-btn modal-btn-primary" id="save-token-btn">Valider</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                requestAnimationFrame(() => {
+                    modal.classList.add('show');
+                });
+                
+                const input = modal.querySelector('#github-token-input');
+                const saveBtn = modal.querySelector('#save-token-btn');
+                
+                input.focus();
+                
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        saveBtn.click();
+                    }
+                });
+                
+                saveBtn.onclick = () => {
+                    const token = input.value.trim();
+                    if (token) {
+                        localStorage.setItem('gh_token', token);
+                        modal.classList.remove('show');
+                        setTimeout(() => modal.remove(), 300);
+                        resolve(token);
+                    } else {
+                        input.style.borderColor = '#ef4444';
+                        setTimeout(() => {
+                            input.style.borderColor = '';
+                        }, 1000);
+                    }
+                };
+            });
+        }
+
+        /* ============================================================
+           MOTEUR D'UPLOAD (MODULE ADMIN) - AMÉLIORÉ
         ============================================================ */
         const cameraInput = document.createElement('input');
         cameraInput.type = 'file'; 
-        cameraInput.accept = 'image/*'; 
-        cameraInput.capture = 'environment'; 
+        cameraInput.accept = 'image/jpeg,image/jpg,image/png,image/webp'; 
         cameraInput.className = 'hidden';
         document.body.appendChild(cameraInput);
+        
         let currentUploadPath = "";
+        let currentProductId = "";
 
-        function startUpload(productId, dossier) {
+        async function startUpload(productId, dossier) {
+            currentProductId = productId;
             currentUploadPath = `${dossier}/images/${productId}-main.jpg`;
+            
+            // Vérifier le token
             let token = localStorage.getItem('gh_token');
+            
             if (!token) {
-                token = prompt("Clé d'accès GitHub requise :");
-                if (token) localStorage.setItem('gh_token', token);
+                try {
+                    token = await showGitHubModal();
+                } catch (e) {
+                    return;
+                }
             }
-            if (token) cameraInput.click();
+            
+            if (token) {
+                cameraInput.click();
+            }
         }
 
         cameraInput.onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
             
-            showToast('Upload en cours...', 'info');
+            // Réinitialiser l'input pour permettre de sélectionner le même fichier
+            e.target.value = '';
             
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async () => {
-                const base64Content = reader.result.split(',')[1];
-                const token = localStorage.getItem('gh_token');
-                let sha = "";
+            // Vérifier la taille du fichier
+            if (file.size > MAX_FILE_SIZE) {
+                showToast(UI_STRINGS[currentLang].fileTooLarge, 'error');
+                return;
+            }
+            
+            // Vérifier le type de fichier
+            if (!file.type.startsWith('image/')) {
+                showToast('Format de fichier non supporté', 'error');
+                return;
+            }
+            
+            showToast(UI_STRINGS[currentLang].uploadInProgress, 'info');
+            
+            try {
+                // Lire le fichier
+                const base64Content = await readFileAsBase64(file);
                 
-                try {
-                    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${currentUploadPath}`);
-                    if (res.ok) { 
-                        const data = await res.json(); 
-                        sha = data.sha; 
-                    }
-                } catch (err) {
-                    console.warn('SHA fetch error:', err);
+                const token = localStorage.getItem('gh_token');
+                if (!token) {
+                    showToast(UI_STRINGS[currentLang].invalidToken, 'error');
+                    return;
                 }
                 
+                // Récupérer le SHA du fichier existant (si il existe)
+                let sha = "";
                 try {
-                    const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${currentUploadPath}`, {
+                    const getResponse = await fetch(
+                        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${currentUploadPath}`,
+                        {
+                            headers: { 
+                                'Authorization': `Bearer ${token}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                    );
+                    
+                    if (getResponse.ok) { 
+                        const data = await getResponse.json(); 
+                        sha = data.sha;
+                        console.log('Fichier existant trouvé, SHA:', sha);
+                    } else if (getResponse.status === 404) {
+                        console.log('Nouveau fichier à créer');
+                    } else {
+                        console.warn('Réponse inattendue:', getResponse.status);
+                    }
+                } catch (err) {
+                    console.warn('Erreur lors de la récupération du SHA:', err);
+                }
+                
+                // Upload du fichier
+                const putResponse = await fetch(
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${currentUploadPath}`,
+                    {
                         method: 'PUT',
                         headers: { 
-                            'Authorization': `token ${token}`, 
-                            'Content-Type': 'application/json' 
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json'
                         },
                         body: JSON.stringify({ 
-                            message: `Update ${currentUploadPath}`, 
+                            message: `Update image for ${currentProductId}`, 
                             content: base64Content, 
-                            sha: sha 
+                            sha: sha || undefined,
+                            branch: 'main'
                         })
-                    });
-                    
-                    if (response.ok) { 
-                        showToast("Image mise à jour avec succès", 'success');
-                        localStorage.removeItem(CACHE_KEY);
-                        localStorage.removeItem(CACHE_TIMESTAMP_KEY);
-                        setTimeout(() => location.reload(), 1500);
-                    } else { 
-                        showToast("Erreur lors de la mise à jour", 'error');
-                        localStorage.removeItem('gh_token'); 
                     }
-                } catch (err) {
-                    showToast("Erreur réseau", 'error');
-                    console.error('Upload error:', err);
+                );
+                
+                if (putResponse.ok) { 
+                    showToast(UI_STRINGS[currentLang].uploadSuccess, 'success');
+                    
+                    // Invalider le cache
+                    localStorage.removeItem(CACHE_KEY);
+                    localStorage.removeItem(CACHE_TIMESTAMP_KEY);
+                    
+                    // Recharger après un délai
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    const errorData = await putResponse.json().catch(() => ({}));
+                    console.error('Erreur GitHub API:', errorData);
+                    
+                    if (putResponse.status === 401 || putResponse.status === 403) {
+                        showToast(UI_STRINGS[currentLang].invalidToken, 'error');
+                        localStorage.removeItem('gh_token');
+                    } else {
+                        showToast(`${UI_STRINGS[currentLang].uploadError} (${putResponse.status})`, 'error');
+                    }
                 }
-            };
+            } catch (err) {
+                console.error('Erreur upload:', err);
+                showToast(UI_STRINGS[currentLang].uploadError, 'error');
+            }
         };
+        
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = () => reject(new Error('Erreur de lecture du fichier'));
+                reader.readAsDataURL(file);
+            });
+        }
 
         /* ============================================================
            LAZY LOADING IMAGES - IMPROVED
@@ -1121,7 +1360,7 @@
                 }
             });
         }, { 
-            rootMargin: '100px', // Load images before they're visible
+            rootMargin: '100px',
             threshold: 0.01
         });
 
@@ -1454,7 +1693,7 @@
                     <div class="badge-container">
                         <div class="badge-type">${typeLabel}</div>
                         <div class="badge-group">
-                            ${p.produit.isNew ? `<div class="badge-new">${UI_STRINGS[currentLang].new}</div>` : ''}
+                            ${p.produit.isNew ? `<div class="badge-new">${UI_STRINGS[currentLang].new || 'New'}</div>` : ''}
                             <div class="favorite-btn ${favoriteClass}" onclick="toggleFavorite('${p.id}', event)">
                                 <i data-lucide="heart"></i>
                             </div>
