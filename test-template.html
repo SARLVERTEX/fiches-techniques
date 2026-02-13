@@ -86,7 +86,7 @@
         @media print {
             @page { 
                 size: A4 portrait; 
-                margin: 15mm;
+                margin: 20mm;
             }
             
             * {
@@ -101,7 +101,7 @@
                 padding: 0 !important; 
                 margin: 0 !important;
                 font-size: 10pt !important;
-                line-height: 1.4 !important;
+                line-height: 1.6 !important;
             }
             
             #main-card { 
@@ -123,9 +123,13 @@
                 display: none !important; 
             }
             
-            /* Hide external links */
-            a[href^="http"]::after,
-            a[href^="https://"]::after {
+            /* Hide ALL links and their content */
+            a, a[href], a[href^="http"], a[href^="https://"] {
+                color: inherit !important;
+                text-decoration: none !important;
+            }
+            
+            a::after, a[href]::after, a[href^="http"]::after, a[href^="https://"]::after {
                 content: "" !important;
                 display: none !important;
             }
@@ -134,39 +138,39 @@
             header {
                 background: white !important;
                 border-bottom: 3px solid #FFD700 !important;
-                padding: 0 0 10mm 0 !important;
-                margin-bottom: 10mm !important;
+                padding: 0 0 12mm 0 !important;
+                margin-bottom: 15mm !important;
                 page-break-after: avoid;
             }
             
             #ui-brand {
                 color: #FFD700 !important;
                 font-size: 9pt !important;
-                margin-bottom: 5mm !important;
+                margin-bottom: 6mm !important;
                 letter-spacing: 0.3em !important;
             }
             
             #ui-titre {
                 color: #1a1a1a !important;
-                font-size: 26pt !important;
+                font-size: 28pt !important;
                 line-height: 1.2 !important;
-                margin-bottom: 8mm !important;
+                margin-bottom: 10mm !important;
             }
             
             #ui-logo {
-                height: 22mm !important;
-                max-height: 22mm !important;
+                height: 25mm !important;
+                max-height: 25mm !important;
             }
             
             #ui-badges {
-                gap: 3mm !important;
+                gap: 4mm !important;
             }
             
             .ui-badge-print {
                 background: #f9f9f9 !important;
                 border: 1.5px solid #FFD700 !important;
                 color: #1a1a1a !important;
-                padding: 2.5mm 5mm !important;
+                padding: 3mm 6mm !important;
                 font-size: 8pt !important;
                 border-radius: 3mm !important;
             }
@@ -179,36 +183,37 @@
             /* ========== SECTION IMAGES + 3D ========== */
             .print-grid-2cols {
                 display: grid !important;
-                grid-template-columns: 1.2fr 0.8fr !important;
-                gap: 10mm !important;
-                margin-bottom: 12mm !important;
+                grid-template-columns: 1.3fr 0.7fr !important;
+                gap: 12mm !important;
+                margin-bottom: 18mm !important;
                 page-break-inside: avoid;
+                page-break-after: always !important;
             }
             
             /* Left column: Images */
             .print-col-left {
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 6mm !important;
+                gap: 8mm !important;
             }
             
             #main-img-container {
                 background: white !important;
                 border: 2px solid #e8e8e8 !important;
-                border-radius: 5mm !important;
-                padding: 10mm !important;
-                min-height: 85mm !important;
-                max-height: 85mm !important;
+                border-radius: 6mm !important;
+                padding: 12mm !important;
+                min-height: 90mm !important;
+                max-height: 90mm !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
                 page-break-inside: avoid;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
             }
             
             #ui-main-img {
                 max-width: 100% !important;
-                max-height: 75mm !important;
+                max-height: 80mm !important;
                 object-fit: contain !important;
             }
             
@@ -216,20 +221,20 @@
             #ui-galerie {
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
-                gap: 5mm !important;
+                gap: 6mm !important;
                 page-break-inside: avoid;
             }
             
             #ui-galerie .zoomable-container {
                 background: white !important;
                 border: 1.5px solid #e8e8e8 !important;
-                border-radius: 3mm !important;
-                padding: 4mm !important;
-                height: 32mm !important;
+                border-radius: 4mm !important;
+                padding: 5mm !important;
+                height: 35mm !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
             }
             
             #ui-galerie img {
@@ -246,18 +251,18 @@
                 justify-content: space-between !important;
                 background: white !important;
                 border: 2px solid #e8e8e8 !important;
-                border-radius: 5mm !important;
-                padding: 10mm !important;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
+                border-radius: 6mm !important;
+                padding: 12mm !important;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
             }
             
             .scene-3d { 
                 perspective: none !important;
-                min-height: 65mm !important;
+                min-height: 70mm !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                margin-bottom: 8mm !important;
+                margin-bottom: 10mm !important;
             }
             
             .screen-3d {
@@ -268,15 +273,15 @@
             .face-front {
                 background: #fafafa !important;
                 border: 3px solid #FFD700 !important;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
-                border-radius: 2mm !important;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
+                border-radius: 3mm !important;
                 transform: none !important;
-                padding: 8mm !important;
+                padding: 10mm !important;
             }
             
             #val-diag {
                 color: #FFD700 !important;
-                font-size: 24pt !important;
+                font-size: 26pt !important;
                 font-weight: 900 !important;
             }
             
@@ -295,8 +300,8 @@
             .bg-black\/50 {
                 background: #fafafa !important;
                 border: 2px solid #FFD700 !important;
-                border-radius: 4mm !important;
-                padding: 5mm !important;
+                border-radius: 5mm !important;
+                padding: 6mm !important;
                 margin-top: 0 !important;
             }
             
@@ -310,7 +315,7 @@
             }
             
             #val-vesa {
-                font-size: 11pt !important;
+                font-size: 12pt !important;
                 color: #FFD700 !important;
                 font-weight: 900 !important;
             }
@@ -319,22 +324,23 @@
             .print-section-inclus-options {
                 background: #fafafa !important;
                 border: none !important;
-                border-radius: 5mm !important;
-                padding: 10mm !important;
-                margin: 12mm 0 !important;
+                border-radius: 6mm !important;
+                padding: 15mm !important;
+                margin: 0 0 18mm 0 !important;
                 page-break-inside: avoid;
+                page-break-after: always !important;
             }
             
             .print-section-flex {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 12mm !important;
+                gap: 15mm !important;
             }
             
             .print-section-inclus-options h3 {
                 color: #FFD700 !important;
-                font-size: 10pt !important;
-                margin-bottom: 6mm !important;
+                font-size: 11pt !important;
+                margin-bottom: 8mm !important;
                 display: flex !important;
                 align-items: center !important;
                 gap: 3mm !important;
@@ -343,20 +349,20 @@
             }
             
             .print-section-inclus-options h3 i {
-                width: 4.5mm !important;
-                height: 4.5mm !important;
+                width: 5mm !important;
+                height: 5mm !important;
             }
             
             /* Accessories */
             #ui-acc {
                 display: grid !important;
                 grid-template-columns: 1fr !important;
-                gap: 5mm !important;
+                gap: 6mm !important;
             }
             
             #ui-acc > div {
                 page-break-inside: avoid;
-                padding-bottom: 4mm !important;
+                padding-bottom: 5mm !important;
                 border-bottom: 1px solid #e0e0e0 !important;
             }
             
@@ -368,28 +374,28 @@
             #ui-acc p:first-child {
                 font-size: 9pt !important;
                 color: #1a1a1a !important;
-                margin-bottom: 2mm !important;
+                margin-bottom: 2.5mm !important;
                 font-weight: 700 !important;
             }
             
             #ui-acc p:last-child {
                 font-size: 8pt !important;
                 color: #666 !important;
-                line-height: 1.5 !important;
+                line-height: 1.6 !important;
             }
             
             /* Options */
             #ui-opt {
                 display: grid !important;
                 grid-template-columns: 1fr !important;
-                gap: 4mm !important;
+                gap: 5mm !important;
             }
             
             #ui-opt > div {
                 background: white !important;
                 border: 1.5px solid #e8e8e8 !important;
-                border-radius: 3mm !important;
-                padding: 4mm 5mm !important;
+                border-radius: 4mm !important;
+                padding: 5mm 6mm !important;
                 color: #1a1a1a !important;
                 font-size: 8pt !important;
                 display: flex !important;
@@ -408,9 +414,9 @@
             .print-grid-specs {
                 display: grid !important;
                 grid-template-columns: 1.8fr 1fr !important;
-                gap: 10mm !important;
+                gap: 12mm !important;
                 padding: 0 !important;
-                margin-bottom: 10mm !important;
+                margin-bottom: 15mm !important;
                 page-break-inside: avoid;
             }
             
@@ -418,40 +424,40 @@
             #ui-specs {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 6mm !important;
+                gap: 8mm !important;
             }
             
             #ui-specs > div {
                 background: white !important;
                 border: 1.5px solid #e8e8e8 !important;
-                border-radius: 4mm !important;
-                padding: 6mm !important;
+                border-radius: 5mm !important;
+                padding: 8mm !important;
                 page-break-inside: avoid;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
             }
             
             #ui-specs h4 {
                 color: #1a1a1a !important;
-                font-size: 9pt !important;
-                margin-bottom: 5mm !important;
+                font-size: 10pt !important;
+                margin-bottom: 6mm !important;
                 display: flex !important;
                 align-items: center !important;
-                gap: 2.5mm !important;
+                gap: 3mm !important;
                 font-weight: 900 !important;
                 letter-spacing: 0.02em !important;
             }
             
             #ui-specs h4 i {
-                width: 4.5mm !important;
-                height: 4.5mm !important;
+                width: 5mm !important;
+                height: 5mm !important;
             }
             
             #ui-specs .space-y-2 > div {
                 display: flex !important;
                 justify-content: space-between !important;
                 border-bottom: 1px solid #f0f0f0 !important;
-                padding-bottom: 2.5mm !important;
-                margin-bottom: 2.5mm !important;
+                padding-bottom: 3mm !important;
+                margin-bottom: 3mm !important;
                 font-size: 8pt !important;
             }
             
@@ -474,30 +480,30 @@
             .print-sidebar {
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 6mm !important;
+                gap: 8mm !important;
             }
             
             /* Team */
             .bg-white\/\[0\.03\] {
                 background: white !important;
                 border-left: 4px solid #FFD700 !important;
-                border-radius: 4mm !important;
-                padding: 6mm !important;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+                border-radius: 5mm !important;
+                padding: 8mm !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
             }
             
             #txt-expert-title {
-                font-size: 9pt !important;
+                font-size: 10pt !important;
                 color: #1a1a1a !important;
-                margin-bottom: 5mm !important;
+                margin-bottom: 6mm !important;
                 font-weight: 900 !important;
                 letter-spacing: 0.05em !important;
             }
             
             #ui-team > div {
                 border-bottom: 1px solid #f0f0f0 !important;
-                padding-bottom: 4mm !important;
-                margin-bottom: 4mm !important;
+                padding-bottom: 5mm !important;
+                margin-bottom: 5mm !important;
             }
             
             #ui-team > div:last-child {
@@ -509,7 +515,7 @@
             #ui-team p:first-child {
                 font-size: 9pt !important;
                 color: #1a1a1a !important;
-                margin-bottom: 1.5mm !important;
+                margin-bottom: 2mm !important;
                 font-weight: 700 !important;
             }
             
@@ -522,15 +528,15 @@
             .bg-black\/20 {
                 background: white !important;
                 border: 1.5px solid #e8e8e8 !important;
-                border-radius: 4mm !important;
-                padding: 6mm !important;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+                border-radius: 5mm !important;
+                padding: 8mm !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
             }
             
             #txt-entretien-title {
                 color: #FFD700 !important;
-                font-size: 9pt !important;
-                margin-bottom: 5mm !important;
+                font-size: 10pt !important;
+                margin-bottom: 6mm !important;
                 font-weight: 900 !important;
                 letter-spacing: 0.05em !important;
             }
@@ -544,11 +550,11 @@
             #ui-entret-list li {
                 display: flex !important;
                 align-items: flex-start !important;
-                gap: 2.5mm !important;
-                margin-bottom: 3.5mm !important;
+                gap: 3mm !important;
+                margin-bottom: 4mm !important;
                 font-size: 8pt !important;
                 color: #1a1a1a !important;
-                line-height: 1.5 !important;
+                line-height: 1.6 !important;
             }
             
             #ui-entret-list li:last-child {
@@ -565,8 +571,8 @@
             footer {
                 background: white !important;
                 border-top: 2px solid #e8e8e8 !important;
-                padding: 7mm 0 0 0 !important;
-                margin-top: 10mm !important;
+                padding: 10mm 0 0 0 !important;
+                margin-top: 12mm !important;
                 display: flex !important;
                 justify-content: space-between !important;
                 align-items: center !important;
@@ -583,16 +589,23 @@
                 opacity: 0.4 !important;
             }
             
-            /* Hide external addresses/links */
-            footer a,
-            footer a[href],
-            #ui-addr a {
-                color: inherit !important;
+            /* Hide ALL address links */
+            #ui-addr, #ui-addr * {
+                color: #666 !important;
                 text-decoration: none !important;
             }
             
-            footer a::after,
-            footer a[href]::after {
+            #ui-addr a, #ui-addr a[href] {
+                display: none !important;
+            }
+            
+            footer a, footer a[href] {
+                color: inherit !important;
+                text-decoration: none !important;
+                pointer-events: none !important;
+            }
+            
+            footer a::after, footer a[href]::after {
                 content: "" !important;
                 display: none !important;
             }
@@ -638,7 +651,7 @@
             }
             
             .gap-6, .gap-8 {
-                gap: 6mm !important;
+                gap: 8mm !important;
             }
         }
     </style>
