@@ -33,7 +33,7 @@ window.PRODUCT_DATA = {
         vesa: "Châssis Autoportant"
     },
     media: {
-        imagePrincipale: "images/https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-43-totem-main.jpg",
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-43-totem-main.jpg",
         galerie: [
             { url: "images/vtx-43-totem-back.jpg", label: { fr: "Roulettes Robustes", en: "Heavy-duty Castors" } },
             { url: "images/vtx-43-totem-digital.jpg", label: { fr: "Indicateur Batterie LCD", en: "LCD Battery Indicator" } },
