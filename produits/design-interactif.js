@@ -15,6 +15,6 @@ window.PRODUCT_DATA = {
         }
     },
     media: {
-        imagePrincipale: "images/gamme-deluxe.jpg" // Assure-toi d'avoir une belle photo
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/design-interactif-main.jpg" // Assure-toi d'avoir une belle photo
     }
 };
