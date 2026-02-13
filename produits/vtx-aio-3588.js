@@ -2,7 +2,7 @@
 window.PRODUCT_DATA = {
     produit: {
         id: "vtx-aio-3588",
-        categorie: "Industrial PC",
+        categorie: "Boîtiers Multimédias",
         isNew: true,
         titre: { 
             fr: "BOITIER MULTIMEDIA ANDROID v.14 (4K/8K)", 
