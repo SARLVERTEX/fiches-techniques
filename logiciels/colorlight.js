@@ -34,7 +34,7 @@ window.PRODUCT_DATA = {
         vesa: "Protocol TCP/IP"
     },
     media: {
-        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/colorlight-main.jpg", // Capture du dashboard PlayerMaster
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/logiciels/images/colorlight-main.jpg", // Capture du dashboard PlayerMaster
         galerie: [
             { url: "images/playermaster-ui.jpg", label: { fr: "Interface PC", en: "PC Interface" } },
             { url: "images/led-assistant-ui.jpg", label: { fr: "App Mobile", en: "Mobile App" } },
