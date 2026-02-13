@@ -33,7 +33,7 @@ window.PRODUCT_DATA = {
         vesa: "Logiciel Windows / Web"
     },
     media: {
-        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/novastar-software-main.jpg",
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/logiciels/images/novastar-software-main.jpg",
         galerie: [
             { url: "images/viplex-express-ui.jpg", label: { fr: "Interface ViPlex", en: "ViPlex Interface" } },
             { url: "images/vnnox-cloud-map.jpg", label: { fr: "Ciblage Géographique VNNOX", en: "VNNOX Geo-fencing" } },
