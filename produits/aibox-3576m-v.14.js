@@ -32,7 +32,7 @@ window.PRODUCT_DATA = {
         vesa: "4 trous de fixation filetés"
     },
     media: {
-        imagePrincipale: "images/AIBOX-3576M_MAIN.jpg",
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/aibox-3576m-v.14-main.jpg",
         galerie: [
             { url: "images/aibox-front.jpg", label: { fr: "Façade Connectique USB/Audio", en: "Front USB/Audio Ports" } },
             { url: "images/aibox-rear.jpg", label: { fr: "Double LAN et Sorties Vidéo", en: "Dual LAN and Video Outputs" } },
