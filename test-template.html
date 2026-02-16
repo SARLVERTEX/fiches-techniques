@@ -1144,7 +1144,7 @@
                     imgUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${img.url}`;
                 }
                 
-                const fileName = `${produitId}-gal${idx+1}.jpg`;
+                const fileName = `${produitId}-gal${idx}.jpg`;
                 
                 // Créer l'élément
                 const galleryItem = document.createElement('div');
@@ -1154,7 +1154,7 @@
                     galleryItem.innerHTML = `
                         <div class="admin-overlay">
                             <i data-lucide="camera" class="w-6 h-6 text-[#FFD700]"></i>
-                            <span class="admin-overlay-label">Gal ${idx+1}</span>
+                            <span class="admin-overlay-label">Gal ${idx}</span>
                         </div>
                         <img src="${imgUrl}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg" 
                              onerror="this.style.opacity='0.3'; this.alt='Image manquante'">
@@ -1164,7 +1164,7 @@
                         return function() {
                             startUpload(fname, 'gallery', index);
                         };
-                    })(idx+1, fileName));
+                    })(idx, fileName));
                 } else {
                     galleryItem.innerHTML = `
                         <img src="${imgUrl}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg" 
