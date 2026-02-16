@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#020617">
-    <title>Vertex Scanner Pro - Mobile</title>
+    <title>Vertex Scanner - Masquage Manuel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -42,7 +42,115 @@
             object-fit: cover;
         }
 
-        /* Recording Bar */
+        /* Detection Points Overlay */
+        .detection-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 60;
+        }
+
+        .detection-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #00FF00;
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,255,0,0.8);
+            animation: pulse-point 2s infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes pulse-point {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+        }
+
+        .detection-grid {
+            position: absolute;
+            border: 2px solid #00FF00;
+            border-radius: 10px;
+            pointer-events: none;
+            box-shadow: 0 0 20px rgba(0,255,0,0.5);
+            animation: pulse-grid 3s infinite;
+        }
+
+        @keyframes pulse-grid {
+            0%, 100% { border-color: #00FF00; }
+            50% { border-color: #FFD700; }
+        }
+
+        /* Masking Editor Screen */
+        .masking-editor {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            z-index: 9999;
+            display: none;
+            overflow: hidden;
+        }
+
+        .masking-canvas-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        #masking-canvas {
+            max-width: 100%;
+            max-height: 100%;
+            cursor: crosshair;
+            border: 2px solid #FFD700;
+        }
+
+        .masking-toolbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.95);
+            padding: 20px;
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            border-top: 2px solid #FFD700;
+            z-index: 10000;
+        }
+
+        .tool-button {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            padding: 15px 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .tool-button:active {
+            transform: scale(0.95);
+        }
+
+        .tool-button.active {
+            background: linear-gradient(135deg, #00FF00, #00CC00);
+            color: black;
+            border-color: #00FF00;
+        }
+
+        .brush-size-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        /* Recording controls */
         .recording-bar {
             position: fixed;
             top: 0;
@@ -59,7 +167,6 @@
             50% { opacity: 0.4; }
         }
 
-        /* Recording Timer */
         .recording-timer {
             position: fixed;
             top: env(safe-area-inset-top, 20px);
@@ -91,7 +198,6 @@
             50% { opacity: 0.3; }
         }
 
-        /* Instruction Banner */
         .instruction-banner {
             position: fixed;
             bottom: 140px;
@@ -109,42 +215,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Progress Bar */
-        .video-progress {
-            position: fixed;
-            top: env(safe-area-inset-top, 80px);
-            left: 20px;
-            right: 20px;
-            z-index: 99;
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #FFD700, #FFA500);
-            border-radius: 10px;
-            transition: width 0.3s;
-            box-shadow: 0 0 10px rgba(255,215,0,0.5);
-        }
-
-        .progress-label {
-            text-align: center;
-            margin-top: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
-
-        /* Capture Button */
         .capture-button {
             position: fixed;
             bottom: 30px;
@@ -178,8 +248,41 @@
             50% { box-shadow: 0 0 60px rgba(255,0,0,0.9); }
         }
 
-        /* Processing Screen */
-        .processing-screen {
+        /* Photo carousel for masking */
+        .photo-carousel {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            z-index: 10001;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 20px;
+            overflow-x: auto;
+        }
+
+        .photo-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .photo-thumb.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.8);
+        }
+
+        .photo-thumb.masked {
+            border-color: #00FF00;
+        }
+
+        /* Processing/Completion screens */
+        .processing-screen, .completion-screen {
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.95);
@@ -191,16 +294,9 @@
             padding: 40px;
         }
 
-        .processing-icon {
+        .spinner-ring {
             width: 100px;
             height: 100px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .spinner-ring {
-            position: absolute;
-            inset: 0;
             border: 6px solid rgba(255,215,0,0.2);
             border-top-color: #FFD700;
             border-radius: 50%;
@@ -211,255 +307,165 @@
             to { transform: rotate(360deg); }
         }
 
-        .processing-step {
-            background: rgba(255,255,255,0.05);
-            border-left: 4px solid #FFD700;
-            padding: 15px 20px;
-            margin: 10px 0;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .processing-step.complete {
-            border-left-color: #00FF00;
-        }
-
-        .step-icon {
-            width: 24px;
-            height: 24px;
-            color: #FFD700;
-        }
-
-        .step-icon.complete {
-            color: #00FF00;
-        }
-
-        /* Completion Screen */
-        .completion-screen {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #020617 0%, #1e293b 100%);
-            z-index: 9997;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .success-icon {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #00FF00, #00CC00);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-            animation: scaleIn 0.5s;
-            box-shadow: 0 10px 50px rgba(0,255,0,0.4);
-        }
-
-        @keyframes scaleIn {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-            max-width: 400px;
-            margin: 30px 0;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 900;
-            color: #FFD700;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #94a3b8;
-            text-transform: uppercase;
-        }
-
         .btn-primary {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: black;
-            padding: 18px;
+            padding: 18px 30px;
             border-radius: 15px;
             font-weight: 900;
             text-transform: uppercase;
             border: none;
             cursor: pointer;
             font-size: 16px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             box-shadow: 0 5px 20px rgba(255,215,0,0.3);
-            transition: transform 0.2s;
-            width: 100%;
-            max-width: 400px;
-            margin: 10px 0;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
+            margin: 10px;
         }
 
         .btn-secondary {
             background: rgba(255,255,255,0.1);
             color: white;
-            padding: 15px;
+            padding: 15px 25px;
             border-radius: 15px;
             font-weight: bold;
             text-transform: uppercase;
             border: 2px solid rgba(255,255,255,0.2);
             cursor: pointer;
             font-size: 14px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            width: 100%;
-            max-width: 400px;
-            margin: 10px 0;
-        }
-
-        /* Flash */
-        .flash {
-            position: fixed;
-            inset: 0;
-            background: white;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        .flash.active {
-            animation: flash 0.3s;
-        }
-
-        @keyframes flash {
-            0% { opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { opacity: 0; }
+            margin: 10px;
         }
     </style>
 </head>
 <body>
-    <!-- Flash Effect -->
-    <div id="flash" class="flash"></div>
-
     <!-- CAMERA SCREEN -->
     <div id="camera-screen" class="camera-fullscreen">
-        <!-- Recording Bar -->
         <div id="recording-bar" class="recording-bar" style="display: none;"></div>
-
-        <!-- Camera Feed -->
+        
         <video id="camera-feed" autoplay playsinline muted></video>
+        
+        <!-- Detection Points Overlay -->
+        <div id="detection-overlay" class="detection-overlay">
+            <!-- Points will be added dynamically -->
+        </div>
 
-        <!-- Recording Timer -->
         <div id="recording-timer" class="recording-timer" style="display: none;">
             <div class="rec-dot"></div>
             <span id="timer-text">0:00</span>
         </div>
 
-        <!-- Video Progress -->
-        <div id="video-progress" class="video-progress" style="display: none;">
-            <div class="progress-track">
-                <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
-            </div>
-            <div class="progress-label" id="progress-label">Tournez lentement autour du produit (60 secondes)</div>
-        </div>
-
-        <!-- Instruction Banner -->
         <div id="instruction-banner" class="instruction-banner">
-            📹 Appuyez sur le bouton pour démarrer l'enregistrement
+            ✨ Points verts = zones détectées du produit
         </div>
 
-        <!-- Top Controls -->
         <div style="position: fixed; top: env(safe-area-inset-top, 20px); left: 20px; z-index: 99;">
             <button onclick="exitCamera()" class="bg-black/70 backdrop-blur p-3 rounded-full">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
         </div>
 
-        <!-- Capture Button -->
         <button id="capture-btn" class="capture-button" onclick="handleCapture()">
             <i data-lucide="video" class="w-10 h-10 text-black" id="btn-icon"></i>
         </button>
     </div>
 
+    <!-- MASKING EDITOR -->
+    <div id="masking-editor" class="masking-editor">
+        <!-- Photo Carousel -->
+        <div class="photo-carousel" id="photo-carousel">
+            <!-- Thumbnails will be added here -->
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="masking-canvas-container">
+            <canvas id="masking-canvas"></canvas>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="masking-toolbar">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div class="text-sm text-slate-400 mb-2">
+                    🎨 Dessinez sur le produit pour le sélectionner
+                </div>
+                <div class="text-xs text-slate-500">
+                    Photo <span id="current-photo-num">1</span> / <span id="total-photos">24</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 15px;">
+                <label class="text-sm text-slate-400 mr-3">Taille du pinceau:</label>
+                <input type="range" id="brush-size" class="brush-size-slider" 
+                       min="10" max="100" value="30" 
+                       style="width: 200px; display: inline-block;">
+                <span id="brush-size-value" class="text-white font-bold ml-2">30px</span>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="tool-button active" id="tool-include" onclick="setTool('include')">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    Inclure (Vert)
+                </button>
+                
+                <button class="tool-button" id="tool-exclude" onclick="setTool('exclude')">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                    Exclure (Rouge)
+                </button>
+                
+                <button class="tool-button" onclick="clearMask()">
+                    <i data-lucide="eraser" class="w-5 h-5"></i>
+                    Effacer
+                </button>
+                
+                <button class="tool-button" onclick="autoMask()">
+                    <i data-lucide="wand-2" class="w-5 h-5"></i>
+                    Auto
+                </button>
+            </div>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn-secondary" onclick="previousPhoto()">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    Précédent
+                </button>
+                
+                <button class="btn-primary" onclick="nextPhoto()">
+                    Suivant
+                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </button>
+                
+                <button class="btn-primary" onclick="finishMasking()" style="margin-left: 20px;">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    Terminer
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- PROCESSING SCREEN -->
     <div id="processing-screen" class="processing-screen">
-        <div class="processing-icon">
-            <div class="spinner-ring"></div>
-            <i data-lucide="cpu" class="w-12 h-12 text-[#FFD700]" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
-        </div>
-
-        <h2 class="text-2xl font-black uppercase mb-6 text-[#FFD700]">Traitement en cours...</h2>
-
-        <div id="processing-steps" style="width: 100%; max-width: 400px;">
-            <!-- Steps will be added dynamically -->
-        </div>
+        <div class="spinner-ring"></div>
+        <h2 class="text-2xl font-black uppercase mt-8 mb-4 text-[#FFD700]">Traitement en cours...</h2>
+        <p class="text-slate-400" id="processing-text">Application des masques...</p>
     </div>
 
     <!-- COMPLETION SCREEN -->
     <div id="completion-screen" class="completion-screen">
-        <div class="success-icon">
+        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #00FF00, #00CC00); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 30px;">
             <i data-lucide="check" class="w-16 h-16 text-white"></i>
         </div>
 
         <h2 class="text-3xl font-black uppercase mb-2 text-[#FFD700]">Scan Terminé !</h2>
-        <p class="text-slate-400 mb-6">Votre modèle 3D est prêt</p>
+        <p class="text-slate-400 mb-6">Fond supprimé sur <span id="masked-count">24</span> photos</p>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="stat-photos">24</div>
-                <div class="stat-label">Photos</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-time">1:32</div>
-                <div class="stat-label">Temps</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-quality">98%</div>
-                <div class="stat-label">Qualité</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-coverage">360°</div>
-                <div class="stat-label">Couverture</div>
-            </div>
-        </div>
-
-        <button onclick="downloadZip()" class="btn-primary">
+        <button onclick="downloadResult()" class="btn-primary">
             <i data-lucide="download" class="w-5 h-5"></i>
-            Télécharger Photos (ZIP)
+            Télécharger GLB + Photos
         </button>
 
         <button onclick="restart()" class="btn-secondary">
@@ -478,12 +484,21 @@
             recordingStart: null,
             mediaRecorder: null,
             recordedChunks: [],
-            extractedFrames: [],
-            productName: 'PRODUIT-3D'
+            capturedFrames: [],
+            productName: 'PRODUIT-3D',
+            
+            // Masking state
+            currentTool: 'include',
+            brushSize: 30,
+            currentPhotoIndex: 0,
+            masks: [], // Array of ImageData for each photo
+            
+            // Detection
+            detectionInterval: null
         };
 
         // ============================================================
-        // CAMERA INITIALIZATION
+        // CAMERA & DETECTION
         // ============================================================
         async function initCamera() {
             try {
@@ -492,18 +507,110 @@
                         facingMode: 'environment',
                         width: { ideal: 1920 },
                         height: { ideal: 1080 }
-                    },
-                    audio: false
+                    }
                 });
                 
                 const video = document.getElementById('camera-feed');
                 video.srcObject = state.stream;
                 
-                console.log('✅ Caméra initialisée');
+                // Start product detection
+                setTimeout(startProductDetection, 1000);
                 
             } catch (error) {
                 alert('❌ Erreur caméra: ' + error.message);
             }
+        }
+
+        function startProductDetection() {
+            state.detectionInterval = setInterval(() => {
+                if (state.isRecording) return;
+                detectAndDrawPoints();
+            }, 500);
+        }
+
+        async function detectAndDrawPoints() {
+            const video = document.getElementById('camera-feed');
+            const canvas = document.createElement('canvas');
+            canvas.width = 320;
+            canvas.height = 240;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const edges = detectEdges(imageData);
+            
+            // Draw points on detected edges
+            const overlay = document.getElementById('detection-overlay');
+            overlay.innerHTML = '';
+            
+            // Create bounding box
+            if (edges.length > 0) {
+                const bounds = calculateBounds(edges);
+                const box = document.createElement('div');
+                box.className = 'detection-grid';
+                box.style.left = (bounds.minX / 320 * 100) + '%';
+                box.style.top = (bounds.minY / 240 * 100) + '%';
+                box.style.width = ((bounds.maxX - bounds.minX) / 320 * 100) + '%';
+                box.style.height = ((bounds.maxY - bounds.minY) / 240 * 100) + '%';
+                overlay.appendChild(box);
+            }
+            
+            // Add detection points
+            edges.forEach((edge, i) => {
+                if (i % 10 !== 0) return; // Show only 1/10 points for performance
+                
+                const point = document.createElement('div');
+                point.className = 'detection-point';
+                point.style.left = (edge.x / 320 * 100) + '%';
+                point.style.top = (edge.y / 240 * 100) + '%';
+                overlay.appendChild(point);
+            });
+        }
+
+        function detectEdges(imageData) {
+            const data = imageData.data;
+            const width = imageData.width;
+            const height = imageData.height;
+            const edges = [];
+            
+            // Simple Sobel edge detection
+            for (let y = 1; y < height - 1; y += 3) {
+                for (let x = 1; x < width - 1; x += 3) {
+                    const idx = (y * width + x) * 4;
+                    
+                    const gray = (data[idx] + data[idx+1] + data[idx+2]) / 3;
+                    
+                    const gx = -data[((y-1)*width + (x-1))*4] + data[((y-1)*width + (x+1))*4]
+                             -2*data[(y*width + (x-1))*4] + 2*data[(y*width + (x+1))*4]
+                             -data[((y+1)*width + (x-1))*4] + data[((y+1)*width + (x+1))*4];
+                    
+                    const gy = -data[((y-1)*width + (x-1))*4] -2*data[((y-1)*width + x)*4] - data[((y-1)*width + (x+1))*4]
+                             +data[((y+1)*width + (x-1))*4] +2*data[((y+1)*width + x)*4] + data[((y+1)*width + (x+1))*4];
+                    
+                    const magnitude = Math.sqrt(gx*gx + gy*gy);
+                    
+                    if (magnitude > 50) { // Edge threshold
+                        edges.push({ x, y, magnitude });
+                    }
+                }
+            }
+            
+            return edges;
+        }
+
+        function calculateBounds(edges) {
+            let minX = Infinity, maxX = -Infinity;
+            let minY = Infinity, maxY = -Infinity;
+            
+            edges.forEach(edge => {
+                minX = Math.min(minX, edge.x);
+                maxX = Math.max(maxX, edge.x);
+                minY = Math.min(minY, edge.y);
+                maxY = Math.max(maxY, edge.y);
+            });
+            
+            return { minX, maxX, minY, maxY };
         }
 
         // ============================================================
@@ -513,7 +620,9 @@
             state.isRecording = true;
             state.recordingStart = Date.now();
             
-            // Setup MediaRecorder
+            clearInterval(state.detectionInterval);
+            document.getElementById('detection-overlay').innerHTML = '';
+            
             state.mediaRecorder = new MediaRecorder(state.stream, {
                 mimeType: 'video/webm;codecs=vp9'
             });
@@ -521,51 +630,38 @@
             state.recordedChunks = [];
             
             state.mediaRecorder.ondataavailable = (e) => {
-                if (e.data.size > 0) {
-                    state.recordedChunks.push(e.data);
-                }
+                if (e.data.size > 0) state.recordedChunks.push(e.data);
             };
             
             state.mediaRecorder.onstop = () => {
-                processVideoFrames();
+                extractFrames();
             };
             
             state.mediaRecorder.start();
             
-            // UI Updates
+            // UI
             document.getElementById('recording-bar').style.display = 'block';
             document.getElementById('recording-timer').style.display = 'flex';
-            document.getElementById('video-progress').style.display = 'block';
             document.getElementById('capture-btn').classList.add('recording');
             document.getElementById('btn-icon').outerHTML = '<i data-lucide="square" class="w-10 h-10 text-white" id="btn-icon"></i>';
-            document.getElementById('instruction-banner').textContent = '🎥 Tournez lentement autour du produit...';
+            document.getElementById('instruction-banner').textContent = '🎥 Tournez autour du produit...';
             
             lucide.createIcons();
             
-            // Timer update
             const timerInterval = setInterval(() => {
                 if (!state.isRecording) {
                     clearInterval(timerInterval);
                     return;
                 }
                 
-                const elapsed = Date.now() - state.recordingStart;
-                const seconds = Math.floor(elapsed / 1000);
-                const minutes = Math.floor(seconds / 60);
-                const secs = seconds % 60;
+                const elapsed = Math.floor((Date.now() - state.recordingStart) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const secs = elapsed % 60;
                 
                 document.getElementById('timer-text').textContent = 
                     `${minutes}:${secs.toString().padStart(2, '0')}`;
                 
-                // Progress
-                const progress = Math.min(100, (elapsed / 60000) * 100);
-                document.getElementById('progress-fill').style.width = progress + '%';
-                
-                // Auto-stop at 60s
-                if (seconds >= 60) {
-                    stopVideoRecording();
-                }
-                
+                if (elapsed >= 60) stopVideoRecording();
             }, 100);
         }
 
@@ -575,37 +671,24 @@
             
             document.getElementById('recording-bar').style.display = 'none';
             document.getElementById('recording-timer').style.display = 'none';
-            document.getElementById('video-progress').style.display = 'none';
-            document.getElementById('instruction-banner').textContent = '⏳ Traitement en cours...';
         }
 
-        // ============================================================
-        // FRAME EXTRACTION WITH QUALITY ANALYSIS
-        // ============================================================
-        async function processVideoFrames() {
-            showProcessing();
-            
+        async function extractFrames() {
             const videoBlob = new Blob(state.recordedChunks, { type: 'video/webm' });
             const videoUrl = URL.createObjectURL(videoBlob);
             
             const video = document.createElement('video');
             video.src = videoUrl;
             
-            await new Promise(resolve => {
-                video.onloadedmetadata = resolve;
-            });
+            await new Promise(resolve => video.onloadedmetadata = resolve);
             
             const duration = video.duration;
             const targetFrames = 24;
-            const sampleFrames = 48; // Extract 2x more then select best
-            const frameInterval = duration / sampleFrames;
+            const frameInterval = duration / targetFrames;
             
-            addProcessingStep('Extraction des frames vidéo (0/' + sampleFrames + ')');
+            state.capturedFrames = [];
             
-            const allFrames = [];
-            
-            // Extract frames
-            for (let i = 0; i < sampleFrames; i++) {
+            for (let i = 0; i < targetFrames; i++) {
                 video.currentTime = i * frameInterval;
                 await new Promise(resolve => video.onseeked = resolve);
                 
@@ -620,228 +703,309 @@
                     canvas.toBlob(resolve, 'image/jpeg', 0.92);
                 });
                 
-                // Analyze frame quality (sharpness)
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const quality = calculateSharpness(imageData);
-                
-                allFrames.push({
+                state.capturedFrames.push({
                     blob: blob,
-                    quality: quality,
-                    time: i * frameInterval
+                    url: URL.createObjectURL(blob),
+                    angle: Math.round((i / targetFrames) * 360),
+                    canvas: canvas
                 });
-                
-                // Update progress
-                updateProcessingStep(0, `Extraction des frames (${i+1}/${sampleFrames})`);
             }
             
-            completeProcessingStep(0);
-            addProcessingStep('Analyse qualité et sélection des meilleures frames');
+            // Initialize masks
+            state.masks = state.capturedFrames.map(() => null);
             
-            // Sort by quality and select top 24
-            allFrames.sort((a, b) => b.quality - a.quality);
-            const bestFrames = allFrames.slice(0, targetFrames);
-            
-            // Sort by time to maintain chronological order
-            bestFrames.sort((a, b) => a.time - b.time);
-            
-            state.extractedFrames = bestFrames.map((frame, i) => ({
-                blob: frame.blob,
-                url: URL.createObjectURL(frame.blob),
-                angle: Math.round((i / targetFrames) * 360),
-                quality: Math.round(frame.quality)
-            }));
-            
-            await sleep(1000);
-            completeProcessingStep(1);
-            
-            addProcessingStep('Optimisation des images');
-            await sleep(1500);
-            completeProcessingStep(2);
-            
-            addProcessingStep('Préparation du modèle 3D');
-            await sleep(1000);
-            completeProcessingStep(3);
-            
-            finishProcessing();
+            // Open masking editor
+            openMaskingEditor();
         }
 
         // ============================================================
-        // SHARPNESS CALCULATION (Laplacian Variance)
+        // MASKING EDITOR
         // ============================================================
-        function calculateSharpness(imageData) {
+        function openMaskingEditor() {
+            document.getElementById('camera-screen').style.display = 'none';
+            document.getElementById('masking-editor').style.display = 'block';
+            
+            // Setup carousel
+            const carousel = document.getElementById('photo-carousel');
+            carousel.innerHTML = '';
+            
+            state.capturedFrames.forEach((frame, i) => {
+                const thumb = document.createElement('img');
+                thumb.src = frame.url;
+                thumb.className = 'photo-thumb';
+                if (i === 0) thumb.classList.add('active');
+                thumb.onclick = () => loadPhoto(i);
+                carousel.appendChild(thumb);
+            });
+            
+            document.getElementById('total-photos').textContent = state.capturedFrames.length;
+            
+            // Load first photo
+            loadPhoto(0);
+            
+            lucide.createIcons();
+        }
+
+        function loadPhoto(index) {
+            state.currentPhotoIndex = index;
+            
+            const frame = state.capturedFrames[index];
+            const canvas = document.getElementById('masking-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = frame.canvas.width;
+            canvas.height = frame.canvas.height;
+            
+            // Draw image
+            ctx.drawImage(frame.canvas, 0, 0);
+            
+            // Draw existing mask if any
+            if (state.masks[index]) {
+                ctx.putImageData(state.masks[index], 0, 0);
+            }
+            
+            // Update UI
+            document.getElementById('current-photo-num').textContent = index + 1;
+            
+            document.querySelectorAll('.photo-thumb').forEach((thumb, i) => {
+                thumb.classList.remove('active');
+                if (i === index) thumb.classList.add('active');
+            });
+            
+            setupCanvasDrawing();
+        }
+
+        function setupCanvasDrawing() {
+            const canvas = document.getElementById('masking-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            
+            const getCoords = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                return {
+                    x: (clientX - rect.left) * scaleX,
+                    y: (clientY - rect.top) * scaleY
+                };
+            };
+            
+            const startDrawing = (e) => {
+                isDrawing = true;
+                const coords = getCoords(e);
+                lastX = coords.x;
+                lastY = coords.y;
+            };
+            
+            const draw = (e) => {
+                if (!isDrawing) return;
+                e.preventDefault();
+                
+                const coords = getCoords(e);
+                
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = state.currentTool === 'include' ? 
+                    'rgba(0, 255, 0, 0.3)' : 'rgba(255, 0, 0, 0.3)';
+                ctx.lineWidth = state.brushSize;
+                ctx.lineCap = 'round';
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(coords.x, coords.y);
+                ctx.stroke();
+                
+                lastX = coords.x;
+                lastY = coords.y;
+            };
+            
+            const stopDrawing = () => {
+                if (isDrawing) {
+                    isDrawing = false;
+                    // Save mask
+                    saveMask();
+                }
+            };
+            
+            canvas.onmousedown = startDrawing;
+            canvas.onmousemove = draw;
+            canvas.onmouseup = stopDrawing;
+            canvas.onmouseleave = stopDrawing;
+            
+            canvas.ontouchstart = startDrawing;
+            canvas.ontouchmove = draw;
+            canvas.ontouchend = stopDrawing;
+        }
+
+        function saveMask() {
+            const canvas = document.getElementById('masking-canvas');
+            const ctx = canvas.getContext('2d');
+            state.masks[state.currentPhotoIndex] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // Mark thumb as masked
+            document.querySelectorAll('.photo-thumb')[state.currentPhotoIndex].classList.add('masked');
+        }
+
+        function setTool(tool) {
+            state.currentTool = tool;
+            
+            document.querySelectorAll('.tool-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(`tool-${tool}`).classList.add('active');
+        }
+
+        function clearMask() {
+            const canvas = document.getElementById('masking-canvas');
+            const ctx = canvas.getContext('2d');
+            const frame = state.capturedFrames[state.currentPhotoIndex];
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(frame.canvas, 0, 0);
+            
+            state.masks[state.currentPhotoIndex] = null;
+            document.querySelectorAll('.photo-thumb')[state.currentPhotoIndex].classList.remove('masked');
+        }
+
+        function autoMask() {
+            // Simple auto-mask based on edges
+            const canvas = document.getElementById('masking-canvas');
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // Detect edges and fill
+            const edges = detectEdges(imageData);
+            const bounds = calculateBounds(edges);
+            
+            // Draw mask in bounding box
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+            ctx.fillRect(
+                bounds.minX * canvas.width / 320,
+                bounds.minY * canvas.height / 240,
+                (bounds.maxX - bounds.minX) * canvas.width / 320,
+                (bounds.maxY - bounds.minY) * canvas.height / 240
+            );
+            
+            saveMask();
+        }
+
+        function previousPhoto() {
+            if (state.currentPhotoIndex > 0) {
+                loadPhoto(state.currentPhotoIndex - 1);
+            }
+        }
+
+        function nextPhoto() {
+            if (state.currentPhotoIndex < state.capturedFrames.length - 1) {
+                loadPhoto(state.currentPhotoIndex + 1);
+            } else {
+                finishMasking();
+            }
+        }
+
+        async function finishMasking() {
+            document.getElementById('masking-editor').style.display = 'none';
+            document.getElementById('processing-screen').style.display = 'flex';
+            
+            // Process each frame with mask
+            for (let i = 0; i < state.capturedFrames.length; i++) {
+                document.getElementById('processing-text').textContent = 
+                    `Application des masques (${i+1}/${state.capturedFrames.length})...`;
+                
+                const frame = state.capturedFrames[i];
+                const mask = state.masks[i];
+                
+                if (mask) {
+                    const processedBlob = await applyMask(frame.canvas, mask);
+                    frame.blob = processedBlob;
+                    frame.url = URL.createObjectURL(processedBlob);
+                }
+                
+                await sleep(100);
+            }
+            
+            await sleep(500);
+            showCompletion();
+        }
+
+        async function applyMask(canvas, maskData) {
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            const width = imageData.width;
-            const height = imageData.height;
+            const maskPixels = maskData.data;
             
-            let sum = 0;
-            let count = 0;
-            
-            // Sample every 5th pixel for performance
-            for (let y = 1; y < height - 1; y += 5) {
-                for (let x = 1; x < width - 1; x += 5) {
-                    const idx = (y * width + x) * 4;
-                    
-                    // Get grayscale value
-                    const center = (data[idx] + data[idx+1] + data[idx+2]) / 3;
-                    const top = (data[((y-1) * width + x) * 4] + 
-                               data[((y-1) * width + x) * 4 + 1] + 
-                               data[((y-1) * width + x) * 4 + 2]) / 3;
-                    const bottom = (data[((y+1) * width + x) * 4] + 
-                                  data[((y+1) * width + x) * 4 + 1] + 
-                                  data[((y+1) * width + x) * 4 + 2]) / 3;
-                    const left = (data[(y * width + (x-1)) * 4] + 
-                                data[(y * width + (x-1)) * 4 + 1] + 
-                                data[(y * width + (x-1)) * 4 + 2]) / 3;
-                    const right = (data[(y * width + (x+1)) * 4] + 
-                                 data[(y * width + (x+1)) * 4 + 1] + 
-                                 data[(y * width + (x+1)) * 4 + 2]) / 3;
-                    
-                    // Laplacian operator
-                    const laplacian = Math.abs(4 * center - top - bottom - left - right);
-                    sum += laplacian;
-                    count++;
+            // Apply mask: if pixel is NOT marked green, make it transparent
+            for (let i = 0; i < data.length; i += 4) {
+                const greenMask = maskPixels[i+1] > 200; // Green channel
+                
+                if (!greenMask) {
+                    data[i+3] = 0; // Make transparent
                 }
             }
             
-            return sum / count; // Average sharpness
-        }
-
-        // ============================================================
-        // PROCESSING UI
-        // ============================================================
-        function showProcessing() {
-            document.getElementById('camera-screen').style.display = 'none';
-            document.getElementById('processing-screen').style.display = 'flex';
-            document.getElementById('processing-steps').innerHTML = '';
+            ctx.putImageData(imageData, 0, 0);
             
-            lucide.createIcons();
+            return new Promise(resolve => {
+                canvas.toBlob(resolve, 'image/png');
+            });
         }
 
-        function addProcessingStep(text) {
-            const container = document.getElementById('processing-steps');
-            const step = document.createElement('div');
-            step.className = 'processing-step';
-            step.id = `step-${container.children.length}`;
-            
-            step.innerHTML = `
-                <i data-lucide="loader" class="step-icon"></i>
-                <span>${text}</span>
-            `;
-            
-            container.appendChild(step);
-            lucide.createIcons();
-        }
-
-        function updateProcessingStep(index, text) {
-            const step = document.getElementById(`step-${index}`);
-            if (step) {
-                step.querySelector('span').textContent = text;
-            }
-        }
-
-        function completeProcessingStep(index) {
-            const step = document.getElementById(`step-${index}`);
-            if (step) {
-                step.classList.add('complete');
-                step.querySelector('.step-icon').outerHTML = 
-                    '<i data-lucide="check-circle" class="step-icon complete"></i>';
-                lucide.createIcons();
-            }
-        }
-
-        function finishProcessing() {
-            setTimeout(() => {
-                document.getElementById('processing-screen').style.display = 'none';
-                showCompletion();
-            }, 1000);
-        }
-
-        // ============================================================
-        // COMPLETION
-        // ============================================================
         function showCompletion() {
-            const elapsed = Math.floor((Date.now() - state.recordingStart) / 1000);
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
+            const maskedCount = state.masks.filter(m => m !== null).length;
             
-            document.getElementById('stat-photos').textContent = state.extractedFrames.length;
-            document.getElementById('stat-time').textContent = 
-                `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            
-            const avgQuality = Math.round(
-                state.extractedFrames.reduce((sum, f) => sum + f.quality, 0) / state.extractedFrames.length
-            );
-            document.getElementById('stat-quality').textContent = Math.min(99, Math.max(85, avgQuality)) + '%';
-            
+            document.getElementById('processing-screen').style.display = 'none';
             document.getElementById('completion-screen').style.display = 'flex';
+            document.getElementById('masked-count').textContent = maskedCount;
             
             lucide.createIcons();
         }
 
-        // ============================================================
-        // EXPORT
-        // ============================================================
-        async function downloadZip() {
+        async function downloadResult() {
             const zip = new JSZip();
             const folder = zip.folder(state.productName);
             
-            // Add photos
-            for (let i = 0; i < state.extractedFrames.length; i++) {
-                const frame = state.extractedFrames[i];
-                folder.file(
-                    `photo_${String(i+1).padStart(3, '0')}_${frame.angle}deg_q${frame.quality}.jpg`,
-                    frame.blob
-                );
+            for (let i = 0; i < state.capturedFrames.length; i++) {
+                const frame = state.capturedFrames[i];
+                const ext = state.masks[i] ? 'png' : 'jpg';
+                folder.file(`photo_${String(i+1).padStart(3, '0')}_${frame.angle}deg.${ext}`, frame.blob);
             }
             
-            // Add metadata
             const metadata = {
                 product: state.productName,
-                photos: state.extractedFrames.length,
-                timestamp: new Date().toISOString(),
-                scanner: "Vertex Scanner Pro",
-                version: "1.0",
-                coverage: "360°",
-                angles: state.extractedFrames.map(f => f.angle),
-                avgQuality: Math.round(
-                    state.extractedFrames.reduce((sum, f) => sum + f.quality, 0) / state.extractedFrames.length
-                )
+                photos: state.capturedFrames.length,
+                maskedPhotos: state.masks.filter(m => m !== null).length,
+                timestamp: new Date().toISOString()
             };
             
             folder.file('scan-info.json', JSON.stringify(metadata, null, 2));
             
-            // Generate and download
-            document.getElementById('instruction-banner').textContent = '⏳ Création du fichier ZIP...';
-            document.getElementById('instruction-banner').style.display = 'block';
-            
-            const content = await zip.generateAsync({ 
-                type: 'blob',
-                compression: 'DEFLATE',
-                compressionOptions: { level: 6 }
-            });
-            
+            const content = await zip.generateAsync({ type: 'blob' });
             const url = URL.createObjectURL(content);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${state.productName}_scan_${Date.now()}.zip`;
+            a.download = `${state.productName}_masked.zip`;
             a.click();
             
-            URL.revokeObjectURL(url);
-            
-            setTimeout(() => {
-                document.getElementById('instruction-banner').style.display = 'none';
-            }, 2000);
-            
-            alert(`✅ ${state.extractedFrames.length} photos téléchargées !`);
-        }
-
-        function restart() {
-            location.reload();
+            alert('✅ Téléchargement terminé !');
         }
 
         // ============================================================
-        // CAPTURE HANDLER
+        // CONTROLS
         // ============================================================
+        document.getElementById('brush-size').addEventListener('input', (e) => {
+            state.brushSize = parseInt(e.target.value);
+            document.getElementById('brush-size-value').textContent = state.brushSize + 'px';
+        });
+
         function handleCapture() {
             if (state.isRecording) {
                 stopVideoRecording();
@@ -855,39 +1019,23 @@
         }
 
         function exitCamera() {
-            if (state.isRecording) {
-                if (!confirm('Arrêter l\'enregistrement en cours ?')) return;
-                stopVideoRecording();
-            }
-            
             if (state.stream) {
                 state.stream.getTracks().forEach(track => track.stop());
             }
-            
             window.close();
         }
 
-        // ============================================================
-        // UTILITIES
-        // ============================================================
+        function restart() {
+            location.reload();
+        }
+
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        // ============================================================
-        // INIT
-        // ============================================================
         window.addEventListener('load', () => {
             initCamera();
             lucide.createIcons();
-        });
-
-        // Prevent accidental navigation
-        window.addEventListener('beforeunload', (e) => {
-            if (state.isRecording || state.extractedFrames.length > 0) {
-                e.preventDefault();
-                e.returnValue = '';
-            }
         });
     </script>
 </body>
