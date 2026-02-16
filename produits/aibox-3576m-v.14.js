@@ -34,9 +34,9 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/aibox-3576m-v.14-main.jpg",
         galerie: [
-            { url: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/aibox-3576m-v.14-gal0.jpg", label: { fr: "Façade Connectique USB/Audio", en: "Front USB/Audio Ports" } },
-            { url: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/aibox-3576m-v.14-gal1.jpg", label: { fr: "Double LAN et Sorties Vidéo", en: "Dual LAN and Video Outputs" } },
-            { url: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/aibox-3576m-v.14-gal2.jpg", label: { fr: "Option 4G", en: "4G Option" } },
+            { url: "produits/images/aibox-3576m-v.14-gal0.jpg", label: { fr: "Façade Connectique USB/Audio", en: "Front USB/Audio Ports" } },
+            { url: "produits/images/aibox-3576m-v.14-gal1.jpg", label: { fr: "Double LAN et Sorties Vidéo", en: "Dual LAN and Video Outputs" } },
+            { url: "produits/images/aibox-3576m-v.14-gal2.jpg", label: { fr: "Option 4G", en: "4G Option" } },
         ]
     },
     accessoires: [
