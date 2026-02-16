@@ -241,44 +241,46 @@
             /* ========== SECTION IMAGES + 3D ========== */
             .print-grid-2cols {
                 display: block !important;
-                margin-bottom: 12mm !important;
+                margin-bottom: 0 !important;
                 page-break-inside: avoid;
+                page-break-after: always;
             }
             
             /* Left column: Images */
             .print-col-left {
                 display: block !important;
-                margin-bottom: 8mm !important;
+                margin-bottom: 0 !important;
+                height: 100% !important;
             }
             
             #main-img-container {
                 background: white !important;
                 border: 2px solid #e8e8e8 !important;
                 border-radius: 6mm !important;
-                padding: 10mm !important;
-                min-height: 70mm !important;
-                max-height: 70mm !important;
+                padding: 15mm !important;
+                min-height: 140mm !important;
+                max-height: 140mm !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
                 page-break-inside: avoid;
                 page-break-after: avoid;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
-                margin-bottom: 8mm !important;
+                margin-bottom: 10mm !important;
             }
             
             #ui-main-img {
                 max-width: 100% !important;
-                max-height: 65mm !important;
+                max-height: 130mm !important;
                 object-fit: contain !important;
             }
             
-            /* Gallery - AFFICHER en print avec 3 colonnes */
+            /* Gallery - AFFICHER en print avec 3 colonnes - AGRANDI */
             #ui-galerie {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr 1fr !important;
-                gap: 4mm !important;
-                margin-bottom: 10mm !important;
+                gap: 6mm !important;
+                margin-bottom: 0 !important;
                 page-break-inside: avoid;
             }
             
@@ -286,9 +288,9 @@
                 background: white !important;
                 border: 1.5px solid #e8e8e8 !important;
                 border-radius: 4mm !important;
-                padding: 3mm !important;
+                padding: 5mm !important;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
-                height: 35mm !important;
+                height: 60mm !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
@@ -296,7 +298,7 @@
             
             #ui-galerie img {
                 max-width: 100% !important;
-                max-height: 30mm !important;
+                max-height: 55mm !important;
                 object-fit: contain !important;
                 border-radius: 2mm !important;
             }
@@ -318,8 +320,13 @@
             
             .print-section-flex {
                 display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
+                grid-template-columns: 1fr !important;
                 gap: 10mm !important;
+            }
+            
+            /* MASQUER les options de personnalisation */
+            .print-section-flex > div:last-child {
+                display: none !important;
             }
             
             .print-section-inclus-options h3 {
