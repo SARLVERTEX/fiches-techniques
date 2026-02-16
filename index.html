@@ -1183,13 +1183,21 @@
         let currentUploadPath = "";
         let currentProductId = "";
 
-        async function startUpload(productId, dossier) {
+        async function startUpload(productId, dossier, imageType = 'main', galleryIndex = null) {
             currentProductId = productId;
-            currentUploadPath = `${dossier}/images/${productId}-main.jpg`;
+            
+            // Déterminer le chemin selon le type d'image
+            if (imageType === 'main') {
+                currentUploadPath = `${dossier}/images/${productId}-main.jpg`;
+            } else if (imageType === 'gallery' && galleryIndex !== null) {
+                currentUploadPath = `${dossier}/images/${productId}-gal${galleryIndex}.jpg`;
+            }
             
             console.log('Starting upload for:', {
                 productId,
                 dossier,
+                imageType,
+                galleryIndex,
                 path: currentUploadPath
             });
             
@@ -1848,33 +1856,71 @@
                 const expectedUrl = `https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/${p.dossier}/images/${p.id}-main.jpg`;
                 const isCorrect = imageUrl === expectedUrl;
                 
+                // Vérifier les images de galerie
+                let galleryStatus = '';
+                let galleryIssues = 0;
+                if (p.media?.galerie && p.media.galerie.length > 0) {
+                    p.media.galerie.forEach((img, idx) => {
+                        const expectedGalUrl = `${p.dossier}/images/${p.id}-gal${idx}.jpg`;
+                        if (img.url !== expectedGalUrl) {
+                            galleryIssues++;
+                        }
+                    });
+                    galleryStatus = galleryIssues > 0 
+                        ? `<span style="color: #f59e0b;">⚠️ ${galleryIssues}/${p.media.galerie.length} galerie</span>` 
+                        : `<span style="color: #10b981;">✅ ${p.media.galerie.length} galerie</span>`;
+                }
+                
                 return `
-                    <div style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 0.5rem; border-left: 3px solid ${isCorrect ? '#10b981' : '#ef4444'};">
+                    <div style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 0.5rem; border-left: 3px solid ${isCorrect && galleryIssues === 0 ? '#10b981' : '#ef4444'};">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <div style="font-weight: 900; color: #FFD700;">${p.id}</div>
-                            ${isCorrect ? '<span style="color: #10b981; font-size: 0.7rem;">✅ OK</span>' : '<span style="color: #ef4444; font-size: 0.7rem;">⚠️ À CORRIGER</span>'}
+                            <div>
+                                <div style="font-weight: 900; color: #FFD700;">${p.id}</div>
+                                ${galleryStatus ? `<div style="font-size: 0.65rem; margin-top: 0.25rem;">${galleryStatus}</div>` : ''}
+                            </div>
+                            ${isCorrect && galleryIssues === 0 ? '<span style="color: #10b981; font-size: 0.7rem;">✅ OK</span>' : '<span style="color: #ef4444; font-size: 0.7rem;">⚠️ À CORRIGER</span>'}
                         </div>
                         <div style="font-size: 0.75rem; color: #94a3b8; word-break: break-all;">
                             <strong>Dossier:</strong> ${p.dossier}<br>
                             <strong>Fichier:</strong> <code>${p.dossier}/${p.id}.js</code><br>
-                            <strong>URL actuelle:</strong><br>
+                            <strong>Image principale:</strong><br>
                             <code style="font-size: 0.65rem; color: ${isCorrect ? '#10b981' : '#ef4444'};">${imageUrl}</code><br>
                             ${!isCorrect ? `
                             <strong style="color: #f59e0b; margin-top: 0.5rem; display: block;">URL attendue:</strong>
                             <code style="font-size: 0.65rem; color: #10b981;">${expectedUrl}</code><br>
                             ` : ''}
-                            <a href="${imageUrl === 'NON DÉFINIE' ? expectedUrl : imageUrl}" target="_blank" style="color: #60a5fa; font-size: 0.7rem; margin-top: 0.5rem; display: inline-block;">Ouvrir l'image</a>
+                            ${galleryIssues > 0 ? `
+                            <strong style="color: #f59e0b; margin-top: 0.5rem; display: block;">Images galerie incorrectes:</strong>
+                            ${p.media.galerie.map((img, idx) => {
+                                const expectedGalUrl = `${p.dossier}/images/${p.id}-gal${idx}.jpg`;
+                                if (img.url !== expectedGalUrl) {
+                                    return `<div style="margin: 0.25rem 0;">
+                                        <span style="color: #ef4444;">gal${idx}:</span>
+                                        <code style="font-size: 0.6rem; color: #ef4444;">${img.url}</code><br>
+                                        <span style="color: #10b981; margin-left: 1rem;">→</span>
+                                        <code style="font-size: 0.6rem; color: #10b981;">${expectedGalUrl}</code>
+                                    </div>`;
+                                }
+                                return '';
+                            }).join('')}
+                            ` : ''}
                         </div>
                         <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
                             <button onclick="testImageUrl('${imageUrl === 'NON DÉFINIE' ? expectedUrl : imageUrl}', '${p.id}')" 
                                 style="padding: 0.35rem 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.7rem; font-weight: 700;">
-                                🧪 Tester
+                                🧪 Tester principale
                             </button>
                             ${!isCorrect ? `
                             <button onclick="copyCorrectImageUrl('${expectedUrl}', '${p.id}')" 
                                 style="padding: 0.35rem 0.75rem; background: #10b981; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.7rem; font-weight: 700;">
                                 📋 Copier URL
                             </button>
+                            ` : ''}
+                            ${p.media?.galerie && p.media.galerie.length > 0 ? `
+                            <a href="product-detail-with-gallery.html?id=${p.id}&dir=${p.dossier}&admin=1&lang=${currentLang}" 
+                                style="padding: 0.35rem 0.75rem; background: #8b5cf6; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.7rem; font-weight: 700; text-decoration: none; display: inline-block;">
+                                🖼️ Voir galerie (${p.media.galerie.length})
+                            </a>
                             ` : ''}
                         </div>
                     </div>
@@ -1884,7 +1930,16 @@
             const incorrectCount = CATALOGUE_COMPLET.filter(p => {
                 const imageUrl = p.media?.imagePrincipale || '';
                 const expectedUrl = `https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/${p.dossier}/images/${p.id}-main.jpg`;
-                return imageUrl !== expectedUrl;
+                let hasGalleryIssues = false;
+                
+                if (p.media?.galerie && p.media.galerie.length > 0) {
+                    hasGalleryIssues = p.media.galerie.some((img, idx) => {
+                        const expectedGalUrl = `${p.dossier}/images/${p.id}-gal${idx}.jpg`;
+                        return img.url !== expectedGalUrl;
+                    });
+                }
+                
+                return imageUrl !== expectedUrl || hasGalleryIssues;
             }).length;
             
             modal.innerHTML = `
