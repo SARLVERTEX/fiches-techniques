@@ -1047,14 +1047,14 @@
             d.getElementById('main-img-container').onclick = () => isAdmin ? startUpload(`${produitId}-main.jpg`) : openZoom(pc.media.imagePrincipale);
             if(isAdmin) d.getElementById('admin-main-photo').innerHTML = '<i data-lucide="camera" class="text-[#FFD700] w-12 h-12"></i>';
 
-            // Galerie
-            d.getElementById('ui-galerie').innerHTML = (pc.media.galerie || []).map((img, idx) => `
-                <div class="zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5" 
-                     onclick="${isAdmin ? `startUpload('${produitId}-gal${idx+1}.jpg')` : `openZoom('${img.url}')`}">
-                    ${isAdmin ? `<div class="admin-overlay opacity-100 bg-black/40"><i data-lucide="camera" class="w-6 h-6 text-[#FFD700]"></i></div>` : ''}
-                    <img src="${img.url}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg">
-                </div>
-            `).join('');
+            // Galerie - SECTION MODIFIÉE
+           d.getElementById('ui-galerie').innerHTML = (pc.media.galerie || []).map((img, idx) => `
+           <div class="zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5" 
+           onclick="${isAdmin ? `startUpload('${produitId}-gal${idx+1}.jpg')` : `openZoom('${img.url}')`}">
+           ${isAdmin ? `<div class="admin-overlay opacity-100 bg-black/40"><i data-lucide="camera" class="w-6 h-6 text-[#FFD700]"></i></div>` : ''}
+           <img src="${img.url}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg">
+    </div>
+`).join('');
 
             // Remplissage technique (Specs, Team, etc.)
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
