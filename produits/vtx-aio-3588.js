@@ -35,9 +35,9 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-aio-3588-main.jpg",
         galerie: [
-            { url: "images/firefly-front.jpg", label: { fr: "Face Avant USB/HDMI", en: "Front Panel USB/HDMI" } },
-            { url: "images/firefly-back.jpg", label: { fr: "Antennes et MicroSD", en: "Antennas and MicroSD" } },
-            { url: "images/firefly-cooling.jpg", label: { fr: "Dissipateur Thermique", en: "Heat Sink" } }
+            { url: "produits/images/vtx-aio-3588-gal0.jpg", label: { fr: "Face Avant USB/HDMI", en: "Front Panel USB/HDMI" } },
+            { url: "produits/images/vtx-aio-3588-gal1.jpg", label: { fr: "Antennes et MicroSD", en: "Antennas and MicroSD" } },
+            { url: "produits/images/vtx-aio-3588-gal2.jpg", label: { fr: "Dissipateur Thermique", en: "Heat Sink" } }
         ]
     },
     accessoires: [
