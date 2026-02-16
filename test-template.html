@@ -264,7 +264,7 @@
                 page-break-inside: avoid;
                 page-break-after: avoid;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
-                margin-bottom: 10mm !important;
+                margin-bottom: 8mm !important;
             }
             
             #ui-main-img {
@@ -273,9 +273,32 @@
                 object-fit: contain !important;
             }
             
-            /* Gallery - hide in print */
+            /* Gallery - AFFICHER en print avec 3 colonnes */
             #ui-galerie {
-                display: none !important;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 4mm !important;
+                margin-bottom: 10mm !important;
+                page-break-inside: avoid;
+            }
+            
+            #ui-galerie > div {
+                background: white !important;
+                border: 1.5px solid #e8e8e8 !important;
+                border-radius: 4mm !important;
+                padding: 3mm !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
+                height: 35mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            #ui-galerie img {
+                max-width: 100% !important;
+                max-height: 30mm !important;
+                object-fit: contain !important;
+                border-radius: 2mm !important;
             }
             
             /* Right column: 3D Section */
