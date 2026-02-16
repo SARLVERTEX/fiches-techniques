@@ -1059,7 +1059,13 @@
                     const data = await response.json();
                     console.log('Upload successful:', data);
                     alert("✅ Image sauvegardée avec succès !"); 
-                    setTimeout(() => location.reload(), 500);
+                    
+                    // Premier refresh immédiat
+                    setTimeout(() => {
+                        // Marquer qu'on vient d'uploader
+                        sessionStorage.setItem('justUploaded', 'true');
+                        location.reload();
+                    }, 500);
                 } else { 
                     const error = await response.json().catch(() => ({}));
                     console.error('Upload error:', { status: response.status, error });
@@ -1080,6 +1086,16 @@
            LANCEMENT & RENDU
         ============================================================ */
         window.onload = () => {
+            // Vérifier si on vient de faire un upload
+            if (sessionStorage.getItem('justUploaded') === 'true') {
+                sessionStorage.removeItem('justUploaded');
+                // Attendre 2 secondes puis refresh automatique pour forcer le cache
+                setTimeout(() => {
+                    console.log('Second refresh pour forcer le cache GitHub...');
+                    location.reload();
+                }, 2000);
+            }
+            
             if(!produitId) return;
             loadScript("config.js", () => {
                 loadScript(`${dossier}/${produitId}.js`, () => {
