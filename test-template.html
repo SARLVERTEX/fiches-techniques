@@ -36,6 +36,20 @@
 
         #zoom-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.98); z-index: 9999; display: none; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(10px); }
         #zoom-overlay img { max-width: 90%; max-height: 90%; border-radius: 1rem; box-shadow: 0 0 50px rgba(0,0,0,0.5); object-fit: contain; }
+        #zoom-overlay::before {
+            content: '✕ Cliquer pour fermer';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #FFD700;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
 
         /* Print Options Panel */
         #print-options-panel {
@@ -280,7 +294,7 @@
             #ui-galerie {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr 1fr !important;
-                gap: 5mm !important;
+                gap: 6mm !important;
                 margin-bottom: 0 !important;
                 page-break-inside: avoid !important;
             }
@@ -288,10 +302,10 @@
             #ui-galerie > div {
                 background: white !important;
                 border: 2px solid #e8e8e8 !important;
-                border-radius: 4mm !important;
-                padding: 5mm !important;
+                border-radius: 5mm !important;
+                padding: 4mm !important;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
-                height: 65mm !important;
+                height: 75mm !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
@@ -299,7 +313,9 @@
             
             #ui-galerie img {
                 max-width: 100% !important;
-                max-height: 60mm !important;
+                max-height: 70mm !important;
+                width: 100% !important;
+                height: 100% !important;
                 object-fit: contain !important;
                 border-radius: 2mm !important;
             }
@@ -1191,6 +1207,7 @@
                 // Créer l'élément
                 const galleryItem = document.createElement('div');
                 galleryItem.className = 'zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5';
+                galleryItem.style.cursor = 'pointer';
                 
                 if (isAdmin) {
                     galleryItem.innerHTML = `
@@ -1210,8 +1227,10 @@
                 } else {
                     galleryItem.innerHTML = `
                         <img src="${imgUrl}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg" 
-                             onerror="this.style.opacity='0.3'; this.alt='Image manquante'">
+                             onerror="this.style.opacity='0.3'; this.alt='Image manquante'"
+                             title="Cliquer pour agrandir">
                     `;
+                    // Ajouter le zoom pour les utilisateurs normaux
                     galleryItem.addEventListener('click', (function(url) {
                         return function() {
                             openZoom(url);
