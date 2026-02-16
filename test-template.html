@@ -24,8 +24,15 @@
 
         /* Zoom & Admin */
         .zoomable-container { position: relative; cursor: pointer; overflow: hidden; }
-        .admin-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; z-index: 20; }
+        .admin-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; opacity: 0; transition: 0.3s; z-index: 20; }
         .zoomable-container:hover .admin-overlay { opacity: 1; }
+        
+        .admin-overlay-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #FFD700;
+            text-transform: uppercase;
+        }
 
         #zoom-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.98); z-index: 9999; display: none; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(10px); }
         #zoom-overlay img { max-width: 90%; max-height: 90%; border-radius: 1rem; box-shadow: 0 0 50px rgba(0,0,0,0.5); object-fit: contain; }
@@ -917,6 +924,7 @@
         ============================================================ */
         const REPO_OWNER = "sarlvertex";
         const REPO_NAME = "fiches-techniques";
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
         
         const version = new Date().getTime();
         const params = new URLSearchParams(window.location.search);
@@ -941,8 +949,6 @@
         function toggleSection(section) {
             const checkbox = document.querySelector(`[data-section="${section}"]`);
             checkbox.classList.toggle('checked');
-            
-            // Update body class for print
             document.body.classList.toggle(`print-hide-${section}`);
         }
 
@@ -966,38 +972,107 @@
 
         // --- CAMERA ENGINE ---
         const cameraInput = document.createElement('input');
-        cameraInput.type = 'file'; cameraInput.accept = 'image/*'; cameraInput.capture = 'environment'; cameraInput.className = 'hidden';
+        cameraInput.type = 'file'; 
+        cameraInput.accept = 'image/*'; 
+        cameraInput.capture = 'environment'; 
+        cameraInput.className = 'hidden';
         document.body.appendChild(cameraInput);
+        
         let uploadTarget = "";
+        let uploadType = "";
+        let galleryIndex = null;
 
-        function startUpload(fileName) {
+        function startUpload(fileName, type, gIndex) {
+            uploadType = type;
+            galleryIndex = gIndex;
             uploadTarget = `${dossier}/images/${fileName}`;
+            
+            console.log('Starting upload:', { fileName, type, gIndex, uploadTarget });
+            
             let token = localStorage.getItem('gh_token');
             if (!token) {
-                token = prompt("Token GitHub requis :");
+                token = prompt("Token GitHub requis (avec permissions repo) :");
                 if (token) localStorage.setItem('gh_token', token);
             }
             if (token) cameraInput.click();
         }
 
         cameraInput.onchange = async (e) => {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader(); reader.readAsDataURL(file);
+            const file = e.target.files[0]; 
+            if (!file) return;
+            
+            e.target.value = ''; // Reset
+            
+            // Vérifier la taille
+            if (file.size > MAX_FILE_SIZE) {
+                alert("❌ Fichier trop volumineux (max 5MB)");
+                return;
+            }
+            
+            const imageTypeLabel = uploadType === 'main' ? 'principale' : `galerie ${galleryIndex}`;
+            const uploading = document.createElement('div');
+            uploading.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); padding: 2rem; border-radius: 1rem; z-index: 99999; color: white; font-weight: bold; text-align: center;';
+            uploading.innerHTML = `🔄 Upload image ${imageTypeLabel}...<br><small style="opacity: 0.7;">${(file.size / 1024).toFixed(0)} KB</small>`;
+            document.body.appendChild(uploading);
+            
+            const reader = new FileReader(); 
+            reader.readAsDataURL(file);
             reader.onload = async () => {
                 const base64 = reader.result.split(',')[1];
                 const token = localStorage.getItem('gh_token');
                 let sha = "";
+                
                 try {
-                    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${uploadTarget}`);
-                    if (res.ok) { const data = await res.json(); sha = data.sha; }
-                } catch (err) {}
+                    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${uploadTarget}`, {
+                        headers: { 
+                            'Authorization': `Bearer ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    if (res.ok) { 
+                        const data = await res.json(); 
+                        sha = data.sha;
+                        console.log('Existing file found, SHA:', sha);
+                    }
+                } catch (err) {
+                    console.warn('SHA fetch error:', err);
+                }
+                
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${uploadTarget}`, {
                     method: 'PUT',
-                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: `Photo: ${uploadTarget}`, content: base64, sha: sha })
+                    headers: { 
+                        'Authorization': `Bearer ${token}`, 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({ 
+                        message: `Update ${uploadType} image for ${produitId} - ${new Date().toISOString()}`, 
+                        content: base64, 
+                        sha: sha || undefined,
+                        branch: 'main'
+                    })
                 });
-                if (response.ok) { alert("✅ Image sauvegardée !"); location.reload(); }
-                else { alert("❌ Erreur GitHub."); localStorage.removeItem('gh_token'); }
+                
+                document.body.removeChild(uploading);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Upload successful:', data);
+                    alert("✅ Image sauvegardée avec succès !"); 
+                    setTimeout(() => location.reload(), 500);
+                } else { 
+                    const error = await response.json().catch(() => ({}));
+                    console.error('Upload error:', { status: response.status, error });
+                    alert(`❌ Erreur GitHub: ${response.status} - ${error.message || response.statusText}`);
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('gh_token'); 
+                    }
+                }
+            };
+            
+            reader.onerror = () => {
+                document.body.removeChild(uploading);
+                alert("❌ Erreur de lecture du fichier");
             };
         };
 
@@ -1041,20 +1116,69 @@
             d.getElementById('ui-logo').src = gc.brand.logo;
             d.getElementById('ui-titre').innerText = t(pc.produit.titre);
 
-            // Image Principale
+            // Image Principale avec admin overlay
             const mImg = d.getElementById('ui-main-img');
             mImg.src = pc.media.imagePrincipale + "?v=" + version;
-            d.getElementById('main-img-container').onclick = () => isAdmin ? startUpload(`${produitId}-main.jpg`) : openZoom(pc.media.imagePrincipale);
-            if(isAdmin) d.getElementById('admin-main-photo').innerHTML = '<i data-lucide="camera" class="text-[#FFD700] w-12 h-12"></i>';
+            
+            if(isAdmin) {
+                d.getElementById('admin-main-photo').innerHTML = '<i data-lucide="camera" class="text-[#FFD700] w-12 h-12"></i><span class="admin-overlay-label">Image principale</span>';
+                d.getElementById('main-img-container').addEventListener('click', function() {
+                    startUpload(produitId + '-main.jpg', 'main', null);
+                });
+            } else {
+                d.getElementById('main-img-container').addEventListener('click', function() {
+                    openZoom(pc.media.imagePrincipale);
+                });
+            }
 
-            // Galerie - SECTION MODIFIÉE
-           d.getElementById('ui-galerie').innerHTML = (pc.media.galerie || []).map((img, idx) => `
-           <div class="zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5" 
-           onclick="${isAdmin ? `startUpload('${produitId}-gal${idx+1}.jpg')` : `openZoom('${img.url}')`}">
-           ${isAdmin ? `<div class="admin-overlay opacity-100 bg-black/40"><i data-lucide="camera" class="w-6 h-6 text-[#FFD700]"></i></div>` : ''}
-           <img src="${img.url}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg">
-    </div>
-`).join('');
+            // Galerie avec admin overlay sur CHAQUE image - VERSION CORRIGÉE
+            const galerieContainer = d.getElementById('ui-galerie');
+            galerieContainer.innerHTML = ''; // Vider d'abord
+            
+            (pc.media.galerie || []).forEach((img, idx) => {
+                // Gérer les URLs relatives et complètes
+                let imgUrl;
+                if (img.url.startsWith('http')) {
+                    imgUrl = img.url;
+                } else {
+                    imgUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${img.url}`;
+                }
+                
+                const fileName = `${produitId}-gal${idx+1}.jpg`;
+                
+                // Créer l'élément
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'zoomable-container bg-black/40 rounded-xl p-1.5 border border-white/5';
+                
+                if (isAdmin) {
+                    galleryItem.innerHTML = `
+                        <div class="admin-overlay">
+                            <i data-lucide="camera" class="w-6 h-6 text-[#FFD700]"></i>
+                            <span class="admin-overlay-label">Gal ${idx+1}</span>
+                        </div>
+                        <img src="${imgUrl}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg" 
+                             onerror="this.style.opacity='0.3'; this.alt='Image manquante'">
+                    `;
+                    // Utiliser addEventListener avec closure pour capturer idx
+                    galleryItem.addEventListener('click', (function(index, fname) {
+                        return function() {
+                            startUpload(fname, 'gallery', index);
+                        };
+                    })(idx+1, fileName));
+                } else {
+                    galleryItem.innerHTML = `
+                        <img src="${imgUrl}?v=${version}" class="w-full h-14 md:h-20 object-cover rounded-lg" 
+                             onerror="this.style.opacity='0.3'; this.alt='Image manquante'">
+                    `;
+                    galleryItem.addEventListener('click', (function(url) {
+                        return function() {
+                            openZoom(url);
+                        };
+                    })(imgUrl));
+                }
+                
+                galerieContainer.appendChild(galleryItem);
+            });
 
             // Remplissage technique (Specs, Team, etc.)
             d.getElementById('ui-addr').innerText = gc.brand.adresse + " | " + t(gc.brand.copyright);
@@ -1087,11 +1211,21 @@
 
         function openZoom(src) {
             let o = document.getElementById('zoom-overlay');
-            if(!o) { o = document.createElement('div'); o.id = 'zoom-overlay'; o.innerHTML = '<img id="z-img">'; o.onclick = () => o.style.display='none'; document.body.appendChild(o); }
-            document.getElementById('z-img').src = src; o.style.display = 'flex';
+            if(!o) { 
+                o = document.createElement('div'); 
+                o.id = 'zoom-overlay'; 
+                o.innerHTML = '<img id="z-img">'; 
+                o.onclick = () => o.style.display='none'; 
+                document.body.appendChild(o); 
+            }
+            document.getElementById('z-img').src = src; 
+            o.style.display = 'flex';
         }
 
-        function changeLang(l) { params.set('lang', l); window.location.search = params.toString(); }
+        function changeLang(l) { 
+            params.set('lang', l); 
+            window.location.search = params.toString(); 
+        }
         
         // Close print options when clicking outside
         document.addEventListener('click', function(event) {
