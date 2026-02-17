@@ -1,3 +1,4 @@
+// produits/vtx-epaper133.js
 window.PRODUCT_DATA = {
     produit: {
         id: "vtx-epaper133",
@@ -32,11 +33,11 @@ window.PRODUCT_DATA = {
         vesa: "2 ports de fixation murale (Wall Bracket Ports)"
     },
     media: {
-        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/ar06254-main.jpg",
+        imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-epaper133-main.jpg",
         galerie: [
-            { url: "produits/images/ar06254-gal0.jpg", label: { fr: "Zone d'affichage monochrome & rouge", en: "Monochrome & Red display area" } },
-            { url: "produits/images/ar06254-gal1.jpg", label: { fr: "Interface USB-C et Boutons de commande", en: "USB-C Interface and Control Buttons" } },
-            { url: "produits/images/ar06254-gal2.jpg", label: { fr: "Fixations murales et Zone décorative", en: "Wall mounts and Decorative area" } },
+            { url: "produits/images/vtx-epaper133-gal0.jpg", label: { fr: "Zone d'affichage monochrome & rouge", en: "Monochrome & Red display area" } },
+            { url: "produits/images/vtx-epaper133-gal1.jpg", label: { fr: "Interface USB-C et Boutons de commande", en: "USB-C Interface and Control Buttons" } },
+            { url: "produits/images/vtx-epaper133-gal2.jpg", label: { fr: "Fixations murales et Zone décorative", en: "Wall mounts and Decorative area" } },
         ]
     },
     accessoires: [
