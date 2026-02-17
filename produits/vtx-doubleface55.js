@@ -35,10 +35,10 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-doubleface55-main.jpg",
         galerie: [
-            { url: "images/zoom1.jpg", label: { fr: "Finition Verre", en: "Glass Finish" } },
-            { url: "images/zoom2.jpg", label: { fr: "Profil Ultra-fin", en: "Ultra-slim Profile" } },
-            { url: "images/zoom3.jpg", label: { fr: "Support Plafond", en: "Ceiling Mount" } },
-            { url: "images/zoom4.jpg", label: { fr: "Connectique USB/RJ45", en: "USB/RJ45 Ports" } }
+            { url: "produits/images/vtx-doubleface55-gal0.jpg", label: { fr: "Finition Verre", en: "Glass Finish" } },
+            { url: "produits/images/vtx-doubleface55-gal1.jpg", label: { fr: "Profil Ultra-fin", en: "Ultra-slim Profile" } },
+            { url: "produits/images/vtx-doubleface55-gal2.jpg", label: { fr: "Support Plafond", en: "Ceiling Mount" } },
+            { url: "produits/images/vtx-doubleface55-gal3.jpg", label: { fr: "Connectique USB/RJ45", en: "USB/RJ45 Ports" } }
         ]
     },
     accessoires: [
