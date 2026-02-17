@@ -36,10 +36,10 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/logiciels/images/colorlight-main.jpg", // Capture du dashboard PlayerMaster
         galerie: [
-            { url: "images/playermaster-ui.jpg", label: { fr: "Interface PC", en: "PC Interface" } },
-            { url: "images/led-assistant-ui.jpg", label: { fr: "App Mobile", en: "Mobile App" } },
-            { url: "images/cloud-cluster.jpg", label: { fr: "Gestion Cluster", en: "Cluster Mgmt" } },
-            { url: "images/widgets-preview.jpg", label: { fr: "Widgets Météo/RSS", en: "Weather/RSS Widgets" } }
+            { url: "logiciels/images/colorlight-gal0.jpg", label: { fr: "Interface PC", en: "PC Interface" } },
+            { url: "logiciels/images/colorlight-gal1.jpg", label: { fr: "App Mobile", en: "Mobile App" } },
+            { url: "logiciels/images/colorlight-gal2.jpg", label: { fr: "Gestion Cluster", en: "Cluster Mgmt" } },
+            { url: "logiciels/images/colorlight-gal3.jpg", label: { fr: "Widgets Météo/RSS", en: "Weather/RSS Widgets" } }
         ]
     },
     accessoires: [
