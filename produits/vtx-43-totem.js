@@ -35,10 +35,10 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/produits/images/vtx-43-totem-main.jpg",
         galerie: [
-            { url: "images/vtx-43-totem-back.jpg", label: { fr: "Roulettes Robustes", en: "Heavy-duty Castors" } },
-            { url: "images/vtx-43-totem-digital.jpg", label: { fr: "Indicateur Batterie LCD", en: "LCD Battery Indicator" } },
-            { url: "images/vtx-43-totem-wifi.jpg", label: { fr: "Module WI-FI", en: "WI-FI Modul" } },
-            { url: "images/vtx-43-totem-alim.jpg", label: { fr: "Alimentation", en: "Power Supply" } }
+            { url: "produits/images/vtx-43-totem-gal0.jpg", label: { fr: "Roulettes Robustes", en: "Heavy-duty Castors" } },
+            { url: "produits/images/vtx-43-totem-gal1.jpg", label: { fr: "Indicateur Batterie LCD", en: "LCD Battery Indicator" } },
+            { url: "produits/images/vtx-43-totem-gal2.jpg", label: { fr: "Module WI-FI", en: "WI-FI Modul" } },
+            { url: "produits/images/vtx-43-totem-gal3.jpg", label: { fr: "Alimentation", en: "Power Supply" } }
         ]
     },
     accessoires: [
