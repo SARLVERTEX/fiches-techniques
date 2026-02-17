@@ -36,10 +36,10 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/logiciels/images/ghx-ds-main.jpg", 
         galerie: [
-            { url: "images/ghx-calendar.jpg", label: { fr: "Pilotage Calendrier", en: "Calendar Control" } },
-            { url: "images/ghx-multiplatform.jpg", label: { fr: "Écosystème Ouvert", en: "Open Ecosystem" } },
-            { url: "images/ghx-emergency.jpg", label: { fr: "Scénarios d'Urgence", en: "Emergency Scenarios" } },
-            { url: "images/ghx-social.jpg", label: { fr: "Interactivité Sociale", en: "Social Interactivity" } }
+            { url: "logiciels/images/ghx-ds-gal0.jpg", label: { fr: "Pilotage Calendrier", en: "Calendar Control" } },
+            { url: "logiciels/images/ghx-ds-gal1.jpg", label: { fr: "Écosystème Ouvert", en: "Open Ecosystem" } },
+            { url: "logiciels/images/ghx-ds-gal2.jpg", label: { fr: "Scénarios d'Urgence", en: "Emergency Scenarios" } },
+            { url: "logiciels/images/ghx-ds-gal3.jpg", label: { fr: "Interactivité Sociale", en: "Social Interactivity" } }
         ]
     },
     accessoires: [
