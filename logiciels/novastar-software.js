@@ -35,10 +35,10 @@ window.PRODUCT_DATA = {
     media: {
         imagePrincipale: "https://raw.githubusercontent.com/sarlvertex/fiches-techniques/main/logiciels/images/novastar-software-main.jpg",
         galerie: [
-            { url: "images/viplex-express-ui.jpg", label: { fr: "Interface ViPlex", en: "ViPlex Interface" } },
-            { url: "images/vnnox-cloud-map.jpg", label: { fr: "Ciblage Géographique VNNOX", en: "VNNOX Geo-fencing" } },
-            { url: "images/novastar-scheduling.jpg", label: { fr: "Planification Avancée", en: "Advanced Scheduling" } },
-            { url: "images/novastar-monitoring.jpg", label: { fr: "Surveillance en temps réel", en: "Real-time Monitoring" } }
+            { url: "logiciels/images/novastar-software-gal0.jpg", label: { fr: "Interface ViPlex", en: "ViPlex Interface" } },
+            { url: "logiciels/images/novastar-software-gal1.jpg", label: { fr: "Ciblage Géographique VNNOX", en: "VNNOX Geo-fencing" } },
+            { url: "logiciels/images/novastar-software-gal2.jpg", label: { fr: "Planification Avancée", en: "Advanced Scheduling" } },
+            { url: "logiciels/images/novastar-software-gal3.jpg", label: { fr: "Surveillance en temps réel", en: "Real-time Monitoring" } }
         ]
     },
     accessoires: [
