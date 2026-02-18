@@ -17,7 +17,7 @@ window.PRODUCT_DATA = {
             en: "Digital ink elegance combined with an exceptional 5-month battery life." 
         },
         ref: "AR06254",
-        sn: "Logiciel : XTMS Platform / Protocole : MQTT"
+        sn: "2025490002V"
     },
     badges: [
         { label: { fr: "13,3\" E-Ink", en: "13.3\" E-Ink" }, icone: "monitor", couleur: "text-blue-400" },
