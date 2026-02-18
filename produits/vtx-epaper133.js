@@ -20,6 +20,7 @@ window.PRODUCT_DATA = {
         sn: "2025490002V"
     },
     badges: [
+        { label: { fr: "E-pure", en: "E-pure" }, icone: "arbre", couleur: "text-green-400" },
         { label: { fr: "13,3\" E-Ink", en: "13.3\" E-Ink" }, icone: "monitor", couleur: "text-blue-400" },
         { label: { fr: "Autonomie 5 mois", en: "5-Month Battery" }, icone: "battery-charging", couleur: "text-yellow-500" },
         { label: { fr: "WiFi / MQTT", en: "WiFi / MQTT" }, icone: "wifi", couleur: "text-green-400" },
