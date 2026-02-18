@@ -39,7 +39,6 @@ window.PRODUCT_DATA = {
             { url: "logiciels/images/xtms-cloud-gal0.jpg", label: { fr: "Page de Connexion", en: "Login Page" } },
             { url: "logiciels/images/xtms-cloud-gal1.jpg", label: { fr: "Menu Device > Label", en: "Device > Label Menu" } },
             { url: "logiciels/images/xtms-cloud-gal2.jpg", label: { fr: "Fenêtre de Publication", en: "Publish Window" } },
-            { url: "logiciels/images/xtms-cloud-gal3.jpg", label: { fr: "Suivi Online/Offline", en: "Online/Offline Tracking" } }
         ]
     },
     accessoires: [
