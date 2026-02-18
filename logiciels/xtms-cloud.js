@@ -3,7 +3,7 @@ window.PRODUCT_DATA = {
     type: "software",
     produit: {
         id: "xtms-cloud",
-        categorie: "Logiciels de Gestion",
+        categorie: "Logiciels",
         isNew: true,
         titre: { 
             fr: "PLATEFORME CLOUD XTMS", 
