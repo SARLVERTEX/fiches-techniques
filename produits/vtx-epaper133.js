@@ -89,6 +89,39 @@ window.PRODUCT_DATA = {
             ] 
         }
     ],
+    procedureCloud: [
+        {
+            titre: { fr: "1. ACCÈS ET CONNEXION", en: "1. ACCESS & LOGIN" },
+            points: [
+                { fr: "Ouvrez Google Chrome et accédez à l'URL : http://47.254.154.190/cloudPlatform", en: "Open Google Chrome and go to: http://47.254.154.190/cloudPlatform" },
+                { fr: "Connectez-vous avec l'ID et le mot de passe fournis", en: "Log in with the provided ID and password" }
+            ]
+        },
+        {
+            titre: { fr: "2. NAVIGATION DANS LES MENUS", en: "2. MENU NAVIGATION" },
+            points: [
+                { fr: "Dans la barre latérale gauche, cliquez sur 'Device' (Appareil)", en: "In the left sidebar, click on 'Device'" },
+                { fr: "Sélectionnez impérativement l'onglet 'Label' (Étiquette)", en: "You must select the 'Label' tab" }
+            ]
+        },
+        {
+            titre: { fr: "3. SÉLECTION ET VÉRIFICATION", en: "3. DEVICE SELECTION" },
+            points: [
+                { fr: "Localisez votre tablette via son adresse MAC (ex: D43D39...)", en: "Locate your tablet via its MAC address" },
+                { fr: "Faites glisser le tableau vers la droite : 'Network Status' doit être 'online'", en: "Scroll the table to the right: 'Network Status' must be 'online'" },
+                { fr: "Si absent, utilisez '+ Add Label' pour ajouter l'adresse MAC", en: "If missing, use '+ Add Label' to add the MAC address" }
+            ]
+        },
+        {
+            titre: { fr: "4. PROCÉDURE DE PUBLICATION", en: "4. PUBLICATION PROCESS" },
+            points: [
+                { fr: "Dans la colonne 'Opt' à droite, cliquez sur 'Refresh Picture'", en: "In the 'Opt' column on the right, click 'Refresh Picture'" },
+                { fr: "Glissez votre fichier dans la zone ou cliquez sur 'Click to upload'", en: "Drag your file into the zone or click 'Click to upload'" },
+                { fr: "Types acceptés : Photo, agenda, logo, etc.", en: "Accepted types: Photo, schedule, logo, etc." },
+                { fr: "Cliquez sur le bouton bleu 'Confirm' pour valider l'envoi", en: "Click the blue 'Confirm' button to validate the upload" }
+            ]
+        }
+    ],
     entretien: [
         { fr: "Cycle de charge : Environ tous les 5 mois selon la fréquence d'actualisation", en: "Charging cycle: Approx. every 5 months depending on refresh frequency" },
         { fr: "Recharger impérativement si la batterie est < 30%", en: "Must recharge if battery is < 30%" },
